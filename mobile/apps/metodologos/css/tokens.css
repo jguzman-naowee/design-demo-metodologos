@@ -1,0 +1,58 @@
+/* Tokens del design system de la app Flutter (lib/shared/design_system/*), copiados EXACTOS.
+   Un token nuevo se crea aquí (misma regla que en la app: ningún valor suelto en los componentes). */
+
+@font-face{font-family:"Helvetica";font-weight:400;font-style:normal;font-display:block;src:url("../assets/fonts/Helvetica-Regular.ttf") format("truetype")}
+@font-face{font-family:"Helvetica";font-weight:700;font-style:normal;font-display:block;src:url("../assets/fonts/Helvetica-Bold.ttf") format("truetype")}
+
+:root{
+  /* ── Colores: primary (blue / JIC) ── */
+  --blue-50:#E6EAEF;--blue-100:#E9F1FF;--blue-200:#DEE9FF;--blue-300:#C6D8FF;--blue-400:#A3BCFE;--blue-500:#7A95FF;
+  --blue-600:#5C70FA;--blue-700:#434CE4;--blue-800:#353AC5;--blue-900:#002b5b;--blue-950:#0943B5;
+  --violet-jic-50:#EFEAF4;--violet-jic-400:#8055A3;--violet-jic-500:#602A8C;--violet-jic-700:#441E63;--violet-jic-900:#28123B;
+  --blue-jic-50:#EBEDF6;--blue-jic-400:#616DB9;--blue-jic-500:#3A48A8;--blue-jic-700:#293377;--blue-jic-900:#181E47;
+  --yellow-jic-50:#FCF8EE;--yellow-jic-200:#FCEE92;--yellow-jic-400:#E5C473;--yellow-jic-500:#DFB550;--yellow-jic-700:#9E8139;--yellow-jic-800:#7A662A;--yellow-jic-900:#5E4C22;
+  /* foundations */
+  --fucsia-900:#FD2DAE;--blue-light-900:#51B5E7;--fucsia-50:#FFECF7;--blue-light-50:#D8F2FF;
+  /* accent (naranja) */
+  --orange-50:#FFF1E6;--orange-100:#FFEDC7;--orange-200:#FFDAA3;--orange-300:#FFBF75;--orange-400:#FF9D47;--orange-500:#FF7B24;
+  --orange-600:#F05705;--orange-700:#D74009;--orange-800:#B83100;--orange-900:#942700;
+  /* gray */
+  --gray-50:#FDFDFD;--gray-100:#F4F5F9;--gray-200:#E7E9F3;--gray-300:#D0D4E6;--gray-400:#B5B9D4;--gray-500:#9C9EBF;
+  --gray-600:#8788AB;--gray-700:#646587;--gray-800:#434565;--gray-900:#282834;
+  /* black alpha (base #282834) y white alpha */
+  --black-alpha-10:#2828341A;--black-alpha-20:#28283433;--black-alpha-30:#2828344D;--black-alpha-40:#28283466;--black-alpha-50:#28283480;
+  --black-alpha-60:#28283499;--black-alpha-70:#282834B3;--black-alpha-80:#282834CC;--black-alpha-90:#282834E6;--black-alpha-100:#282834;
+  --white-alpha-10:#FFFFFF1A;--white-alpha-20:#FFFFFF33;--white-alpha-30:#FFFFFF4D;--white-alpha-40:#FFFFFF66;--white-alpha-50:#FFFFFF80;
+  --white-alpha-60:#FFFFFF99;--white-alpha-70:#FFFFFFB3;--white-alpha-80:#FFFFFFCC;--white-alpha-90:#FFFFFFE6;--white-alpha-100:#FFFFFF;
+  /* semantics */
+  --error-50:#FFFFF0;--error-100:#FFE5E9;--error-200:#FECDD4;--error-300:#FCABB6;--error-400:#FE8091;--error-500:#FB5067;
+  --error-600:#ED314A;--error-700:#DA1630;--error-800:#C4031D;--error-900:#9E0015;
+  --success-50:#ECF7EC;--success-100:#DEFADE;--success-200:#BDF5BE;--success-300:#8BEA8D;--success-400:#50D853;--success-500:#28BF2D;
+  --success-600:#14A919;--success-700:#1F8923;--success-800:#17641A;--success-900:#124515;
+  --warning-50:#FFF8E6;--warning-100:#FFEDC7;--warning-200:#FFDAA3;--warning-300:#FFBF75;--warning-400:#FF9D47;--warning-500:#FF7B24;
+  --warning-600:#F05705;--warning-700:#D74009;--warning-800:#B83100;--warning-900:#942700;
+  --informative-quiet:#CEF4FF;
+  --success-text:#0F5132;--finalizado-bg:#FBE0E0;--finalizado-text:#B3261E;
+  /* enlaces */
+  --link:#4850E5;
+
+  /* ── Espaciados (spacingsSmall / Medium / Large) ── */
+  --sp-s-S:2px;--sp-s-M:4px;--sp-s-L:6px;--sp-s-XL:8px;
+  --sp-m-S:12px;--sp-m-M:16px;--sp-m-L:20px;--sp-m-XL:24px;
+  --sp-l-S:32px;--sp-l-M:40px;--sp-l-L:48px;--sp-l-XL:64px;--sp-l-XXL:80px;
+
+  /* ── Radios ── */
+  --r-small:8px;--r-medium:10px;--r-large:12px;--r-xlarge:16px;--r-pill:20px;
+
+  /* ── Tamaños ── */
+  --icon-xs:14px;--icon-s:16px;--touch-target:36px;
+
+  /* ── Tipografía: escala de la Guía COC (Helvetica). Títulos navy, cuerpo negro ── */
+  --font:"Helvetica",Arial,sans-serif;
+  --navy:var(--blue-jic-900);--negro:var(--black-alpha-100);
+  --fs-display:44px;--fs-h1:28px;--fs-h2:22px;--fs-subtitle:20px;--fs-body:16px;--fs-label:15px;--fs-body-small:14px;--fs-caption:13px;--fs-caption-small:11px;--fs-tag:12px;
+  --fw-regular:400;--fw-bold:700;--fw-tag:600;
+
+  /* ── Marco: la app no pinta barra de estado ni home indicator; el sistema los aporta en el dispositivo ── */
+  --safe-top:0px;--safe-bottom:0px;
+}
