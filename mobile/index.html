@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Demo móvil · Naowee</title>
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="mobile.css">
+</head>
+<body>
+<header class="top"><img class="logo" src="../shared/logos/naowee.svg" alt="Naowee" width="106" height="20"><h1>Demo móvil</h1>
+  <label class="sr" for="appSel">App</label><select id="appSel" class="appsel"></select>
+  <span class="devtag" id="devtag" hidden>DEV</span></header>
+<main class="stage">
+  <section class="device" aria-label="Teléfono">
+    <div class="phone">
+      <div class="screen" id="screen">
+        <iframe id="app" title="Diseño en el teléfono"></iframe>
+        <div class="spot" id="spot" hidden></div>
+        <div class="cursor" id="cursor" hidden></div>
+      </div>
+    </div>
+  </section>
+  <aside class="panel" aria-label="Casos">
+    <div class="k">CASOS</div>
+    <ol class="cases" id="cases"></ol>
+    <div class="say" id="say" aria-live="polite"></div>
+    <div class="ctrl">
+      <div class="seg" role="group" aria-label="Modo">
+        <button type="button" data-mode="paso" class="on">Paso a paso</button>
+        <button type="button" data-mode="auto">Automático</button>
+      </div>
+      <div class="row">
+        <button type="button" class="btn ghost" id="restart">↺ Reiniciar</button>
+        <span class="cnt" id="cnt"></span>
+        <button type="button" class="btn" id="next">Siguiente ▸</button>
+      </div>
+    </div>
+    <section class="dev" id="dev" hidden aria-label="Modo dev">
+      <div class="k">MODO DEV</div>
+      <div class="row">
+        <label class="sr" for="size">Tamaño del teléfono</label>
+        <select id="size" class="appsel">
+          <option value="375x667">iPhone SE · 375×667</option>
+          <option value="390x844" selected>iPhone 15 · 390×844</option>
+          <option value="412x915">Pixel 8 · 412×915</option>
+        </select>
+        <button type="button" class="btn ghost" id="reload">⟳ Recargar app</button>
+      </div>
+      <div class="row">
+        <button type="button" class="btn ghost" id="pickBtn" aria-pressed="false">◎ Elegir elemento</button>
+        <button type="button" class="btn ghost" id="solo">Ver sin marco</button>
+      </div>
+      <label class="k" for="log">PASOS CAPTURADOS (se copian al portapapeles)</label>
+      <textarea id="log" rows="6" spellcheck="false" placeholder="Activa «Elegir elemento» y pulsa algo en el teléfono."></textarea>
+    </section>
+  </aside>
+</main>
+<script src="apps/index.js"></script>
+<script src="mobile.js"></script>
+</body>
+</html>
