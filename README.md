@@ -4,7 +4,10 @@ Demo móvil navegable de la app de **Metodólogos** (Naowee). Parte del marco `d
 
 ## Estado
 
-Vacío: falta mapear la app y montarla. Seguir `docs/MAPEO-METODOLOGOS.md`.
+Demo de la app **Metodólogos** (COC) montada en `mobile/apps/metodologos/`, con 13 casos guiados: sesión y eventos (1.x), evento y filtros (2.x), deportista (3.x), formulario de evaluación (4.x) y Mi perfil (5.x).
+
+- **Correr:** `npm run dev` → http://localhost:8770/mobile/?app=metodologos (agrega `&dev=1` para el modo dev).
+- **Qué cubre y qué no:** `docs/inventario.md`. Lo principal que queda fuera: escribir en los campos (el marco no teclea), así que el formulario llega hasta los errores de validación, y la pantalla de actualización obligatoria.
 
 ## Cómo está armado
 
