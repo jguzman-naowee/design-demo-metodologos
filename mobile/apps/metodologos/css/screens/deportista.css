@@ -1,0 +1,78 @@
+/* Perfil del deportista / del deporte (lib/features/deportistas/presentation/pages/deportista_perfil_page.dart).
+   Padding del scroll 16/16/16/24; OcCard = padding 22/20, borde gray300, radio 16. */
+.pf{padding:var(--sp-m-M) var(--sp-m-M) var(--sp-m-XL)}
+.pf .h2{margin:0}
+.pf-back{display:flex;align-items:center;justify-content:flex-start;width:32px;height:32px;color:var(--orange-700)}
+.pf-gap-s{height:var(--sp-s-M)}.pf-gap-m{height:var(--sp-m-M)}.pf-gap-l{height:var(--sp-m-L)}.pf-gap-xl{height:var(--sp-s-XL)}.pf-gap-12{height:var(--sp-m-S)}
+.pf-card{width:100%;padding:22px var(--sp-m-L);background:var(--white-alpha-100);border:1px solid var(--gray-300);border-radius:var(--r-xlarge)}
+.pf-card.row{display:flex;align-items:center}
+.pf-card.row.top{align-items:flex-start}
+
+/* Cabecera: avatar 88 (inicial 34) + nombre h2 + colegio */
+.pf-head{display:flex;align-items:center}
+.pf-avatar{flex:none;width:88px;height:88px;margin-right:var(--sp-m-S);border-radius:50%;background:var(--success-100);color:var(--success-text);
+  display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:var(--fw-bold);line-height:1;overflow:hidden}
+.pf-avatar span{position:relative;top:5.4px} /* Alignment(0, 0.2): (88-34)/2 * 0.2 */
+.pf-head-txt{flex:1 1 auto;min-width:0}
+.pf-colegio{display:flex;align-items:center;margin-top:var(--sp-s-S)}
+.pf-colegio .t-body{margin-left:var(--sp-s-M);min-width:0;color:var(--gray-700)}
+
+/* Info. Deportiva: grilla de 2 columnas, etiquetas arriba y valores abajo (12 entre columnas, 8 entre título y valor) */
+.pf-info-title{margin:0 0 18px}
+.pf-info-rows{display:flex;flex-direction:column;gap:22px}
+.pf-irow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:var(--sp-m-S);row-gap:var(--sp-s-XL)}
+.pf-ilabel{align-self:start;color:var(--gray-700);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pf-ival{align-self:center;min-width:0;font-weight:var(--fw-bold)}
+.pf-ival.chipcell{font-weight:var(--fw-regular)}
+.pf-sportchip{display:inline-flex;align-items:center;max-width:100%;padding:var(--sp-s-L) var(--sp-s-XL);background:var(--white-alpha-100);border:2px solid var(--orange-600);
+  border-radius:var(--r-small);box-shadow:0 0 0 2px var(--orange-100)}
+.pf-sportchip .icbox{margin-right:var(--sp-s-M)}
+.pf-sportchip .t-tag{min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* Textos de sección */
+.pf-intro{margin:0;text-align:justify;line-height:1.4;color:var(--navy)}
+
+/* Tarjeta de prueba */
+.pf-prueba{margin-bottom:var(--sp-s-XL)}
+.pf-grid{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center}
+.pf-grid > .l{padding-right:var(--sp-s-XL)}
+.pf-grid > .top{padding-bottom:var(--sp-s-XL)}
+.pf-ph .cap{color:var(--gray-700)}
+.pf-ph b{display:block;margin-top:var(--sp-s-S);font-size:17px;font-weight:var(--fw-bold);color:var(--negro)}
+.pf-flex1{flex:1 1 0;min-width:0}
+.pf-ph .chipgap{height:var(--sp-s-XL)}
+.pf-cta{flex:0 1 auto;min-width:0;margin-left:var(--sp-s-XL)}
+.pf .btn.small{height:40px;max-width:100%}
+.pf .btn.fit{width:auto}
+
+/* Acciones calificada: ojo / lápiz */
+.pf-acts{display:flex;justify-content:flex-end;gap:var(--sp-s-XL)}
+.pf-iconbtn{display:flex;align-items:center;justify-content:center;width:var(--touch-target);height:var(--touch-target);background:var(--orange-100);border-radius:var(--r-small);color:var(--orange-700)}
+.pf-iconbtn:active{filter:brightness(.94)}
+
+/* Metadata (fecha/autor) alineada a la derecha, icono a la derecha del texto */
+.pf-meta{display:flex;flex-direction:column;align-items:flex-end;gap:var(--sp-s-M)}
+.pf-mrow{display:flex;align-items:center}
+.pf-mrow > span.tx{min-width:0;text-align:end;font-size:var(--fs-caption-small);display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;-webkit-line-clamp:1}
+.pf-mrow.two > span.tx{-webkit-line-clamp:2}
+.pf-mrow > .icbox{margin-left:var(--sp-s-L)}
+.pf-mfila{display:flex;align-items:center;gap:var(--sp-s-XL);color:var(--gray-700)}
+.pf-mfila + .pf-mfila{margin-top:var(--sp-s-XL)}
+.pf-mfila .tx{min-width:0;font-size:var(--fs-caption);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* Bloqueado: motivo + «No se puede calificar» */
+.pf-block{display:flex;flex-direction:column;align-items:flex-end;text-align:end}
+.pf-block.start{align-items:flex-start;text-align:start;width:100%}
+.pf-block b{font-size:var(--fs-body-small);font-weight:var(--fw-bold);color:var(--gray-700);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pf-block span{margin-top:var(--sp-s-S);font-size:var(--fs-caption);color:var(--gray-500);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* Integrantes */
+.pf-miembro{display:flex;align-items:center;width:100%;padding:var(--sp-m-M) 0;border-bottom:1px solid var(--gray-300);color:var(--negro)}
+.pf-miembro b{flex:1 1 auto;min-width:0;font-size:16px;font-weight:600}
+.pf-miembro .icbox{color:var(--orange-700)}
+.pf-empty{display:flex;flex-direction:column;align-items:center;padding:var(--sp-l-S) var(--sp-m-L);text-align:center}
+.pf-empty .icbox{color:var(--gray-400);margin-bottom:var(--sp-m-S)}
+.pf-empty p{margin:0;font-size:var(--fs-caption);color:var(--gray-700)}
+.pf-aviso{display:flex;align-items:flex-start}
+.pf-aviso .icbox{color:var(--orange-700);margin-right:var(--sp-s-XL)}
+.pf-aviso p{margin:0;flex:1 1 auto;min-width:0}

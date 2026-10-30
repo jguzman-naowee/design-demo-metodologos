@@ -1,0 +1,22 @@
+/* Iniciar sesión (WebView de Keycloak): barra de la app + formulario web (tipografía del tema web, no Helvetica) */
+.is{flex:1 1 auto;display:flex;flex-direction:column;min-height:0}
+.is-bar{display:flex;align-items:center;gap:var(--sp-s-XL);padding:var(--sp-m-M)}
+.is-bar .t-h2{margin:0}
+.is-web{flex:1 1 auto;overflow-y:auto;padding:0 var(--sp-m-M);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--gray-900)}
+.is-logo{display:block;width:176px;height:auto;margin:var(--sp-m-S) auto 0}
+.is-web h1{margin:var(--sp-m-M) 0 var(--sp-m-XL);text-align:center;font-size:24px;line-height:1.25;font-weight:700;color:var(--gray-900)}
+.is-label{display:block;margin:var(--sp-m-S) 0 var(--sp-s-XL);font-size:14px;font-weight:600;line-height:1.3}
+.is-label span{color:var(--error-700)}
+.is-input{width:100%;height:48px;padding:0 var(--sp-m-M);border:1px solid var(--gray-300);border-radius:var(--r-large);background:var(--white-alpha-100);font:400 15px/1 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--gray-900)}
+.is-input::placeholder{color:var(--gray-700);opacity:.8}
+.is-input:focus{outline:0;border:2px solid var(--orange-700);padding:0 15px}
+.is-pass{position:relative}
+.is-pass .is-input{padding-right:52px}
+.is-eye{position:absolute;right:0;top:0;width:48px;height:48px;display:flex;align-items:center;justify-content:center;border:0;background:none;cursor:pointer}
+.is-olvido{margin:var(--sp-m-S) 0 0;text-align:right;font-size:14px;color:var(--gray-700)}
+.is-olvido .is-link{font-weight:700;color:var(--gray-900)}
+.is-link{border:0;background:none;padding:0;font:inherit;color:var(--link);cursor:pointer;min-height:44px;display:inline-flex;align-items:center}
+.is-pie{padding:var(--sp-m-S) var(--sp-m-M) var(--sp-m-XL)}
+.is-pie .btn{width:100%}
+.is-legal{margin:var(--sp-m-S) 0 0;text-align:center;font:400 12px/1.4 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--gray-700)}
+.is-legal .is-link{font-size:12px}

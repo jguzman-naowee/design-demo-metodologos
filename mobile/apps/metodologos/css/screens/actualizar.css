@@ -1,0 +1,6 @@
+/* Actualización obligatoria (update_required_page.dart): padding 16, contenido centrado, logo 80. */
+.up{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:center;align-items:stretch;padding:var(--sp-m-M)}
+.up-logo{align-self:center;width:var(--sp-l-XXL);height:var(--sp-l-XXL);object-fit:contain;display:block;margin-bottom:var(--sp-m-L)}
+.up h1{margin:0 0 var(--sp-s-XL);font-size:var(--fs-h2);text-align:center}
+.up p{margin:0;font-size:var(--fs-body-small);color:var(--gray-700);text-align:center}
+.up .btn{margin-top:var(--sp-m-L)}
