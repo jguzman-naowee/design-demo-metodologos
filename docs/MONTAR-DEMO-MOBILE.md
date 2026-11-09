@@ -85,10 +85,17 @@ Muestra una etiqueta roja DEV y un panel con:
   `{ t: "click", sel: "…", body: "" },` al cuadro y lo copia al portapapeles. Pega en `steps`.
 - **Tamaño del teléfono:** iPhone SE, iPhone 15 o Pixel 8.
 - **⟳ Recargar app:** recarga el iframe sin perder el caso.
-- **Ver sin marco:** la app a pantalla completa (Esc vuelve). Sirve para revisar el diseño solo.
 - El selector de **App** de la cabecera cambia de demo sin recargar la página.
 
 Flujo típico: `Siguiente` hasta la pantalla que falta → ◎ Elegir elemento → pulsar → pegar el paso → `Reiniciar` y probar.
+
+## 4b. El marco (cabecera, teléfono, panel)
+
+- **Cabecera:** logo Naowee + `nombre` de `app.json` y subtítulo (`subtitulo`, opcional; por defecto «Demo móvil»), selector de App, botón **Casos** (abre/cierra el panel) e interruptor **Vista plana**.
+- **Vista plana** (en todos los modos, no solo dev): la app a pantalla completa, sin teléfono ni franjas. **Esc** vuelve (también con el foco dentro de la app).
+- **Teléfono:** el marco dibuja la barra de estado (9:30, isla, señal/batería) y el indicador de inicio como franjas arriba y abajo; la app va entre ambas, sin saber que existen. Color de las franjas: `"estatus": "#fff"` en `app.json` (opcional; blanco por defecto; el texto se vuelve claro u oscuro solo). Tras cambiarlo, `npm run registrar`.
+- **Controles flotantes** (arriba a la derecha del escenario): zoom −, ajustar, zoom +, y ▷ que reinicia el caso. El zoom va de 50 % a 200 % sobre el ajuste automático; con zoom mayor el escenario se desplaza. En pantallas < 700 px se ocultan (el teléfono ya ocupa el ancho).
+- **Panel de casos:** abierto por defecto en ≥ 1100 px (a un lado del teléfono); en menos ancho flota como cajón a la derecha y, en < 700 px, como hoja inferior. Cerrado de inicio fuera de ≥ 1100 px.
 
 ## 5. Antes de dar la demo por lista
 

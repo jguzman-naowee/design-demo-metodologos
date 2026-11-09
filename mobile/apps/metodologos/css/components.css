@@ -1,0 +1,175 @@
+/* Componentes de la app (equivalen a lib/shared/design_system y lib/shared/widgets).
+   Cada bloque cita su widget Flutter de origen. Solo usan variables de tokens.css. */
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:var(--font);font-size:var(--fs-body);color:var(--negro);background:var(--white-alpha-100);
+  -webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;overflow:hidden}
+button,input{font:inherit;color:inherit}
+button{background:none;border:0;padding:0;margin:0;cursor:pointer;text-align:inherit}
+a{color:inherit;text-decoration:none}
+:focus{outline:none}
+:focus-visible{outline:2px solid var(--orange-700);outline-offset:2px}
+[hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+svg.ic{display:block;flex:none}
+
+/* ── Tipografía (design_system_text_styles.dart) ── */
+.t-display{font-size:var(--fs-display);font-weight:var(--fw-bold);color:var(--navy)}
+.t-h1{font-size:var(--fs-h1);font-weight:var(--fw-bold);color:var(--navy);margin:0}
+.t-h2{font-size:var(--fs-h2);font-weight:var(--fw-bold);color:var(--navy);margin:0}
+.t-subtitle{font-size:var(--fs-subtitle);font-weight:var(--fw-bold);color:var(--navy);margin:0}
+.t-body{font-size:var(--fs-body);font-weight:var(--fw-regular);color:var(--negro)}
+.t-label{font-size:var(--fs-label);font-weight:var(--fw-regular);color:var(--negro)}
+.t-body-small{font-size:var(--fs-body-small);font-weight:var(--fw-regular);color:var(--negro)}
+.t-caption{font-size:var(--fs-caption);font-weight:var(--fw-regular);color:var(--negro)}
+.t-caption-small{font-size:var(--fs-caption-small);font-weight:var(--fw-regular);color:var(--negro)}
+.t-tag{font-size:var(--fs-tag);font-weight:var(--fw-tag);color:var(--negro)}
+.c-gray-700{color:var(--gray-700)}.c-orange{color:var(--orange-700)}.c-negro{color:var(--negro)}.c-navy{color:var(--navy)}
+
+/* ── Raíz y páginas ── */
+#app{position:fixed;inset:0;overflow:hidden;background:var(--white-alpha-100)}
+.page{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--white-alpha-100);overflow:hidden}
+.page-safe{padding-top:var(--safe-top)}            /* SafeArea(top) */
+.page-body{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+.scroll{scrollbar-width:none;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+
+/* ── OcAppBar (shared/widgets/oc_app_bar.dart): padding 16/8, borde inferior 1px gray300, logo 40, menú 24 ── */
+.appbar{flex:none;display:flex;align-items:center;justify-content:space-between;padding:6px var(--sp-m-M);
+  background:var(--white-alpha-100);border-bottom:1px solid var(--gray-300)}
+.appbar-btn{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%}
+.appbar-btn.logo{margin-left:-2px}.appbar-btn.menu{margin-right:-10px;color:var(--blue-jic-900)}
+.appbar-btn img{width:40px;height:40px;object-fit:contain;display:block}
+
+/* ── OcBottomNav (shared/widgets/oc_bottom_nav.dart) ── */
+.bnav{flex:none;display:flex;justify-content:space-evenly;background:var(--white-alpha-100);border-top:1px solid var(--gray-300);
+  padding:var(--sp-m-S) 0 max(var(--sp-s-XL),var(--safe-bottom))}
+.bnav-item{display:flex;flex-direction:column;align-items:center;min-width:44px;color:var(--gray-700)}
+.bnav-item .t-tag{color:inherit;margin:var(--sp-s-M) 0}
+.bnav-item .bar{height:2px;width:var(--sp-l-M);background:transparent}
+.bnav-item[aria-current="page"]{color:var(--orange-700)}
+.bnav-item[aria-current="page"] .bar{background:var(--orange-700)}
+
+/* ── OcButton (atoms/oc_button.dart): large 52, radio 12, texto 16/700 ── */
+.btn{display:flex;align-items:center;justify-content:center;gap:var(--sp-s-L);width:100%;height:52px;padding:0 var(--sp-m-L);
+  border:1px solid transparent;border-radius:var(--r-large);font-size:var(--fs-body);font-weight:var(--fw-bold);line-height:normal;white-space:nowrap;text-align:center}
+.btn > span{overflow:hidden;text-overflow:ellipsis}
+.btn.medium{height:44px;font-size:var(--fs-label)}
+.btn.small{height:44px;padding:0 var(--sp-m-S);font-size:var(--fs-label);font-weight:var(--fw-tag)} /* alto 40 en la app; 44 por objetivo táctil */
+.btn.fit{width:auto}
+.btn.primary{background:var(--orange-700);color:var(--white-alpha-100)}
+.btn.dark{background:var(--black-alpha-100);color:var(--white-alpha-100)}
+.btn.cream{background:var(--orange-100);color:var(--orange-700)}
+.btn.cream-outlined{background:var(--orange-100);color:var(--orange-700);border-color:var(--orange-700)}
+.btn.outline{background:var(--white-alpha-100);color:var(--black-alpha-100);border-color:var(--gray-300)}
+.btn:disabled,.btn[aria-disabled="true"]{background:var(--gray-300);color:var(--gray-500);border-color:transparent;cursor:default}
+.btn:active:not(:disabled){filter:brightness(.94)}
+
+/* ── OcStatusChip (molecules/oc_status_chip.dart): píldora 10/600, radio 20 ── */
+.chip{display:inline-block;max-width:100%;padding:var(--sp-s-M) var(--sp-s-XL);border-radius:var(--r-pill);font-size:10px;font-weight:var(--fw-tag);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:normal}
+.chip.calificado,.chip.enCurso{background:var(--success-100);color:var(--success-text)}
+.chip.sinCalificacion{background:var(--orange-100);color:var(--orange-700)}
+.chip.programado{background:var(--gray-300);color:var(--blue-jic-900)}
+.chip.finalizado{background:var(--finalizado-bg);color:var(--finalizado-text)}
+.chip.info{background:var(--informative-quiet);color:var(--blue-900);font-size:14px;padding:var(--sp-s-M) 14px}
+
+/* ── OcSearchBar + OcTextField (molecules/oc_search_bar.dart, atoms/oc_text_field.dart) ── */
+.searchrow{display:flex;align-items:center;gap:var(--sp-s-XL)}
+.search{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:10px;height:44px;padding:0 18px;
+  background:var(--white-alpha-100);border:.5px solid var(--gray-500);border-radius:26px;color:var(--gray-700)}
+.search input{flex:1 1 auto;min-width:0;width:100%;height:100%;border:0;background:transparent;outline:0;padding:0;
+  font-size:var(--fs-label);color:var(--negro);caret-color:var(--orange-700)}
+.search input::placeholder{color:var(--gray-700);opacity:1}
+.search input::-webkit-search-cancel-button{display:none}
+.search:focus-within{outline:2px solid var(--orange-700);outline-offset:2px}
+.field-input{width:100%;min-height:44px;padding:var(--sp-m-S) var(--sp-m-M);background:var(--white-alpha-100);border:1px solid var(--gray-300);border-radius:var(--r-large);
+  font-size:var(--fs-label);color:var(--negro);caret-color:var(--orange-700)}
+.field-input:focus{border:2px solid var(--orange-700);padding:11px 15px;outline:0}
+.field-input::placeholder{color:var(--gray-700);opacity:1}
+.field-input:disabled{background:var(--gray-100);border-color:var(--gray-400)}
+
+/* Disparador de filtro "Estado" (eventos_page.dart::_estadoTrigger): 132px, radio 12, padding 18/14 */
+.trigger{flex:none;width:132px;height:44px;display:flex;align-items:center;padding:0 14px 0 18px;
+  background:var(--white-alpha-100);border:.5px solid var(--gray-500);border-radius:var(--r-large);color:var(--negro)}
+.trigger > span{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:var(--fs-label);font-weight:var(--fw-regular)}
+.trigger.on{border:1.5px solid var(--orange-700);color:var(--orange-700)}
+
+/* ── Card genérica (molecules/oc_card.dart) y tarjeta de evento (oc_evento_card.dart) ── */
+.card{background:var(--white-alpha-100);border:1px solid var(--gray-300);border-radius:var(--r-xlarge);padding:var(--sp-m-M)}
+.evcard{display:block;width:100%;margin-bottom:22px;overflow:hidden;background:var(--white-alpha-100);border:1px solid var(--gray-300);
+  box-shadow:0 2px 10px rgba(24,30,71,.05);text-align:left}
+.evcard-link{display:block}
+.evcard-aviso{padding:0 var(--sp-m-M) var(--sp-m-M)}
+.evcard-body.has-aviso{padding-bottom:0}
+.evcard-img{display:block;width:100%;height:150px;object-fit:cover;background:var(--gray-200)}
+.evcard-body{padding:var(--sp-m-M)}
+.evcard-meta{display:flex;align-items:center;justify-content:space-between;min-height:20px}
+.evcard-title{margin:var(--sp-s-XL) 0 var(--sp-s-M);font-size:var(--fs-subtitle);font-weight:var(--fw-bold);color:var(--navy);line-height:1.2;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.evcard-sub{margin:0;font-size:var(--fs-label);color:var(--gray-700)}
+
+/* Aviso de plazo de edición (oc_aviso_edicion_evento.dart) */
+.aviso{display:block;width:100%;margin-top:var(--sp-m-S);min-height:44px;padding:var(--sp-m-S);background:var(--orange-100);border-radius:var(--r-small);text-align:left}
+.aviso-row{display:flex;align-items:center;gap:var(--sp-s-XL)}
+.aviso-row b{flex:1 1 auto;font-size:var(--fs-caption);font-weight:var(--fw-tag);color:var(--black-alpha-100)}
+.aviso-more{display:block;margin:var(--sp-s-XL) 0 0;font-size:var(--fs-caption);color:var(--black-alpha-100)}
+
+/* ── OcEmptyState (molecules/oc_empty_state.dart) ── */
+.empty{flex:1 1 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:var(--sp-l-S) var(--sp-m-L);text-align:center;min-height:100%}
+.empty .ic{color:var(--gray-400);margin-bottom:var(--sp-m-S)}
+.empty p{margin:0;font-size:var(--fs-caption);color:var(--gray-700)}
+
+/* ── Bottom sheet modal (showModalBottomSheet: esquinas superiores 20, scrim negro 54%) ── */
+.scrim{position:absolute;inset:0;z-index:50;background:rgba(0,0,0,.54);opacity:0;transition:opacity .25s ease-out}
+.scrim.show{opacity:1}
+.scrim.side{background:rgba(40,40,52,.45)}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:51;max-height:92%;overflow-y:auto;background:var(--white-alpha-100);
+  border-radius:var(--r-pill) var(--r-pill) 0 0;padding:var(--sp-s-XL) 0 max(var(--sp-m-XL),var(--safe-bottom));
+  transform:translateY(100%);transition:transform .25s ease-out}
+.sheet.show{transform:none}
+.sheet-handle{width:var(--sp-l-M);height:var(--sp-s-M);margin:0 auto var(--sp-m-L);background:var(--gray-300);border-radius:var(--r-pill)}
+.sheet-head{display:flex;align-items:center;padding:0 var(--sp-m-XL)}
+.sheet-head h2{flex:1 1 auto;margin:0}
+.sheet-x{display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-10px -10px -10px 0;color:var(--blue-jic-900)}
+.sheet-div{height:1px;background:var(--gray-300);margin:var(--sp-m-M) 0 var(--sp-s-XL)}
+.sheet-pad{padding:0 var(--sp-m-XL)}
+.checkrow{display:flex;align-items:center;gap:var(--sp-m-M);width:100%;min-height:44px;padding:var(--sp-m-S) 0;font-size:var(--fs-body);color:var(--black-alpha-100)}
+.checkbox{flex:none;display:flex;align-items:center;justify-content:center;width:20px;height:20px;border:2px solid var(--gray-300);border-radius:4px;background:var(--white-alpha-100);color:var(--white-alpha-100)}
+.checkrow[aria-checked="true"] .checkbox{background:var(--orange-700);border-color:var(--orange-700)}
+.checkbox .ic{display:none}.checkrow[aria-checked="true"] .checkbox .ic{display:block}
+
+/* Panel lateral "Conoce más" (oc_conoce_mas_sheet.dart): entra por la derecha, 94% de ancho, esquinas izquierdas 20 */
+.sidepanel{position:absolute;top:0;right:0;bottom:0;z-index:51;width:94%;background:var(--white-alpha-100);border-radius:var(--r-pill) 0 0 var(--r-pill);
+  padding:calc(var(--sp-m-XL) + var(--safe-top)) var(--sp-m-XL) var(--sp-m-XL);overflow-y:auto;transform:translateX(100%);transition:transform .25s ease-out}
+.sidepanel.show{transform:none}
+.sidepanel .x{display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-10px 0 0 -10px;color:var(--orange-700)}
+.sidepanel h2{margin:var(--sp-m-M) 0 var(--sp-s-XL)}
+.sidepanel p{margin:0 0 var(--sp-l-S);font-size:17px;color:var(--gray-700);text-align:justify}
+.linkrow{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:44px;padding:var(--sp-m-S) 0;color:var(--black-alpha-100);border-bottom:1px solid var(--gray-300)}
+
+/* ── OcSnackbar (molecules/oc_snackbar.dart): flotante, texto blanco 16, botón X ── */
+.snack{position:absolute;left:15px;right:15px;bottom:10px;z-index:60;display:flex;align-items:center;gap:var(--sp-s-XL);
+  padding:14px var(--sp-m-M);border-radius:4px;color:var(--white-alpha-100);font-size:var(--fs-body);box-shadow:0 3px 5px -1px rgba(0,0,0,.2),0 6px 10px rgba(0,0,0,.14),0 1px 18px rgba(0,0,0,.12)}
+.snack span{flex:1 1 auto}
+.snack button{display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-14px -12px -14px 0;color:inherit}
+.snack.error{background:var(--error-600)}.snack.warning{background:var(--warning-600)}.snack.success{background:var(--success-600)}.snack.info{background:var(--blue-500)}
+
+/* ── Login (login_page.dart) ── */
+.login{flex:1 1 auto;display:flex;flex-direction:column;padding:var(--sp-m-M);padding-bottom:var(--sp-m-M)}
+.login-mid{flex:1 1 0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.login-mid img{width:110px;height:110px;object-fit:contain;display:block}
+.login-mid h1{margin:var(--sp-m-L) 0 var(--sp-s-XL)}
+.login-mid p{margin:0;font-size:var(--fs-body);color:var(--gray-700)}
+.login .btn{margin-bottom:var(--sp-m-S)}
+
+/* ── Contenido de listados (eventos_page.dart) ── */
+.content{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;padding:var(--sp-m-M) var(--sp-m-M) 0}
+.content > h1{margin:0}
+.content .lead{margin:var(--sp-s-M) 0 var(--sp-m-M);font-size:var(--fs-body-small);color:var(--gray-700)}
+.content .searchrow{margin-bottom:var(--sp-m-M)}
+.list{flex:1 1 auto;min-height:0}
+
+@media (prefers-reduced-motion:reduce){.scrim,.sheet,.sidepanel{transition:none}}
+.scroll::-webkit-scrollbar,.sheet::-webkit-scrollbar,.sidepanel::-webkit-scrollbar{display:none}
+.sheet:focus,.sidepanel:focus{outline:0}

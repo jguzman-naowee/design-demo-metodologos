@@ -1,19 +1,71 @@
-.top{height:68px;display:flex;align-items:center;gap:16px;padding:12px 16px;background:#fff;border-bottom:1px solid var(--line)}
-.top h1{font-size:16px;margin:0}
-.logo{display:block;height:20px;width:auto}
-.stage{display:grid;grid-template-columns:minmax(0,1fr) 380px;height:calc(100vh - 68px);min-height:560px}
-.device{display:flex;align-items:center;justify-content:center;padding:24px;min-width:0}
-@media (max-width:820px){.stage{grid-template-columns:1fr;height:auto}.device{padding:24px 16px}.panel{border-left:0!important;border-top:1px solid var(--line)}}
-.phone{--w:390;--h:844;width:min(100%,calc(var(--w) * 1px + 24px),calc((100vh - 68px - 72px) * var(--w) / var(--h) + 24px));padding:12px;border-radius:44px;background:#14162A;box-shadow:0 24px 60px rgba(20,22,38,.35)}
-.screen{position:relative;aspect-ratio:var(--w)/var(--h);border-radius:34px;overflow:hidden;background:#fff}
-.screen iframe{width:100%;height:100%;border:0;display:block}
+html,body{height:100%}
+:root{--hdr:72px}
+body{height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+
+/* ── Cabecera (estilo JIN): marca + app a la izquierda, controles a la derecha ── */
+.top{flex:none;min-height:72px;display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;padding:8px 24px;background:#fff;border-bottom:1px solid var(--line);position:relative;z-index:30}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.logo{display:block;height:20px;width:auto;flex:none}
+.sep{width:1px;height:32px;background:var(--line)}
+.ttl{display:flex;flex-direction:column;line-height:1.2;min-width:0}
+.top h1{font-size:16px;font-weight:500;margin:0}
+.sub{font-size:16px;font-weight:300;color:var(--mut)}
+.tools{margin-left:auto;display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px}
+.appsel{font:inherit;font-size:13px;min-height:44px;border-radius:10px;border:1px solid #D0D4E6;padding:0 10px;background:#fff;color:var(--ink)}
+.pill{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 14px;border:1px solid #D0D4E6;border-radius:999px;background:#fff;color:var(--ink);font-size:14px;font-weight:600;letter-spacing:-.01em;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.08);transition:background .15s,border-color .15s}
+.pill:hover{background:#F8F8FC;border-color:#9A9BB8}
+.pill[aria-expanded=true]{border-color:var(--v);color:var(--v)}
+.track{position:relative;width:40px;height:24px;border-radius:999px;background:#B9BCD3;transition:background .15s}
+.knob{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .15s}
+.pill[aria-checked=true] .track{background:var(--v)}
+.pill[aria-checked=true] .knob{transform:translateX(16px)}
+.devtag{font-size:10.5px;font-weight:700;letter-spacing:.06em;color:#fff;background:#B3261E;border-radius:999px;padding:4px 10px}
+
+/* ── Escenario ── */
+.stage{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) auto}
+.device{position:relative;min-width:0;min-height:0}
+.scroller{height:100%;display:flex;overflow:auto;padding:24px}
+.zoom{position:absolute;top:14px;right:14px;z-index:5;display:flex;gap:4px;padding:4px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 4px 14px rgba(20,22,38,.12)}
+.zb{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:8px;background:transparent;color:var(--ink);cursor:pointer}
+.zb:hover{background:#F1F1F8}
+.zb:disabled{opacity:.35;cursor:not-allowed}
+
+/* El holder ocupa el tamaño ya escalado (así el scroll y el centrado son reales); el teléfono se escala desde su esquina. */
+.holder{--w:390;--h:844;--k:1;--est:#fff;--estfg:#14162A;flex:none;margin:auto;position:relative;width:calc((var(--w) * 1px + 24px) * var(--k));height:calc((var(--h) * 1px + 24px) * var(--k))}
+.phone{position:absolute;left:0;top:0;width:calc(var(--w) * 1px + 24px);height:calc(var(--h) * 1px + 24px);padding:12px;border-radius:44px;background:#282834;box-shadow:0 24px 60px rgba(20,22,38,.3);transform:scale(var(--k));transform-origin:0 0}
+.screen{position:relative;width:100%;height:100%;border-radius:34px;overflow:hidden;background:var(--est);display:flex;flex-direction:column;clip-path:inset(0 round 34px);isolation:isolate}
+.vp{flex:1;min-height:0;background:#fff}
+.vp iframe{width:100%;height:100%;border:0;display:block}
+
+/* Franjas dibujadas por el marco: la app no sabe que existen. */
+.sbar{position:relative;flex:none;height:44px;padding:0 32px;display:flex;align-items:center;justify-content:space-between;background:var(--est);color:var(--estfg);font-size:16px;font-weight:600}
+.isla{position:absolute;top:9px;left:50%;width:112px;height:32px;transform:translateX(-50%);border-radius:999px;background:#14162A}
+.ind{display:flex;align-items:center;gap:5px}
+.hbar{flex:none;height:26px;display:flex;align-items:center;justify-content:center;background:var(--est)}
+.hbar span{width:134px;height:5px;border-radius:3px;background:var(--estfg);opacity:.85}
+/* iPhone SE: sin isla, barra baja. Pixel 8: perforación pequeña. */
+.holder[data-dev=se] .sbar{height:24px;padding:0 16px;font-size:13px}
+.holder[data-dev=se] .isla{display:none}
+.holder[data-dev=se] .hbar{height:20px}
+.holder[data-dev=se] .hbar span{width:100px}
+.holder[data-dev=pixel] .sbar{height:38px;padding:0 28px;font-size:14px}
+.holder[data-dev=pixel] .isla{top:11px;width:16px;height:16px}
+.holder[data-dev=pixel] .hbar span{width:110px}
+
 .spot{position:absolute;pointer-events:none;border-radius:10px;box-shadow:0 0 0 2px var(--v),0 0 0 9999px rgba(20,22,38,.55);transition:all .35s ease}
-.cursor{position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:rgba(74,42,128,.85);border:2px solid #fff;pointer-events:none;transition:transform .6s cubic-bezier(.5,0,.2,1)}
+.spot.hint{animation:hint 1.4s ease-in-out infinite}
+@keyframes hint{50%{box-shadow:0 0 0 5px var(--v),0 0 0 9999px rgba(20,22,38,.55)}}
+@media (prefers-reduced-motion:reduce){.spot.hint{animation:none}}
+.cursor{position:absolute;left:0;top:0;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:rgba(74,42,128,.85);border:2px solid #fff;pointer-events:none;transition:transform .6s cubic-bezier(.5,0,.2,1)}
 .cursor.press{animation:press .3s}
 @keyframes press{50%{scale:.6}}
-.panel{display:flex;flex-direction:column;gap:14px;width:100%;background:#fff;border-left:1px solid var(--line);padding:20px 16px;overflow-y:auto}
+
+/* ── Panel de casos (drawer) ── */
+.panel{display:none;flex-direction:column;gap:14px;width:380px;max-width:100%;background:#fff;border-left:1px solid var(--line);padding:12px 16px 20px;overflow-y:auto}
+body.panel-open .panel{display:flex}
+.phd{display:flex;align-items:center;justify-content:space-between}
 .k{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--mut)}
-.cases{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.cases{list-style:none;margin:0;padding:2px;display:flex;flex-direction:column;gap:6px;max-height:min(300px,32dvh);overflow-y:auto;flex:none}
 .case{width:100%;display:flex;align-items:center;gap:12px;text-align:left;min-height:48px;padding:6px 12px;border:1px solid #E1E3EE;border-radius:10px;background:#fff;cursor:pointer}
 .case.on{border-color:var(--v);background:#F1ECFB}
 .case b{flex:none;width:32px;height:26px;border-radius:13px;background:#8A8FAE;color:#fff;font-size:11.5px;display:flex;align-items:center;justify-content:center}
@@ -30,16 +82,35 @@
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .row{display:flex;align-items:center;gap:10px}
 .cnt{flex:1;text-align:center;font-size:12px;font-weight:700;color:var(--mut)}
-.appsel{font:inherit;font-size:13px;min-height:44px;border-radius:10px;border:1px solid #D0D4E6;padding:0 10px;background:#fff;color:var(--ink)}
-.top .appsel{margin-left:auto}
-.devtag{font-size:10.5px;font-weight:700;letter-spacing:.06em;color:#fff;background:#B3261E;border-radius:999px;padding:4px 10px}
 .dev{display:flex;flex-direction:column;gap:10px;padding:14px;border:1.5px dashed #B3261E;border-radius:var(--r)}
 .dev .row{flex-wrap:wrap}
 .dev textarea{width:100%;font:12px/1.4 ui-monospace,Menlo,monospace;border:1px solid #D0D4E6;border-radius:10px;padding:10px;resize:vertical}
 .dev .btn[aria-pressed=true]{background:var(--v);color:#fff}
-body.solo .top,body.solo .panel{display:none}
-body.solo .stage{display:block;height:auto}
-body.solo .device{padding:0;display:block}
-body.solo .phone{--w:390;--h:844;width:min(100%,calc(var(--w) * 1px + 24px),calc((100vh - 68px - 72px) * var(--w) / var(--h) + 24px));padding:12px;border-radius:44px;background:#14162A;box-shadow:0 24px 60px rgba(20,22,38,.35)}
-body.solo .screen{border-radius:0;height:100vh;aspect-ratio:auto}
-.panel.vacio .ctrl,.panel.vacio .k:first-child{display:none}
+.panel.vacio .ctrl,.panel.vacio .phd .k{display:none}
+
+/* < 1100 px: el panel flota sobre el escenario (no empuja el teléfono). */
+@media (max-width:1099px){
+  .panel{position:fixed;z-index:20;top:var(--hdr);right:0;bottom:0;width:min(380px,100%);box-shadow:-12px 0 32px rgba(20,22,38,.18)}
+}
+/* Móvil real: hoja inferior. */
+@media (max-width:699px){
+  .top{padding:8px 16px}
+  .sep,.sub{display:none}
+  .tools{margin-left:0;width:100%}
+  .scroller{padding:16px}
+  .zoom{display:none} /* en el móvil el teléfono ya ocupa el ancho; «Reiniciar» está en la hoja de casos */
+  .pill{padding:0 10px;gap:8px}
+  #casosBtn span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .panel{top:auto;left:0;width:100%;max-height:72dvh;border-left:0;border-top:1px solid var(--line);border-radius:16px 16px 0 0;box-shadow:0 -12px 32px rgba(20,22,38,.22)}
+}
+
+/* ── Vista plana: solo la app, sin teléfono ni cromo; queda el interruptor flotante ── */
+body.solo{background:#fff}
+body.solo .brand,body.solo .appsel,body.solo #casosBtn,body.solo .devtag,body.solo .panel,body.solo .zoom,body.solo .sbar,body.solo .hbar,body.solo .spot,body.solo .cursor{display:none!important}
+body.solo .top{position:fixed;top:14px;right:16px;min-height:0;padding:0;border:0;background:none;z-index:40}
+body.solo .tools{margin:0;width:auto}
+body.solo .stage{display:block}
+body.solo .scroller{padding:0;overflow:hidden}
+body.solo .holder{--k:1!important;width:min(100%,calc(var(--w) * 1px));height:100dvh;margin:0 auto}
+body.solo .phone{position:static;width:100%;height:100%;padding:0;border-radius:0;background:none;box-shadow:none;transform:none}
+body.solo .screen{border-radius:0;clip-path:none}
