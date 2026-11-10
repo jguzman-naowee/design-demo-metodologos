@@ -31,7 +31,7 @@ Router.add("/iniciar-sesion", {
       ojo.setAttribute("aria-label", ver ? "Ocultar contraseña" : "Mostrar contraseña");
       ojo.querySelector(".icbox").innerHTML = Ui.icon(ver ? "ojo-abierto" : "ojo-cerrado", { size: 24, color: "var(--orange-700)" }).replace(/^<span[^>]*>|<\/span>$/g, "");
     });
-    Ui.on(root, "click", "[data-act=recuperar],[data-act=politica],[data-act=terminos]", () => Ui.toast("Disponible próximamente", "info"));
+    Ui.on(root, "click", "[data-act=recuperar],[data-act=politica],[data-act=terminos]", () => Ui.toast("Esta opción todavía no está disponible.", "info", 0, "Próximamente"));
     /* Sin validación ni datos: entra con la sesión de mentira. */
     Ui.on(root, "click", "[data-act=iniciar-sesion]", () => { Session.login(); Router.go("/eventos"); });
     root.querySelector("form").addEventListener("submit", (e) => { e.preventDefault(); Session.login(); Router.go("/eventos"); });

@@ -1,0 +1,29 @@
+/* Adaptador entre el SDK de Naowee (css/sdk-naowee.css) y la demo móvil. No redefine estilos del SDK: solo lo que depende del marco del teléfono. */
+
+/* Íconos: el SDK usa una fuente de íconos; la demo usa SVG, que toman el color del contenedor. */
+.nwt-alert__icon{color:var(--pvt-icon-color)}
+.nwt-alert__icon .icbox{width:var(--naotech-sizing-16)!important;height:var(--naotech-sizing-16)!important}
+.nwt-avatar-icon{color:var(--naotech-icon-color)}
+
+/* Tipografía del toast: tokens del SDK para «body bold» (título) y «smalltext regular» (mensaje) */
+.nwt-toast__title{font-size:var(--naotech-body-font-size);line-height:var(--naotech-body-line-height);letter-spacing:var(--naotech-body-letter-spacing);font-weight:var(--naotech-font-weight-bold);color:var(--naotech-app-color-800)}
+.nwt-toast__message{font-size:var(--naotech-smalltext-font-size);line-height:var(--naotech-smalltext-line-height);font-weight:var(--naotech-font-weight-regular);color:var(--naotech-app-color-800)}
+
+/* El toast del SDK es position:fixed a la ventana y entra/sale deslizando 100% de su alto. Aquí vive dentro del teléfono: un contenedor recorta
+   el deslizamiento, así que el aviso sale de detrás de la barra de pestañas (o del borde inferior) y vuelve a esconderse ahí, sin pasar por encima. */
+.nwt-toast{position:absolute;left:0;right:0;bottom:0;z-index:60;overflow:hidden;pointer-events:none}
+.nwt-toast__content{position:relative;bottom:auto;pointer-events:auto}
+.nwt-toast__close{width:20px;height:20px}
+.nwt-toast__close::after{content:"";position:absolute;inset:-12px}   /* objetivo táctil ≥ 44px */
+.nwt-toast__close .icbox{width:20px!important;height:20px!important}
+
+/* Alertas mute: el SDK pinta el texto con el tono 600 del tema; en informativo y negativo se usa 700 para llegar a contraste AA sobre blanco. */
+.nwt-alert[nwt-variant=mute][nwt-theme=informative],.nwt-alert[nwt-variant=mute][nwt-theme=negative]{--pvt-font-color:var(--naotech-theme-color-700)}
+.nwt-alert[nwt-variant=mute] a{color:inherit;font-weight:var(--naotech-font-weight-bold);text-decoration:underline;text-underline-offset:3px}
+
+/* Alerta con detalle desplegable (plazo en la tarjeta del evento) */
+.nwt-alert[data-act=aviso]{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.nwt-alert[data-act=aviso]:focus-visible{outline:2px solid var(--naotech-theme-color-700);outline-offset:2px;border-radius:var(--naotech-sizing-20)}
+.nwt-alert[data-act=aviso] .nwt-alert__content{align-items:flex-start;padding:var(--naotech-sizing-12) var(--naotech-sizing-14)}
+.nwt-alert .aviso-more{color:var(--pvt-font-color)}  /* el desplegable se anima en motion.css */
+.nwt-alert .av-chev{flex:none;display:flex;align-items:center;color:var(--naotech-app-color-700)}

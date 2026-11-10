@@ -1,0 +1,104 @@
+/* Inicio del celular (simulado) + aviso de notificación. Decorativo: el fondo empieza y termina en blanco para empalmar con las franjas del marco (--est). */
+.cel{overflow:hidden} /* .page ya es absoluta y en columna: el aviso se posiciona respecto a ella */
+.cel-wall{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;padding:12px 16px 0;
+  background:radial-gradient(120% 60% at 50% 0,#fff 0,#fff 8%,rgba(255,255,255,0) 60%),linear-gradient(180deg,#fff 0,#e4e6ec 18%,#d9dce4 62%,#e9ebf0 92%,#fff 100%)}
+
+/* Widgets oscuros translúcidos */
+.cel-w{background:rgba(34,36,44,.94);color:#fff;border-radius:24px;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.cel-clima{display:flex;align-items:center;gap:12px;padding:14px 18px;height:84px}
+.cel-clima-t{flex:1;min-width:0;display:flex;flex-direction:column}
+.cel-clima-t b{font-size:15px}.cel-clima-t small{font-size:11.5px;color:#b9bdc9}
+.cel-clima-g{font-size:36px;font-weight:300}
+.cel-row{display:flex;gap:12px;margin-top:12px}
+.cel-cal{flex:1 1 0;min-width:0;padding:12px 12px 10px;height:174px;display:flex;flex-direction:column}
+.cel-cal-h{display:flex;flex-direction:column;margin-bottom:6px}
+.cel-cal-h span{font-size:11px;font-weight:700;color:#ff5a52;letter-spacing:.04em}
+.cel-cal-h b{font-size:16px}
+.cel-cal-g{flex:1;display:grid;grid-template-columns:repeat(7,1fr);align-content:space-between;font-size:10.5px;text-align:center;color:#e6e8ef}
+.cel-cal-g i{font-style:normal;color:#9aa0b0;font-size:9.5px}
+.cel-cal-g span{position:relative;display:grid;place-items:center;height:15px}
+.cel-cal-g span.ev::after{content:"";position:absolute;bottom:-1px;left:50%;width:3px;height:3px;margin-left:-1.5px;border-radius:50%;background:#7fa7ff}
+.cel-cal-g span.hoy{background:#ff5a52;border-radius:50%;font-weight:700;width:17px;height:17px;margin:-1px auto 0}
+.cel-cal-g span.hoy::after{display:none}
+.cel-col{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:12px}
+.cel-ev{padding:12px 14px;height:81px;display:flex;flex-direction:column;justify-content:center}
+.cel-ev-h span{font-size:10px;font-weight:700;color:#b9bdc9;letter-spacing:.05em}
+.cel-ev b{display:block;margin-top:4px;font-size:13.5px}
+.cel-ev small{display:block;margin-top:2px;font-size:11px;color:#7fa7ff;font-weight:700;letter-spacing:.02em}
+.cel-bat{padding:12px 14px;height:81px;display:flex;align-items:center;justify-content:space-between}
+.cel-bat span:first-child{font-size:10px;font-weight:700;color:#b9bdc9;letter-spacing:.05em}
+.cel-bat b{display:block;font-size:22px;margin-top:2px}.cel-bat small{font-size:10.5px;color:#b9bdc9}
+.cel-bat-r{flex:none;width:36px;height:36px;border-radius:50%;border:5px solid #2fbf5a;box-sizing:border-box}
+.cel-sec{margin:14px 0 6px;text-align:center;font-size:11.5px;color:#5b6070}
+
+/* Iconos */
+.cel-apps{display:grid;grid-template-columns:repeat(4,1fr);row-gap:14px;margin-top:4px}
+.cel-app{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
+.cel-ico{position:relative;display:grid;place-items:center;width:60px;height:60px;border-radius:15px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+.cel-lbl{font-size:11px;color:#2a2d3a;text-align:center;white-space:nowrap}
+.cel-app.is-mine{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cel-app.is-mine .cel-ico{background:#fff;border:1px solid #d7dae3}
+.cel-app.is-mine:active .cel-ico{transform:scale(.94)}
+.cel-badge{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:#ff3b30;color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center;border:2px solid #e4e6ec;animation:celPop 280ms var(--mo-out,cubic-bezier(.23,1,.32,1)) both}
+.cel-badge[hidden]{display:none}
+@keyframes celPop{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:none}}
+.a-fotos{background:linear-gradient(160deg,#fff,#eef0f6)}
+.a-mapas{background:linear-gradient(160deg,#4ecb71,#2f9e44)}
+.a-record{background:#fff}.a-notas{background:linear-gradient(160deg,#ffe066,#f4b400)}
+.a-contactos{background:linear-gradient(160deg,#adb5bd,#868e96)}.a-ajustes{background:linear-gradient(160deg,#adb5bd,#6c757d)}
+.a-camara{background:linear-gradient(160deg,#6c757d,#343a40)}
+.a-tel{background:linear-gradient(160deg,#4ecb71,#2b8a3e)}.a-nav{background:linear-gradient(160deg,#4dabf7,#1971c2)}
+.a-msg{background:linear-gradient(160deg,#51cf66,#2f9e44)}.a-music{background:linear-gradient(160deg,#ff6b81,#e03131)}
+.cel-dock{margin:auto -4px 10px;padding:12px 14px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;border-radius:30px;background:rgba(255,255,255,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.cel-dock .cel-lbl{display:none}
+.cel-dock .cel-app{gap:0}
+
+/* Aviso de notificación (estilo del sistema), con la insignia del tema del SDK de Naowee (nwt-theme) */
+.ntf{position:absolute;left:8px;right:8px;top:6px;z-index:5;display:flex;gap:12px;align-items:flex-start;padding:12px 14px;text-align:left;
+  background:rgba(250,250,252,.84);backdrop-filter:blur(24px) saturate(1.6);-webkit-backdrop-filter:blur(24px) saturate(1.6);
+  border-radius:24px;box-shadow:0 12px 32px rgba(20,22,42,.22),0 1px 0 rgba(255,255,255,.7) inset;color:#14162a;font-family:inherit;border:0;cursor:pointer;
+  transform:translateY(-150%);opacity:0;transition:transform 420ms cubic-bezier(.32,.72,0,1),opacity 220ms ease;-webkit-tap-highlight-color:transparent}
+.ntf.in{transform:none;opacity:1}
+.ntf:active{transform:scale(.985)}
+.ntf-ico{position:relative;flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:10px;background:#fff;border:1px solid #d7dae3}
+.ntf-badge{--naotech-avatar-icon-dimension:18px;position:absolute;right:-6px;bottom:-6px;width:18px;height:18px;border:2px solid #fff;box-sizing:content-box}
+.ntf-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.ntf-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:11.5px;color:#6b7080}
+.ntf-app{font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.ntf-t{font-size:14.5px;line-height:1.25}
+.ntf-m{font-size:13.5px;line-height:1.3;color:#2b2e3d}
+
+@media (prefers-reduced-motion:reduce){.ntf{transition:opacity .15s ease;transform:none}.cel-badge{animation:none}}
+
+/* ── Bandeja de notificaciones (#/notificaciones): título con enlace, pestañas con contador y filas planas de borde a borde ── */
+.nt{padding-bottom:var(--sp-m-XL)}
+.nt-head{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-s-XL);margin:0 0 var(--sp-m-S)}
+.nt-head h1{margin:0;flex:none;font-size:var(--naotech-heading6-font-size)} /* DC-016: título de la bandeja con el token del SDK (20px) */
+.nt-todas{display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin-right:calc(-1 * var(--sp-s-XL));border-radius:50%;color:var(--orange-700);transition:transform var(--mo-fast,140ms) var(--mo-out,cubic-bezier(.23,1,.32,1)),color var(--mo-fast,140ms) ease,opacity var(--mo-fast,140ms) ease}
+.nt-todas:active{transform:scale(.92)}
+.nt-todas:disabled{color:var(--gray-500);opacity:.6}
+.nt-tabs{margin:0 calc(-1 * var(--sp-m-M));padding:0 var(--sp-m-M)}
+.nt-tabs .tab{flex:none;padding:0 var(--sp-m-L) 0 0}
+.nt-tabs .tab-txt{display:inline-flex;align-items:center;gap:var(--sp-s-XL)}
+.nt-cnt{display:inline-grid;place-items:center;overflow:hidden;min-width:20px;max-width:40px;height:20px;padding:0 6px;border-radius:10px;background:var(--orange-700);color:var(--white-alpha-100);font-size:var(--fs-caption-small);font-weight:var(--fw-bold);line-height:1;
+  transition:max-width 280ms var(--mo-out,cubic-bezier(.23,1,.32,1)),min-width 280ms var(--mo-out,cubic-bezier(.23,1,.32,1)),padding 280ms var(--mo-out,cubic-bezier(.23,1,.32,1)),margin 280ms var(--mo-out,cubic-bezier(.23,1,.32,1)),opacity 200ms ease,transform 280ms var(--mo-out,cubic-bezier(.23,1,.32,1))}
+.nt-cnt[data-cnt="1"]{background:var(--white-alpha-100);color:var(--gray-700);box-shadow:inset 0 0 0 1px var(--gray-300)}
+/* Vacío: la píldora se encoge a nada (y se lleva el hueco del gap) en vez de desaparecer de golpe */
+.nt-cnt.vacio{max-width:0;min-width:0;padding:0;margin-left:calc(-1 * var(--sp-s-XL));opacity:0;transform:scale(.6);pointer-events:none}
+.nt-lista{margin:0 calc(-1 * var(--sp-m-M))}
+.nt-item{position:relative;display:flex;align-items:flex-start;gap:var(--sp-m-S);width:100%;padding:var(--sp-m-M);text-align:left;background:var(--white-alpha-100);border:0;border-bottom:1px solid var(--gray-200);border-radius:0;
+  -webkit-tap-highlight-color:transparent;transition:background-color var(--mo-fast,140ms) ease}
+.nt-item:active{background:var(--gray-100)}
+.nt-item.nueva{background:var(--orange-50)}
+.nt-item.nueva:active{background:var(--orange-100)}
+.nt-av{position:relative;flex:none;width:40px;height:40px}
+.nt-ini{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--success-100);color:var(--success-text);font-size:var(--fs-body);font-weight:var(--fw-bold);line-height:1}
+/* La alerta va a un lado del avatar, como insignia pequeña del tema */
+.nt-ico{--naotech-avatar-icon-dimension:18px;position:absolute;right:-5px;bottom:-4px;box-sizing:content-box;border:2px solid var(--white-alpha-100)}
+.nt-item.nueva .nt-ico{border-color:var(--orange-50)}
+.nt-body{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+.nt-t{font-size:var(--fs-label);line-height:1.3;color:var(--black-alpha-100)}
+.nt-t b{font-weight:var(--fw-bold)}
+.nt-h{font-size:var(--fs-caption);color:var(--gray-700)}
+.nt-ev{font-size:var(--fs-caption);color:var(--gray-500);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nt-punto{flex:none;width:10px;height:10px;margin-top:6px;border-radius:50%;background:var(--orange-700)}

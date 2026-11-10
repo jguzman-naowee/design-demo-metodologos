@@ -38,11 +38,9 @@
       '<div class="ef-cap" data-cap hidden role="alert">' + Ui.icon("cancelar", { size: 16, color: "var(--error-400)" }) + "<span></span></div></div>";
   };
 
-  const loader = () =>
-    '<div class="oc-loader" data-testid="evaluacion-cargando" role="status" aria-label="Cargando"><div class="oc-loader-in"><img class="oc-wave" src="assets/images/coc_wave.png" alt="">' +
-    '<svg class="oc-rings" viewBox="0 0 87.12 43.56" aria-hidden="true">' +
-    ["#0081C8@15.91@15.91", "#FCB131@28.945@27.57", "#20242E@41.98@15.91", "#00A651@55.015@27.57", "#EE334E@68.05@15.91"].map((s) => { const p = s.split("@"); return '<circle cx="' + p[1] + '" cy="' + p[2] + '" r="13.72" stroke="' + p[0] + '"/>'; }).join("") +
-    "</svg></div></div>";
+  /* Pantalla de carga al enviar: el mismo logo animado del inicio de sesión (Ui.logoAnimado), un ciclo completo en CARGA_MS */
+  const CARGA_MS = 2000;
+  const loader = () => '<div class="oc-loader" data-testid="evaluacion-cargando" role="status" aria-label="Cargando">' + Ui.logoAnimado({ tamano: 132, dur: CARGA_MS }) + "</div>";
 
   function render(params, ctx, conjunto) {
     const d = Data.deportistaById(params.id), idx = d ? Evaluaciones.pruebaIndex(d, params.prueba) : -1;
@@ -62,7 +60,7 @@
     const editIntent = ctx.query.modo === "editar";
     let editando = !!(op0 && editIntent && op0.editable);
     const esEquipo = !!d.esEquipo;
-    const volver = () => Router.back("/deportista/" + encodeURIComponent(d.id));
+    const volver = () => Router.back("/deportista/" + encodeURIComponent(d.id) + "?evento=" + encodeURIComponent(p.eventoId || "e1"));
     let validated = false, opinion = op0, confirm = null;
     const readOnly = () => !!op0 && !editando && (modoVer || editIntent);
 
@@ -75,8 +73,8 @@
     const infoEdicion = () => {
       if (!opinion) return "";
       const u = opinion.editableUntil;
-      if (opinion.editable) return u ? '<p class="ef-caption ef-ro-info" data-testid="evaluacion-aviso-plazo">Puedes editar esta evaluación hasta el ' + esc(Data.fechaLarga(u)) + ".</p>" : "";
-      return u ? '<p class="ef-caption ef-ro-info" data-testid="evaluacion-aviso-plazo">El plazo de edición terminó el ' + esc(Data.fechaLarga(u)) + ".</p>" : "";
+      if (opinion.editable) return u ? '<div class="ef-ro-info">' + Ui.alertaMute("informative", "Puedes editar esta evaluación hasta el " + esc(Data.fechaLarga(u)) + ".", "evaluacion-aviso-plazo") + "</div>" : "";
+      return u ? '<div class="ef-ro-info">' + Ui.alertaMute("negative", "El plazo de edición terminó el " + esc(Data.fechaLarga(u)) + ".", "evaluacion-aviso-plazo") + "</div>" : "";
     };
 
     function pintar() {
@@ -177,7 +175,7 @@
       quitarFoco();
       validated = true;
       const m = marcar();
-      if (hayErrores(m)) { Ui.toast("Revisa los campos obligatorios.", "warning", 6000); return; }
+      if (hayErrores(m)) { Ui.toast("Revisa los campos obligatorios.", "warning", 6000, "Faltan campos"); return; }
       const esEdicion = editando && !!op0;
       const host = document.getElementById("app");
       confirm = Ui.html('<div class="ef-confirm" data-testid="evaluacion-confirmar" role="dialog" aria-modal="true" aria-label="' + (esEdicion ? "Confirmar cambios" : "Confirmar envío") + '"></div>');
@@ -212,12 +210,12 @@
         const op = Evaluaciones.save(d, idx, valores);
         if (!esEdicion && window.PerfilRecientes && PerfilRecientes.marcar) PerfilRecientes.marcar(d.id, idx, { fecha: d.pruebas[idx].fecha, evaluador: d.pruebas[idx].evaluador, editableUntil: op.editableUntil });
         confirm.remove(); confirm = null;
-        const msg = esEdicion ? "Evaluación actualizada." : "Evaluación registrada.";
+        const msg = esEdicion ? "Evaluación actualizada" : "Evaluación registrada";
         /* El snackbar se muestra sobre la pantalla a la que se vuelve (ScaffoldMessenger de la app) */
-        const mostrar = () => { window.removeEventListener("hashchange", mostrar); setTimeout(() => Ui.toast(msg, "info"), 30); };
+        const mostrar = () => { window.removeEventListener("hashchange", mostrar); setTimeout(() => Ui.toast("Quedó guardada en el historial del deportista.", "success", 0, msg), 30); };
         window.addEventListener("hashchange", mostrar);
         volver();
-      }, 1400);
+      }, CARGA_MS);
     }
 
     return () => { if (confirm) { confirm.remove(); confirm = null; } };

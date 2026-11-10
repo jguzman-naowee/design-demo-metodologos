@@ -14,7 +14,7 @@
 .ef-pre{margin:0 0 var(--sp-m-S)}                                    /* caption «Datos precargados…» + 12 */
 .ef-hint{margin:var(--sp-s-M) 0 0}                                   /* SizedBox small.M + caption */
 .ef-gap{height:var(--sp-m-M)}
-.ef-ro-info{margin:var(--sp-s-XL) 0 0}
+.ef-ro-info{margin:var(--sp-s-XL) 0 0}   /* contiene un NwtAlert mute del SDK */
 .ef-banner-wrap{margin-top:var(--sp-m-M)}
 
 /* OcBanner (success): padding 12/8, radio 12, icono 20, gap 8, bodySmall 14 */
@@ -61,34 +61,6 @@
 .ef-confirm .btn+.btn{margin-top:var(--sp-s-XL)}
 .ef-confirm .btn .icbox{transform:none}
 
-/* OcLoadingIndicator: ola tricolor que se dibuja + 5 aros que aparecen uno a uno (ciclo 2200 ms) */
-@property --oc-r{syntax:"<percentage>";inherits:false;initial-value:0%}
+/* Pantalla de carga: usa el logo animado compartido (Ui.logoAnimado, estilos .login-logo en components.css) */
 .oc-loader{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
-.oc-loader-in{display:flex;flex-direction:column;align-items:center;animation:ocAll 2200ms linear infinite}
-.oc-wave{display:block;width:132px;aspect-ratio:756/231;object-fit:contain;
-  -webkit-mask-image:linear-gradient(90deg,#000 0,#000 var(--oc-r),transparent calc(var(--oc-r) + 8%));mask-image:linear-gradient(90deg,#000 0,#000 var(--oc-r),transparent calc(var(--oc-r) + 8%));
-  animation:ocWave 2200ms linear infinite}
-.oc-rings{display:block;width:87.12px;height:43.56px;margin-top:9.24px;overflow:visible}
-.oc-rings circle{fill:none;stroke-width:4.39px;transform-box:fill-box;transform-origin:center;opacity:0}
-.oc-rings circle:nth-child(1){animation:ocO1 2200ms linear infinite,ocS1 2200ms linear infinite}
-.oc-rings circle:nth-child(2){animation:ocO2 2200ms linear infinite,ocS2 2200ms linear infinite}
-.oc-rings circle:nth-child(3){animation:ocO3 2200ms linear infinite,ocS3 2200ms linear infinite}
-.oc-rings circle:nth-child(4){animation:ocO4 2200ms linear infinite,ocS4 2200ms linear infinite}
-.oc-rings circle:nth-child(5){animation:ocO5 2200ms linear infinite,ocS5 2200ms linear infinite}
-@keyframes ocAll{0%,80%{opacity:1}92%,100%{opacity:0}}
-@keyframes ocWave{0%{--oc-r:0%;animation-timing-function:cubic-bezier(.42,0,.58,1)}28%,100%{--oc-r:100%}}
-@keyframes ocO1{0%,30%{opacity:0;animation-timing-function:cubic-bezier(0,0,.58,1)}46%,100%{opacity:1}}
-@keyframes ocO2{0%,35%{opacity:0;animation-timing-function:cubic-bezier(0,0,.58,1)}51%,100%{opacity:1}}
-@keyframes ocO3{0%,40%{opacity:0;animation-timing-function:cubic-bezier(0,0,.58,1)}56%,100%{opacity:1}}
-@keyframes ocO4{0%,45%{opacity:0;animation-timing-function:cubic-bezier(0,0,.58,1)}61%,100%{opacity:1}}
-@keyframes ocO5{0%,50%{opacity:0;animation-timing-function:cubic-bezier(0,0,.58,1)}66%,100%{opacity:1}}
-@keyframes ocS1{0%,30%{transform:scale(.5);animation-timing-function:cubic-bezier(.175,.885,.32,1.275)}46%,100%{transform:scale(1)}}
-@keyframes ocS2{0%,35%{transform:scale(.5);animation-timing-function:cubic-bezier(.175,.885,.32,1.275)}51%,100%{transform:scale(1)}}
-@keyframes ocS3{0%,40%{transform:scale(.5);animation-timing-function:cubic-bezier(.175,.885,.32,1.275)}56%,100%{transform:scale(1)}}
-@keyframes ocS4{0%,45%{transform:scale(.5);animation-timing-function:cubic-bezier(.175,.885,.32,1.275)}61%,100%{transform:scale(1)}}
-@keyframes ocS5{0%,50%{transform:scale(.5);animation-timing-function:cubic-bezier(.175,.885,.32,1.275)}66%,100%{transform:scale(1)}}
-@media (prefers-reduced-motion:reduce){
-  .oc-loader-in,.oc-wave,.oc-rings circle{animation:none}
-  .oc-wave{-webkit-mask-image:none;mask-image:none}
-  .oc-rings circle{opacity:1}
 }

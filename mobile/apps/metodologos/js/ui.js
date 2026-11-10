@@ -31,7 +31,7 @@
    Ui.empty(mensaje, {icon})              OcEmptyState
    Ui.openSheet({title, body, onMount(el, close), onClose}) → {el, close}   bottom sheet modal (como showModalBottomSheet)
    Ui.openSidePanel(html, {onMount}) → {el, close}                          panel lateral derecho (Conoce más)
-   Ui.toast(mensaje, tipo="info", ms=5000)  OcSnackbar: error|warning|success|info
+   Ui.toast(mensaje, tipo="info", ms=5000, titulo)  NwtToast del SDK: error|warning|success|info
    Ui.on(root, evento, selector, fn)      delegación de eventos; fn(ev, elemento)
    Ui.html(str) → Node                    convierte HTML en elemento
    Ui.search(texto, {placeholder, testid, label})   OcSearchBar sin el trailing
@@ -68,6 +68,11 @@
   };
   const rawIcon = (nombre, o) => { const size = (o && o.size) || 24; return '<span class="icbox" style="display:flex;align-items:center;justify-content:center;flex:none;width:' + size + "px;height:" + size + 'px" aria-hidden="true">' + svgOf(nombre, size, false) + "</span>"; };
   const registerIcon = (nombre, svg) => { ICONS[nombre] = svg; };
+  /* Glifos de las alertas del SDK (NwtAlert / NwtToast): van dentro de un círculo relleno (i, !) o sueltos en las alertas mute (circulo + i / !) */
+  registerIcon("nwt-i", '<svg viewBox="0 0 24 24"><circle cx="12" cy="6.8" r="1.7" fill="currentColor"/><rect x="10.6" y="10.3" width="2.8" height="8.4" rx="1.2" fill="currentColor"/></svg>');
+  registerIcon("nwt-exclamacion", '<svg viewBox="0 0 24 24"><rect x="10.6" y="4.8" width="2.8" height="9" rx="1.2" fill="currentColor"/><circle cx="12" cy="18.3" r="1.7" fill="currentColor"/></svg>');
+  registerIcon("nwt-info-o", '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="8" r="1.2" fill="currentColor"/><rect x="11" y="10.8" width="2" height="6" rx="1" fill="currentColor"/></svg>');
+  registerIcon("nwt-alerta-o", '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><rect x="11" y="6.8" width="2" height="6.4" rx="1" fill="currentColor"/><circle cx="12" cy="16.4" r="1.2" fill="currentColor"/></svg>');
 
   /* Estilo mínimo del icbox: el svg nunca excede la caja (scaleDown) */
   const st = document.createElement("style");
@@ -85,10 +90,20 @@
     return "<button type=\"" + (o.type || "button") + '"' + common + (o.disabled ? " disabled" : "") + ">" + inner + "</button>";
   };
 
+  /* Doble chulo («marcar todas como leídas») */
+  registerIcon("nwt-doble-check", '<svg viewBox="0 0 24 24"><path d="M1.5 12.8l4.3 4.3L13.8 7.6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.6 15.6l1.5 1.5L21 5.6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  /* Campana de notificaciones: lleva a la bandeja; la insignia cuenta los avisos sin leer (window.Alertas, js/data-alertas.js) */
+  registerIcon("nwt-campana", '<svg viewBox="0 0 24 24"><path d="M12 3.5a5.5 5.5 0 0 0-5.5 5.5v3.2c0 .8-.3 1.5-.8 2.1L4.6 15.6A1 1 0 0 0 5.4 17.2h13.2a1 1 0 0 0 .8-1.6l-1.1-1.3c-.5-.6-.8-1.3-.8-2.1V9A5.5 5.5 0 0 0 12 3.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.8 19.5a2.4 2.4 0 0 0 4.4 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>');
+  const sinLeer = () => (window.Alertas ? Alertas.sinLeer() : 0);
+  const campana = () => { const n = sinLeer(); return '<button type="button" class="appbar-btn bell" data-testid="appbar-notificaciones" data-act="notificaciones" aria-label="Notificaciones' + (n ? ", " + n + (n === 1 ? " sin leer" : " sin leer") : "") + '">' +
+    icon("nwt-campana", { size: 26, color: "var(--blue-jic-900)" }) + '<span class="bell-badge" data-testid="campana-insignia"' + (n ? "" : " hidden") + ">" + (n || "") + "</span></button>"; };
+  /* Actualiza la insignia de todas las campanas visibles (tras leer avisos) */
+  const actualizarCampana = () => { const n = sinLeer(); document.querySelectorAll(".bell").forEach((b) => { const i = b.querySelector(".bell-badge"); i.textContent = n || ""; i.hidden = !n; b.setAttribute("aria-label", "Notificaciones" + (n ? ", " + n + " sin leer" : "")); }); };
   const appBar = () =>
     '<header class="appbar">' +
       '<a class="appbar-btn logo" href="#/eventos" data-testid="appbar-logo" aria-label="Ir a Eventos"><img src="assets/images/coc_logo.png" alt="" width="40" height="40"></a>' +
-      '<button type="button" class="appbar-btn menu" data-testid="appbar-menu" data-act="conoce-mas" aria-label="Abrir menú Conoce más" aria-haspopup="dialog">' + icon("m-menu", { size: 24, color: "var(--blue-jic-900)" }) + "</button>" +
+      '<div class="appbar-r">' + campana() +
+      '<button type="button" class="appbar-btn menu" data-testid="appbar-menu" data-act="conoce-mas" aria-label="Abrir menú Conoce más" aria-haspopup="dialog">' + icon("m-menu", { size: 24, color: "var(--blue-jic-900)" }) + "</button></div>" +
     "</header>";
 
   const NAV = [
@@ -173,13 +188,56 @@
     return api;
   }
 
-  let toastTimer = null;
-  function toast(msg, tipo, ms) {
-    const root = host(); root.querySelectorAll(".snack").forEach((n) => n.remove()); clearTimeout(toastTimer);
-    const el = html('<div class="snack ' + (tipo || "info") + '" role="status" data-testid="snackbar"><span>' + esc(msg) + '</span><button type="button" aria-label="Cerrar aviso">' + icon("m-close", { size: 16, color: "currentColor" }) + "</button></div>");
-    const nav = root.querySelector(".bnav"); if (nav) el.style.bottom = nav.offsetHeight + 10 + "px";
-    el.querySelector("button").addEventListener("click", () => el.remove());
-    root.appendChild(el); toastTimer = setTimeout(() => el.remove(), ms || 5000);
+  /* NwtToast (SDK de Naowee): aviso inferior con tema, icono, título y mensaje; entra deslizando (240 ms) y se cierra solo.
+     toast(mensaje, tipo, ms, titulo): tipo success|warning|error|info → tema positive|warning|negative|informative. */
+  const TOAST_TEMAS = { success: ["positive", "m-check", "Listo"], warning: ["warning", "nwt-exclamacion", "Revisa"], error: ["negative", "nwt-exclamacion", "Algo salió mal"], info: ["informative", "nwt-i", "Aviso"] };
+  let toastTimer = null, toastEl = null;
+  function cerrarToast(el) {
+    if (!el || !el.isConnected) return;
+    el.classList.remove("nwt-toast--visible");
+    setTimeout(() => el.remove(), 260);
+  }
+  function toast(msg, tipo, ms, titulo) {
+    const root = host(); clearTimeout(toastTimer);
+    if (toastEl) { toastEl.remove(); toastEl = null; }
+    const t = TOAST_TEMAS[tipo] || TOAST_TEMAS.info;
+    const el = html('<div class="nwt-toast" role="status" data-testid="snackbar"><div class="nwt-toast__content" nwt-theme="' + t[0] + '"><div class="nwt-toast__component">' +
+      '<div class="nwt-avatar-icon">' + icon(t[1], { size: 16, color: "var(--naotech-icon-color)" }) + "</div>" +
+      '<div class="nwt-toast__body"><div class="nwt-toast__title">' + esc(titulo || t[2]) + '</div><div class="nwt-toast__message"><p class="nwt-toast__message__value">' + esc(msg) + "</p></div>" +
+      '<button type="button" class="nwt-toast__close" aria-label="Cerrar aviso">' + icon("m-close", { size: 20, color: "currentColor" }) + "</button></div></div></div></div>");
+    const nav = root.querySelector(".bnav"); if (nav) el.style.bottom = nav.offsetHeight + "px";
+    el.querySelector(".nwt-toast__close").addEventListener("click", () => { clearTimeout(toastTimer); cerrarToast(el); });
+    root.appendChild(el); toastEl = el;
+    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("nwt-toast--visible")));
+    toastTimer = setTimeout(() => cerrarToast(el), ms || 5000);
+  }
+
+  /* Logo animado del COC (el del inicio de sesión): la ola se dibuja, COLOMBIA sube letra a letra y los aros hacen «pop» de a uno.
+     tamano: lado de la caja en px (110 por defecto); dur: duración del ciclo en ms (3000 por defecto). Las imágenes son las capas assets/images/coc_logo_*.png. */
+  const LETRAS = [[3.628, 12.576], [16.989, 13.301], [32.044, 6.227], [38.875, 13.301], [53.748, 13.362], [69.287, 8.283], [79.262, 2.418], [82.95, 12.455]];
+  const logoAnimado = (o) => {
+    o = o || {}; const t = o.tamano || 110, d = o.dur || 3000;
+    return '<div class="login-logo" role="img" aria-label="Comité Olímpico Colombiano" style="width:' + t + "px;height:" + t + "px;--lg-dur:" + d + 'ms"><div class="login-logo-in"><img class="lg-wave" src="assets/images/coc_logo_wave.png" alt="">' +
+      '<div class="lg-word">' + LETRAS.map((l, k) => '<img class="lg-l' + k + '" style="left:' + l[0] + "%;width:" + l[1] + '%" src="assets/images/coc_logo_l' + k + '.png" alt="">').join("") + "</div>" +
+      '<div class="lg-rings">' + [0, 1, 2, 3, 4].map((k) => '<img class="lg-r' + k + '" src="assets/images/coc_logo_r' + k + '.png" alt="">').join("") + "</div></div></div>";
+  };
+
+  /* NwtAlert mute (SDK de Naowee): mensaje de una línea sin fondo, con icono y el color del tema. tema: informative|negative|… ; textoHtml ya viene escapado. */
+  const alertaMute = (tema, textoHtml, testid) => '<div class="nwt-alert nwt-alert--visible" nwt-theme="' + tema + '" nwt-variant="mute"' + (testid ? ' data-testid="' + esc(testid) + '"' : "") + '><div class="nwt-alert__content"><div class="nwt-alert__icon">' +
+    icon(tema === "negative" ? "nwt-alerta-o" : "nwt-info-o", { size: 16, color: "currentColor" }) + '</div><span class="nwt-alert__label">' + textoHtml + "</span></div></div>";
+
+  /* Subrayado que se desliza bajo la pestaña activa. Devuelve mover(animar): llamarlo tras cambiar la pestaña .on. */
+  function tabIndicator(tabsEl) {
+    const ind = document.createElement("span"); ind.className = "tab-ind"; ind.setAttribute("aria-hidden", "true"); tabsEl.appendChild(ind);
+    const mover = (animar) => {
+      const t = tabsEl.querySelector(".tab.on"); if (!t) return;
+      const caja = tabsEl.getBoundingClientRect(), r = t.querySelector(".tab-in").getBoundingClientRect();
+      ind.classList.toggle("sin-anim", !animar); ind.style.width = r.width + "px"; ind.style.transform = "translateX(" + (r.left - caja.left) + "px)";
+    };
+    requestAnimationFrame(() => mover(false));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => mover(false));
+    window.addEventListener("resize", () => mover(false));
+    return mover;
   }
 
   /* Los delegados puestos sobre #app (que persiste entre pantallas) se quitan al cambiar de ruta (Ui.offAll, lo llama el router); si no, se acumulan y se disparan en pantallas ajenas. */
@@ -194,9 +252,10 @@
       '<h2 class="t-h2">Conoce más</h2>' +
       "<p>Entérate del desarrollo de los eventos y las iniciativas del ciclo olímpico en nuestra landing page.</p>" +
       '<button type="button" class="linkrow" data-testid="conoce-mas-visitanos" data-act="visitanos"><span class="t-body c-negro">Visítanos</span>' + icon("arrow-up-right", { size: 20, color: "var(--orange-700)" }) + "</button>"
-    , { onMount(el) { el.querySelector("[data-act=visitanos]").addEventListener("click", () => toast("En la app real se abre la landing del ciclo olímpico dentro de la app; aquí no hay sitio externo.", "info")); } });
+    , { onMount(el) { el.querySelector("[data-act=visitanos]").addEventListener("click", () => toast("En la app real se abre la landing del ciclo olímpico dentro de la app; aquí no hay sitio externo.", "info", 0, "Solo en la app real")); } });
   }
   document.addEventListener("click", (e) => { const m = e.target.closest("[data-act=conoce-mas]"); if (m) conoceMas(); });
+  document.addEventListener("click", (e) => { if (e.target.closest("[data-act=notificaciones]") && location.hash.split("?")[0] !== "#/notificaciones") location.hash = "#/notificaciones"; });
 
-  window.Ui = { esc, html, icon, rawIcon, registerIcon, chip, button, appBar, bottomNav, page, empty, search, checkRow, openSheet, openSidePanel, toast, on, closeLayer, conoceMas, offAll };
+  window.Ui = { logoAnimado, actualizarCampana, tabIndicator, alertaMute, esc, html, icon, rawIcon, registerIcon, chip, button, appBar, bottomNav, page, empty, search, checkRow, openSheet, openSidePanel, toast, on, closeLayer, conoceMas, offAll };
 })();

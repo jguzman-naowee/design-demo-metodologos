@@ -34,7 +34,10 @@
   const focus = async (el) => {
     el.scrollIntoView({ block: "center", behavior: RM ? "auto" : "smooth" });
     await sleep(RM ? 0 : 350);
-    const r = rectOf(el), p = 6;
+    /* La app anima sus pantallas y listas: se espera a que el elemento deje de moverse para marcarlo donde queda. */
+    let r = rectOf(el);
+    for (let n = 0; !RM && n < 10; n++) { await sleep(60); const r2 = rectOf(el); const quieto = Math.abs(r2.x - r.x) < 1 && Math.abs(r2.y - r.y) < 1 && Math.abs(r2.w - r.w) < 1 && Math.abs(r2.h - r.h) < 1; r = r2; if (quieto) break; }
+    const p = 6;
     Object.assign(spot.style, { left: r.x - p + "px", top: r.y - p + "px", width: r.w + 2 * p + "px", height: r.h + 2 * p + "px" });
     spot.hidden = false; S.fxEl = el; S.fxClick = false;
     return r;
