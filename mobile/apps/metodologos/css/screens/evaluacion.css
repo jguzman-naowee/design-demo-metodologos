@@ -3,12 +3,13 @@
 
 /* Scroll: padding 16/16/16/24 (spacingsMedium.M ×3, XL abajo) */
 .ef-scroll{flex:1 1 auto;min-height:0;padding:var(--sp-m-M) var(--sp-m-M) var(--sp-m-XL)}
-.ef-back{display:flex;align-items:center;justify-content:center;width:32px;height:32px;color:var(--orange-700);position:relative}
-.ef-back::after{content:"";position:absolute;inset:-6px}            /* objetivo táctil ≥ 44 sin mover el diseño */
-.ef-h1{margin:var(--sp-s-M) 0 var(--sp-s-XL)}                        /* SizedBox small.M tras el chevron, small.XL tras el título */
+/* Barra compacta (DC-013) a sangre: el sticky respeta el padding del scroll, se compensa con top y márgenes negativos */
+.ef-scroll > .topbar{top:calc(-1 * var(--sp-m-M));margin:calc(-1 * var(--sp-m-M)) calc(-1 * var(--sp-m-M)) calc(var(--sp-m-M) - var(--topbar-h))}
+.ef-h1{margin:0 0 var(--sp-s-XL)}
 .ef-desc{margin:0;font-size:var(--fs-label);color:var(--gray-700);text-align:justify}
-.ef-div{height:1px;margin:var(--sp-m-M) calc(-1 * var(--sp-m-M)) 0;background:var(--gray-300)}   /* extremo a extremo */
-.ef-section{margin:var(--sp-m-L) 0 var(--sp-m-S);font-size:var(--fs-body);font-weight:var(--fw-bold);color:var(--blue-jic-900)}
+.ef-div{height:1px;margin:var(--sp-m-M) calc(-1 * var(--sp-m-M)) 0;background:var(--gray-200)}   /* extremo a extremo */
+/* Cada sección abre con una banda tonal: el formulario se lee por bloques */
+.ef-section{margin:var(--sp-m-L) 0 var(--sp-m-S);padding:var(--sp-s-XL) var(--sp-m-S);background:var(--blue-jic-50);border-radius:var(--r-small);font-size:var(--fs-body);font-weight:var(--fw-bold);color:var(--blue-jic-900)}
 .ef-section.first{margin-bottom:var(--sp-s-M)}
 .ef-caption{margin:0;font-size:var(--fs-caption);color:var(--gray-700)}
 .ef-pre{margin:0 0 var(--sp-m-S)}                                    /* caption «Datos precargados…» + 12 */
@@ -24,12 +25,13 @@
 /* OcTextField: título (4 izq, 2 abajo), caja radio 12 con borde 1/2, padding horizontal 16, contador y caption */
 .ef-field{display:flex;flex-direction:column;align-items:stretch}
 .ef-title{display:flex;align-items:center;padding:0 0 var(--sp-s-S) var(--sp-s-M)}
-.ef-title label{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:var(--fs-label);color:var(--gray-700)}
-.ef-req{margin-left:var(--sp-s-S);font-size:20px;font-weight:var(--fw-bold);color:var(--error-400);line-height:1}
-.ef-box{position:relative;display:block;padding:0 var(--sp-m-M);background:var(--white-alpha-100);border:1px solid var(--gray-300);border-radius:var(--r-large)}
+.ef-title label{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:var(--fs-label);color:var(--negro)}
+.ef-req{margin-left:var(--sp-s-S);font-size:20px;font-weight:var(--fw-bold);color:var(--error-700);line-height:1} /* 400 daba 2.4:1 */
+.ef-box{position:relative;display:block;padding:0 var(--sp-m-M);background:var(--white-alpha-100);border:1px solid var(--gray-600);border-radius:var(--r-large)}
 .ef-box:focus-within{border-width:2px;border-color:var(--orange-700)}
 .ef-box.error,.ef-box.error:focus-within{border-color:var(--error-600)}
-.ef-box.disabled{background:var(--gray-100);border-color:var(--gray-400)}
+/* Bloqueado (precargado o solo lectura) = contenido para leer: superficie tonal sin borde; lo editable conserva el borde */
+.ef-box.disabled{background:var(--gray-100);border-color:transparent}
 .ef-box.disabled:focus-within{border-width:1px}
 .ef-box input,.ef-box textarea{display:block;width:100%;margin:0;border:0;border-radius:0;background:transparent;outline:0;padding:var(--sp-m-S) 0;
   font-family:var(--font);font-size:var(--fs-label);line-height:normal;color:var(--negro);caret-color:var(--orange-700)}
@@ -42,8 +44,8 @@
 .ef-box textarea{height:100%;resize:none;overflow-y:auto}
 .ef-grip{position:absolute;right:3px;bottom:3px;padding:var(--sp-s-M);cursor:ns-resize;touch-action:none;line-height:0}
 .ef-grip svg{display:block;width:12px;height:12px}
-.ef-counter{align-self:stretch;margin:var(--sp-s-M) var(--sp-s-M) 0 0;text-align:right;font-size:var(--fs-caption);color:var(--gray-600)}
-.ef-cap{display:flex;align-items:flex-start;gap:var(--sp-s-L);margin-top:var(--sp-s-XL);font-size:var(--fs-caption);color:var(--error-400)}
+.ef-counter{align-self:stretch;margin:var(--sp-s-M) var(--sp-s-M) 0 0;text-align:right;font-size:var(--fs-caption);color:var(--gray-700)}
+.ef-cap{display:flex;align-items:flex-start;gap:var(--sp-s-L);margin-top:var(--sp-s-XL);font-size:var(--fs-caption);color:var(--error-700)} /* 400 daba 2.4:1 */
 .ef-cap .icbox{margin-top:0}
 
 /* Acciones: Cancelar (flex 1) + Guardar evaluación (flex 2), separación 12; margen superior 24 */
@@ -63,4 +65,3 @@
 
 /* Pantalla de carga: usa el logo animado compartido (Ui.logoAnimado, estilos .login-logo en components.css) */
 .oc-loader{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
-}

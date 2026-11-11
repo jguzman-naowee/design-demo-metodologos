@@ -222,13 +222,21 @@
       if (!d) return Ui.page({ nav: "eventos", testid: "pantalla-deportista", body: Ui.empty("No encontramos al deportista", { icon: "m-search_off" }) });
       const miembro = esMiembro(d);
       const titulo = !miembro && d.esEquipo ? "Perfil del deporte" : "Perfil del deportista";
-      const cuerpo = '<a class="pf-back" href="#/eventos" data-act="volver" data-testid="perfil-volver" aria-label="Volver">' + ico("m-chevron_left", 32, "var(--orange-700)") + "</a>" + gap("s") +
-        '<h1 class="t-h1" style="color:var(--negro)" data-testid="perfil-titulo">' + titulo + "</h1>" + gap("m") + header(d) + gap("m") + infoDeportiva(d, miembro) + gap("l") +
+      const cuerpo = '<div class="pf-titlerow fija a-sangre" data-testid="perfil-barra"><a class="backlink" href="#/eventos" data-act="volver" data-testid="perfil-volver" aria-label="Volver">' + ico("m-chevron_left", 32, "var(--orange-700)") + "</a>" +
+        '<h1 class="t-h1" style="color:var(--negro)" data-testid="perfil-titulo">' + titulo + "</h1></div>" + gap("m") + header(d) + gap("m") + infoDeportiva(d, miembro) + gap("l") +
         (miembro ? miembroAviso() + historialMiembro(d) : d.esEquipo ? equipo(d) : individual(d, eventoActual(d, ctx)));
       return Ui.page({ nav: "eventos", testid: "pantalla-deportista", scroll: true, body: '<div class="pf" data-testid="perfil-contenido" data-es-equipo="' + (d.esEquipo && !miembro) + '">' + cuerpo + "</div>" });
     },
     mount(root, params, ctx) {
       const d = dep(params.id), ev = d && Data.evento(eventoActual(d, ctx));
+      /* DC-039: una sola barra fija; con scroll solo gana sombra y su texto pasa a «Perfil de <nombre>» (arriba no muestra el nombre) */
+      const scroller = root.querySelector(".page-body"), barra = root.querySelector(".pf-titlerow"), h1 = root.querySelector("[data-testid=perfil-titulo]");
+      if (d && scroller && barra && h1) {
+        const arriba = h1.textContent, abajo = "Perfil de " + (!esMiembro(d) && d.esEquipo ? d.deporte : d.nombre);
+        const sombra = Ui.fijar(scroller, barra);
+        const texto = () => { h1.textContent = barra.classList.contains("pegada") ? abajo : arriba; };
+        scroller.addEventListener("scroll", texto, { passive: true }); texto();
+      }
       /* Subrayado deslizante bajo la pestaña activa (mide el texto de la pestaña) */
       const ind = root.querySelector(".pf-tabind");
       const moverInd = (t, animar) => {

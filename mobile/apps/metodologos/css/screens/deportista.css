@@ -2,9 +2,18 @@
    Padding del scroll 16/16/16/24; OcCard = padding 22/20, borde gray300, radio 16. */
 .pf{padding:var(--sp-m-M) var(--sp-m-M) var(--sp-m-XL)}
 .pf .h2{margin:0}
-.pf-back{display:flex;align-items:center;justify-content:flex-start;width:32px;height:32px;color:var(--orange-700)}
+/* El rótulo de página baja un escalón; el nombre del sujeto manda */
+.pf h1.t-h1{font-size:var(--fs-subtitle)}
+/* DC-020: volver y título en la misma fila */
+/* DC-039: la fila es la barra fija del perfil (sombra al pegarse, a sangre; top −16 por el padding del scroll) */
+.pf-titlerow{position:sticky;top:calc(-1 * var(--sp-m-M));z-index:5;display:flex;align-items:center;gap:var(--sp-s-M);height:var(--topbar-h);background:var(--white-alpha-100);
+  box-shadow:calc(-1 * var(--sp-m-M)) 0 0 var(--white-alpha-100),var(--sp-m-M) 0 0 var(--white-alpha-100)}
+.pf-titlerow h1{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pf-titlerow .backlink{margin:0 0 0 -6px;align-self:center}
+.pf-head .t-h2{font-size:var(--fs-sujeto)}
 .pf-gap-s{height:var(--sp-s-M)}.pf-gap-m{height:var(--sp-m-M)}.pf-gap-l{height:var(--sp-m-L)}.pf-gap-xl{height:var(--sp-s-XL)}.pf-gap-12{height:var(--sp-m-S)}
-.pf-card{width:100%;padding:22px var(--sp-m-L);background:var(--white-alpha-100);border:1px solid var(--gray-300);border-radius:var(--r-xlarge)}
+/* Cards sin borde sobre superficie tonal; lo pendiente en cálido (.pf-prueba), lo bloqueado en reposo */
+.pf-card{width:100%;padding:22px var(--sp-m-L);background:var(--gray-100);border:0;border-radius:var(--r-xlarge)}
 .pf-card.row{display:flex;align-items:center}
 .pf-card.row.top{align-items:flex-start}
 
@@ -19,10 +28,10 @@
 .pf-colegio .t-body{margin-left:var(--sp-s-M);min-width:0;color:var(--gray-700)}
 
 /* Info. Deportiva: grilla de 2 columnas, etiquetas arriba y valores abajo (12 entre columnas, 8 entre título y valor) */
-.pf-info-title{margin:0 0 18px}
+.pf-info-title{margin:0 0 18px;font-size:var(--fs-body)}
 .pf-info-rows{display:flex;flex-direction:column;gap:22px}
 .pf-irow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:var(--sp-m-S);row-gap:var(--sp-s-XL)}
-.pf-ilabel{align-self:start;color:var(--gray-700);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pf-ilabel{align-self:start;font-size:var(--fs-caption);color:var(--gray-700);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .pf-ival{align-self:center;min-width:0;font-weight:var(--fw-bold)}
 .pf-ival.chipcell{font-weight:var(--fw-regular)}
 .pf-sportchip{display:inline-flex;align-items:center;max-width:100%;padding:var(--sp-s-L) var(--sp-s-XL);background:var(--white-alpha-100);border:2px solid var(--orange-600);
@@ -31,10 +40,12 @@
 .pf-sportchip .t-tag{min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
 /* Textos de sección */
-.pf-intro{margin:0;text-align:justify;line-height:1.4;color:var(--navy)}
+.pf-intro{margin:0;text-align:justify;line-height:1.4;font-size:var(--fs-body-small);color:var(--gray-700)}
 
 /* Tarjeta de prueba */
 .pf-prueba{margin-bottom:var(--sp-s-XL)}
+.pf-card.pf-prueba{background:var(--orange-50)}
+.pf-card:has(.pf-block){background:var(--white-alpha-100);box-shadow:inset 0 0 0 1px var(--gray-200)}
 .pf-grid{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center}
 .pf-grid > .l{padding-right:var(--sp-s-XL)}
 .pf-grid > .top{padding-bottom:var(--sp-s-XL)}
@@ -43,12 +54,14 @@
 .pf-flex1{flex:1 1 0;min-width:0}
 .pf-ph .chipgap{height:var(--sp-s-XL)}
 .pf-cta{flex:0 1 auto;min-width:0;margin-left:var(--sp-s-XL)}
-.pf .btn.small{height:40px;max-width:100%}
+.pf .btn.small{position:relative;height:40px;max-width:100%}
+.pf .btn.small::after{content:"";position:absolute;inset:-2px 0} /* 44 táctil sin mover el diseño */
 .pf .btn.fit{width:auto}
 
 /* Acciones calificada: ojo / lápiz */
 .pf-acts{display:flex;justify-content:flex-end;gap:var(--sp-s-XL)}
-.pf-iconbtn{display:flex;align-items:center;justify-content:center;width:var(--touch-target);height:var(--touch-target);background:var(--orange-100);border-radius:var(--r-small);color:var(--orange-700)}
+.pf-iconbtn{position:relative;display:flex;align-items:center;justify-content:center;width:var(--touch-target);height:var(--touch-target);background:var(--orange-100);border-radius:var(--r-small);color:var(--orange-700)}
+.pf-iconbtn::after{content:"";position:absolute;inset:-4px}
 .pf-iconbtn:active{filter:brightness(.94)}
 
 /* Metadata (fecha/autor) alineada a la derecha, icono a la derecha del texto */
@@ -65,15 +78,16 @@
 .pf-block{display:flex;flex-direction:column;align-items:flex-end;text-align:end}
 .pf-block.start{align-items:flex-start;text-align:start;width:100%}
 .pf-block b{font-size:var(--fs-body-small);font-weight:var(--fw-bold);color:var(--gray-700);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.pf-block span{margin-top:var(--sp-s-S);font-size:var(--fs-caption);color:var(--gray-500);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pf-block span{margin-top:var(--sp-s-S);font-size:var(--fs-caption);color:var(--gray-700);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
 /* Integrantes */
-.pf-miembro{display:flex;align-items:center;width:100%;padding:var(--sp-m-M) 0;border-bottom:1px solid var(--gray-300);color:var(--negro)}
-.pf-miembro b{flex:1 1 auto;min-width:0;font-size:16px;font-weight:600}
+/* Integrantes: informativos, la calificación del equipo manda */
+.pf-miembro{display:flex;align-items:center;width:100%;padding:var(--sp-m-M) 0;border-bottom:1px solid var(--gray-200);color:var(--negro)}
+.pf-miembro b{flex:1 1 auto;min-width:0;font-size:var(--fs-label);font-weight:var(--fw-regular)}
 .pf-miembro .icbox{color:var(--orange-700)}
 .pf-empty{display:flex;flex-direction:column;align-items:center;padding:var(--sp-l-S) var(--sp-m-L);text-align:center}
 .pf-empty .icbox{color:var(--gray-400);margin-bottom:var(--sp-m-S)}
-.pf-empty p{margin:0;font-size:var(--fs-caption);color:var(--gray-700)}
+.pf-empty p{margin:0;font-size:var(--fs-body-small);color:var(--gray-700)}
 .pf-aviso{display:flex;align-items:flex-start}
 .pf-aviso .icbox{color:var(--orange-700);margin-right:var(--sp-s-XL)}
 .pf-aviso p{margin:0;flex:1 1 auto;min-width:0}
@@ -87,16 +101,18 @@
 .pf-tabind{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--orange-700);transform:translateX(0);transition:transform .28s cubic-bezier(.4,0,.2,1),width .28s cubic-bezier(.4,0,.2,1);pointer-events:none}
 .pf-tabind.sin-anim{transition:none}
 @media (prefers-reduced-motion:reduce){.pf-tabind,.pf .tab-txt{transition:none}}
-.pf-evgrupo{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-s-XL);margin:var(--sp-m-S) 0 var(--sp-s-XL)}
-.pf-evgrupo .nm{min-width:0;color:var(--negro);font-weight:var(--fw-bold);font-size:var(--fs-body-small)} /* DC-006: 14px */
+/* Grupos por evento separados por aire, rótulo discreto */
+.pf-evgrupo{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-s-XL);margin:var(--sp-m-L) 0 var(--sp-s-XL)}
+.pf-evgrupo .nm{min-width:0;color:var(--gray-800);font-weight:var(--fw-bold);font-size:var(--fs-caption)} /* DC-006 pedía 14; baja a 13 con la jerarquía validada */
 
 /* Card compacta de prueba calificada (Calificar / Historial): una columna de lectura a la izquierda, acciones a la derecha */
-.pf-ccard{display:flex;align-items:center;gap:var(--sp-s-XL);width:100%;margin-bottom:var(--sp-s-XL);padding:14px 12px 14px var(--sp-m-L);background:var(--white-alpha-100);border:1px solid var(--gray-300);border-radius:var(--r-xlarge)}
+.pf-ccard{display:flex;align-items:center;gap:var(--sp-s-XL);width:100%;margin-bottom:var(--sp-s-XL);padding:14px 12px 14px var(--sp-m-L);background:var(--gray-100);border:0;border-radius:var(--r-xlarge)}
+/* Plazo vencido = en reposo */
+.pf-ccard:has(.nwt-alert[nwt-theme=negative]){background:var(--white-alpha-100);box-shadow:inset 0 0 0 1px var(--gray-200)}
 .pf-cmain{flex:1 1 auto;min-width:0}
 .pf-ctitle{display:flex;align-items:center;flex-wrap:wrap;gap:var(--sp-s-XL)}
 .pf-ctitle b{font-size:17px;font-weight:var(--fw-bold);color:var(--negro)}
 .pf-cmeta{display:flex;flex-direction:column;gap:var(--sp-s-S);margin-top:var(--sp-s-XL)}
 .pf-cmrow{display:flex;align-items:center;gap:var(--sp-s-L);font-size:var(--fs-caption);color:var(--gray-700)}
-.pf-cmrow:first-child{color:var(--negro)}
 .pf-cmrow .tx{min-width:0}
 

@@ -24,7 +24,7 @@
    Ui.registerIcon(nombre, svg)           añade un icono nuevo al registro
    Ui.chip(estado[, label])               OcStatusChip (estado: calificado|sinCalificacion|enCurso|programado|finalizado|info)
    Ui.button({title, variant, size, testid, act, href, type, fit, disabled, leftIcon, leftIconColor, rightIcon})
-                                          OcButton; variant: primary|dark|cream|cream-outlined|outline; size: large|medium|small
+                                          OcButton; variant: primary|dark|cream|cream-outlined|tertiary|outline; size: large|medium|small
    Ui.appBar()                            OcAppBar (logo → #/eventos, menú → panel «Conoce más»; el panel se engancha solo)
    Ui.bottomNav(actual)                   OcBottomNav; actual: "eventos" | "perfil" | null
    Ui.page({appBar=true, nav=null, body, scroll=false, bodyClass})  página completa (columna: appbar / cuerpo / nav)
@@ -36,6 +36,8 @@
    Ui.html(str) → Node                    convierte HTML en elemento
    Ui.search(texto, {placeholder, testid, label})   OcSearchBar sin el trailing
    Ui.checkRow({label, checked, testid})  fila con casilla (filtros)
+   Ui.topbar(titulo, testid) + Ui.seguirTitulo(scroller, h1)  barra compacta fija que aparece al pasar el título (DC-013)
+   Ui.fijar(scroller, barra) → refrescar()  sombra .pegada de una barra sticky (clase .fija) cuando el contenido pasa por debajo
    ═════════════════════════════════════════════════════════════════════════════════════════ */
 (() => {
   "use strict";
@@ -101,7 +103,8 @@
   const actualizarCampana = () => { const n = sinLeer(); document.querySelectorAll(".bell").forEach((b) => { const i = b.querySelector(".bell-badge"); i.textContent = n || ""; i.hidden = !n; b.setAttribute("aria-label", "Notificaciones" + (n ? ", " + n + " sin leer" : "")); }); };
   const appBar = () =>
     '<header class="appbar">' +
-      '<a class="appbar-btn logo" href="#/eventos" data-testid="appbar-logo" aria-label="Ir a Eventos"><img src="assets/images/coc_logo.png" alt="" width="40" height="40"></a>' +
+      '<div class="appbar-l"><a class="appbar-btn logo" href="#/eventos" data-testid="appbar-logo" aria-label="Ir a Eventos"><img src="assets/images/coc_logo.png" alt="" width="40" height="40"></a>' +
+      '<span class="appbar-app" data-testid="appbar-app">Metodólogos</span></div>' + /* DC-017: nombre de la app, nivel secundario */
       '<div class="appbar-r">' + campana() +
       '<button type="button" class="appbar-btn menu" data-testid="appbar-menu" data-act="conoce-mas" aria-label="Abrir menú Conoce más" aria-haspopup="dialog">' + icon("m-menu", { size: 24, color: "var(--blue-jic-900)" }) + "</button></div>" +
     "</header>";
@@ -240,6 +243,29 @@
     return mover;
   }
 
+  /* Barra compacta (DC-013): HTML para el primer hijo del scroll. Inerte mientras está oculta; el título va aria-hidden (el h1 real sigue en la página). */
+  const topbar = (titulo, testid) => '<div class="topbar" inert' + attr("data-testid", testid) + '><button type="button" class="backlink" data-act="volver" aria-label="Volver">' +
+    icon("m-chevron_left", { size: 32, color: "var(--orange-700)" }) + '</button><span class="topbar-t" aria-hidden="true">' + esc(titulo) + "</span></div>";
+  /* La muestra cuando el h1 queda por debajo de la barra; devuelve el refresco (llamarlo si el contenido cambia). */
+  function seguirTitulo(scroller, titulo) {
+    const bar = scroller && scroller.querySelector(".topbar"); if (!bar || !titulo) return () => {};
+    const f = () => { const on = titulo.getBoundingClientRect().bottom <= scroller.getBoundingClientRect().top + bar.offsetHeight; if (on !== bar.classList.contains("on")) { bar.classList.toggle("on", on); bar.inert = !on; } };
+    scroller.addEventListener("scroll", f, { passive: true }); f();
+    return f;
+  }
+
+  /* Barra sticky (DC-016): pone .pegada (sombra) solo cuando hay scroll y la barra ya llegó a su tope. Mismo mecanismo en todas. */
+  function fijar(scroller, barra) {
+    if (!scroller || !barra) return () => false;
+    const f = () => {
+      const lim = scroller.getBoundingClientRect().top + parseFloat(getComputedStyle(scroller).paddingTop) + (parseFloat(getComputedStyle(barra).top) || 0);
+      const on = scroller.scrollTop > 0 && barra.getBoundingClientRect().top <= lim + 0.5;
+      barra.classList.toggle("pegada", on); return on;
+    };
+    scroller.addEventListener("scroll", f, { passive: true }); f();
+    return f;
+  }
+
   /* Los delegados puestos sobre #app (que persiste entre pantallas) se quitan al cambiar de ruta (Ui.offAll, lo llama el router); si no, se acumulan y se disparan en pantallas ajenas. */
   const delegados = [];
   function on(root, ev, sel, fn) { const h = (e) => { const t = e.target.closest(sel); if (t && root.contains(t)) fn(e, t); }; root.addEventListener(ev, h); delegados.push([root, ev, h]); }
@@ -257,5 +283,5 @@
   document.addEventListener("click", (e) => { const m = e.target.closest("[data-act=conoce-mas]"); if (m) conoceMas(); });
   document.addEventListener("click", (e) => { if (e.target.closest("[data-act=notificaciones]") && location.hash.split("?")[0] !== "#/notificaciones") location.hash = "#/notificaciones"; });
 
-  window.Ui = { logoAnimado, actualizarCampana, tabIndicator, alertaMute, esc, html, icon, rawIcon, registerIcon, chip, button, appBar, bottomNav, page, empty, search, checkRow, openSheet, openSidePanel, toast, on, closeLayer, conoceMas, offAll };
+  window.Ui = { fijar, topbar, seguirTitulo, logoAnimado, actualizarCampana, tabIndicator, alertaMute, esc, html, icon, rawIcon, registerIcon, chip, button, appBar, bottomNav, page, empty, search, checkRow, openSheet, openSidePanel, toast, on, closeLayer, conoceMas, offAll };
 })();

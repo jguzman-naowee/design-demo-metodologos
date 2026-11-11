@@ -1,16 +1,16 @@
 /* Mi perfil (mi_perfil_page.dart): padding 16/16/16/0, avatar 88 (OcAvatar), OcCard con padding 22/20, botón «Cerrar sesión». */
 .mp{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;padding:var(--sp-m-M) var(--sp-m-M) 0}
-.mp > h1{margin:0 0 var(--sp-m-M)}
+.mp > h1{margin:0 0 var(--sp-m-M);font-size:var(--fs-subtitle)} /* el rótulo baja un escalón; el nombre manda */
 .mp-head{display:flex;align-items:center;gap:var(--sp-m-S);margin-bottom:var(--sp-m-M)}
 /* OcAvatar: círculo success100, inicial successText h2 (alineación 0,0.2 ⇒ empuja la inicial 0.1·(alto−línea) hacia abajo) */
 .mp-avatar{flex:none;width:88px;height:88px;border-radius:50%;background:var(--success-100);color:var(--success-text);display:flex;align-items:center;justify-content:center;
   padding-top:10.8px;font-size:34px;font-weight:var(--fw-bold);line-height:1}
 .mp-id{flex:1 1 auto;min-width:0}
-.mp-name{margin:0 0 var(--sp-s-S);font-size:24px;font-weight:var(--fw-bold);color:var(--black-alpha-100)}
+.mp-name{margin:0 0 var(--sp-s-S);font-size:var(--fs-sujeto);font-weight:var(--fw-bold);color:var(--black-alpha-100)}
 .mp-role{margin:0;font-size:var(--fs-body);color:var(--gray-700)}
-/* OcCard: borde gray300, radio 16, padding vertical 22 / horizontal 20 */
-.mp-card{width:100%;padding:22px var(--sp-m-L);background:var(--white-alpha-100);border:1px solid var(--gray-300);border-radius:var(--r-xlarge);margin-bottom:var(--sp-m-L)}
-.mp-card h2{margin:0 0 var(--sp-m-S)}
+/* OcCard sin borde sobre superficie tonal (mismo criterio que .pf-card), padding 22/20 */
+.mp-card{width:100%;padding:22px var(--sp-m-L);background:var(--gray-100);border:0;border-radius:var(--r-xlarge);margin-bottom:var(--sp-m-L)}
+.mp-card h2{margin:0 0 var(--sp-m-S);font-size:var(--fs-body)}
 .mp-label{margin:0 0 var(--sp-s-M);font-size:var(--fs-caption);color:var(--gray-700)}
 .mp-value{margin:0;font-size:var(--fs-label);color:var(--black-alpha-100);overflow-wrap:anywhere}
 .mp .flip{display:flex;transform:scaleX(-1)}

@@ -6,9 +6,14 @@
   const esc = Ui.esc;
   const EXPLICACION = "Estos son los deportes que tienes asignados para calificar en este evento.";
   const slug = (s) => Data.norm(s).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  /* DC-030: mayúscula inicial en las palabras de más de 3 letras (de, la, del quedan como están) */
+  const titular = (s) => String(s).replace(/\p{L}+/gu, (w) => (w.length > 3 ? w[0].toUpperCase() + w.slice(1) : w));
 
   /* Material groups_outlined (empty state de la lista) */
   Ui.registerIcon("m-groups_outlined", '<svg viewBox="0 0 24 24"><path d="M12 12.75c1.63 0 3.07.39 4.24.9 1.08.48 1.76 1.56 1.76 2.73V18H6v-1.61c0-1.18.68-2.26 1.76-2.73 1.17-.52 2.61-.91 4.24-.91zM4 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm1.13 1.1c-.37-.06-.74-.1-1.13-.1-.99 0-1.93.21-2.78.58C.48 14.9 0 15.62 0 16.43V18h4.5v-1.61c0-.83.23-1.61.63-2.29zM20 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4 3.43c0-.81-.48-1.53-1.22-1.85-.85-.37-1.79-.58-2.78-.58-.39 0-.76.04-1.13.1.4.68.63 1.46.63 2.29V18H24v-1.57zM12 6c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"/></svg>');
+
+  /* Hero del detalle (imágenes oficiales compartidas con la plataforma COC); sin entrada se usa la portada de la tarjeta. Único mapeo. */
+  const HERO = { e2: "assets/images/hero/hero-intercolegiados.webp", e4: "assets/images/hero/hero-jsj2026.webp", e5: "assets/images/hero/hero-joj2026.webp" };
 
   /* Estado que sobrevive solo al ir al perfil del deportista y volver (en la app la página sigue en la pila) */
   let saved = null;
@@ -64,7 +69,7 @@
       '<div class="fs-scroll"><div class="fs-sec"><p class="fs-label">DEPORTE</p><div class="fs-gap8"></div><div data-slot="deporte"></div></div><div class="fs-div"></div>' +
       '<div class="fs-sec chips"><p class="fs-label">ESTADO DE CALIFICACIÓN</p><div class="fs-wrap" data-slot="estados" data-testid="filtro-estados"></div></div><div class="fs-div"></div>' +
       '<div class="fs-sec chips"><p class="fs-label">GÉNERO</p><div class="fs-wrap" data-slot="generos" data-testid="filtro-generos"></div></div></div>' +
-      '<div class="fs-div"></div><div class="fs-foot">' + Ui.button({ title: "Limpiar", variant: "outline", testid: "filtro-limpiar", act: "limpiar" }) + Ui.button({ title: "Aplicar", variant: "primary", testid: "filtro-aplicar", act: "aplicar" }) + "</div>";
+      '<div class="fs-div"></div><div class="fs-foot">' + Ui.button({ title: "Limpiar", variant: "tertiary", testid: "filtro-limpiar", act: "limpiar" }) + Ui.button({ title: "Aplicar", variant: "primary", testid: "filtro-aplicar", act: "aplicar" }) + "</div>";
     Ui.openSheet({
       title: "Filtrar deportistas", body,
       onMount(el, close) {
@@ -105,21 +110,24 @@
       if (!ev) {
         return Ui.page({ nav: "eventos", testid: "pantalla-evento", body: '<div class="evd"><button type="button" class="backlink" data-act="volver" data-testid="evento-volver" aria-label="Volver">' + Ui.icon("m-chevron_left", { size: 32, color: "var(--orange-700)" }) + "</button>" + Ui.empty("No encontramos este evento", { icon: "m-search_off" }) + "</div>" });
       }
-      const deportes = Data.deportesDelEvento(ev), imagen = ev.imagen || Data.eventoGenerico;
-      const body = '<div class="evd">' +
-        '<button type="button" class="backlink" data-act="volver" data-testid="evento-volver" aria-label="Volver">' + Ui.icon("m-chevron_left", { size: 32, color: "var(--orange-700)" }) + "</button>" +
-        '<div class="evd-head" data-testid="evento-header">' +
-          '<span class="evd-thumb"><img src="' + esc(imagen) + '" alt="" onload="this.classList.add(\'ld\')" onerror="this.onerror=null;this.src=\'' + Data.eventoGenerico + '\'"></span>' +
-          '<div class="evd-info">' + '<span class="evd-chip" data-testid="evento-estado">' + Ui.chip(ev.estado, ev.estadoLabel) + "</span>" +
-            '<h1 class="evd-title" data-testid="evento-nombre">' + esc(ev.nombre) + "</h1>" +
-            '<p class="evd-sub" data-testid="evento-fecha-lugar">' + esc(ev.lugar ? ev.fecha + " " + ev.lugar : ev.fecha) + "</p></div></div>" +
-        (deportes.length ? '<div class="evd-gap16"></div>' + seccionDeportes(deportes) : "") +
+      const deportes = Data.deportesDelEvento(ev), imagen = HERO[ev.id] || ev.imagen;
+      /* Hero a sangre: imagen + velo navy que oscurece hacia abajo; sin imagen (o si falla) queda el degradado de marca del fondo */
+      const body = '<div class="evd scroll" data-testid="evento-scroll">' +
+        '<div class="evd-nombre" aria-hidden="true">' + esc(titular(ev.nombre)) + "</div>" +
+        '<header class="evd-hero" data-testid="evento-header">' +
+          (imagen ? '<img class="evd-hero-img" src="' + esc(imagen) + '" alt="" decoding="async" onload="this.classList.add(\'ld\')" onerror="this.remove()">' : "") +
+          '<span class="evd-hero-veil" aria-hidden="true"></span>' +
+          '<button type="button" class="backlink evd-hero-back" data-act="volver" data-testid="evento-volver" aria-label="Volver">' + Ui.icon("m-chevron_left", { size: 32, color: "var(--white-alpha-100)" }) + "</button>" +
+          '<div class="evd-hero-in"><span class="evd-chip" data-testid="evento-estado">' + Ui.chip(ev.estado, ev.estadoLabel) + "</span>" +
+            '<h1 class="evd-title" data-testid="evento-nombre">' + esc(titular(ev.nombre)) + "</h1>" +
+            '<p class="evd-sub" data-testid="evento-fecha-lugar">' + esc(ev.lugar ? ev.fecha + " · " + ev.lugar : ev.fecha) + "</p></div></header>" +
+        (deportes.length ? seccionDeportes(deportes) : "") +
         '<div class="evd-gap16"></div><div class="searchrow evd-search">' + Ui.search("", { placeholder: "Buscar deportista", testid: "evento-buscar" }) +
           '<span class="fbtn-wrap"><button type="button" class="fbtn" data-act="filtro" data-testid="evento-filtro" aria-haspopup="dialog" aria-label="Filtrar deportistas">' + Ui.icon("m-filter_list_rounded", { size: 20, color: "currentColor" }) + '</button><span class="fbadge" data-testid="evento-filtro-badge" hidden></span></span></div>' +
-        '<div class="evd-gap16"></div><div class="tabs evd-tabs" role="tablist" data-testid="evento-tabs">' +
+        '<div class="evd-gap16"></div><div class="tabs evd-tabs fija a-sangre" role="tablist" data-testid="evento-tabs">' +
           ["Deportes individuales", "Deportes de conjunto"].map((t, i) => '<button type="button" role="tab" class="tab" data-tab="' + i + '" data-testid="evento-tab-' + (i ? "conjunto" : "individuales") + '"><span class="tab-in"><span class="tab-txt">' + t + '</span><span class="tab-bar"></span></span></button>').join("") + "</div>" +
         '<div class="evd-gap16"></div><div class="evd-listhead"><h2 class="t-h2 evd-h2" data-testid="evento-lista-titulo"></h2><span data-testid="evento-contador" class="evd-count"></span></div><div class="evd-gap2"></div>' +
-        '<div class="list scroll evd-list" data-testid="evento-lista" aria-live="polite"></div></div>';
+        '<div class="evd-list" data-testid="evento-lista" aria-live="polite"></div></div>';
       return Ui.page({ nav: "eventos", testid: "pantalla-evento", body });
     },
     mount(root, params) {
@@ -155,19 +163,29 @@
         list.innerHTML = items.length ? items.map((d) => tile(d, ev.id)).join("") : Ui.empty(hay ? "No encontramos deportistas con esos filtros" : "Aún no hay resultados para calificar en esta categoría", { icon: "m-groups_outlined" });
       };
 
-      /* Sombra suave bajo el título de la lista mientras esta se desplaza por debajo */
-      const cabeza = root.querySelector(".evd-listhead"), sombra = () => cabeza.classList.toggle("sombra", list.scrollTop > 2);
-      list.addEventListener("scroll", sombra, { passive: true });
+      /* DC-012: un solo scroll (.evd); las pestañas quedan fijas arriba y llevan sombra mientras la lista pasa por debajo */
+      const pagina = root.querySelector(".evd"), barra = root.querySelector(".evd-tabs");
+      /* Posición natural de la barra: se mide en el separador previo (no es sticky), así sigue valiendo tras cargar fuentes e imágenes */
+      const nombre = root.querySelector(".evd-nombre"), altoNombre = () => nombre.offsetHeight;
+      const tope = () => pagina.scrollTop + barra.previousElementSibling.getBoundingClientRect().bottom - pagina.getBoundingClientRect().top - altoNombre();
+      const sombra = Ui.fijar(pagina, barra);
+      /* DC-042: el nombre aparece solo cuando las pestañas están pegadas */
+      const verNombre = () => nombre.classList.toggle("on", barra.classList.contains("pegada"));
+      pagina.addEventListener("scroll", verNombre, { passive: true }); verNombre();
       input.addEventListener("input", () => { st.query = input.value; paint(); sombra(); });
       Ui.on(root, "click", ".tab", (e, t) => {
         if (+t.dataset.tab === st.tab) return;
-        st.tab = +t.dataset.tab; paint(); sombra();
+        const estaba = sombra();
+        st.tab = +t.dataset.tab; paint();
+        /* Con la barra pegada, la lista nueva empieza arriba (no a media altura) */
+        if (estaba) pagina.scrollTop = tope();
+        sombra();
         /* Entrada suave de la lista nueva al cambiar de pestaña (no al buscar ni al filtrar) */
         if (!matchMedia("(prefers-reduced-motion: reduce)").matches) list.animate([{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "none" }], { duration: 200, easing: "cubic-bezier(.23,1,.32,1)" });
       });
       Ui.on(root, "click", "[data-act=deportes-info]", () => abrirListado(Data.deportesDelEvento(ev)));
       fbtn.addEventListener("click", () => abrirFiltro(ev, st.filtro, (r) => { st.filtro = r; paint(); sombra(); }));
-      paint();
+      paint(); sombra();
       return () => { saved = /^#\/deportista\//.test(location.hash) ? st : null; };
     },
   });

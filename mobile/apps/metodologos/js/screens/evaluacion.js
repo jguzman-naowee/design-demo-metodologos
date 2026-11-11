@@ -35,7 +35,7 @@
       '<div class="ef-title"><label for="ef-' + id + '">' + esc(o.t) + '</label><span class="ef-req" aria-hidden="true">*</span></div>' +
       '<div class="ef-box' + (area ? " area" : "") + (dis ? " disabled" : "") + '">' + inner + "</div>" +
       (area ? '<div class="ef-counter" data-counter>' + String((o.v || "").length) + "/1000</div>" : "") +
-      '<div class="ef-cap" data-cap hidden role="alert">' + Ui.icon("cancelar", { size: 16, color: "var(--error-400)" }) + "<span></span></div></div>";
+      '<div class="ef-cap" data-cap hidden role="alert">' + Ui.icon("cancelar", { size: 16, color: "var(--error-700)" }) + "<span></span></div></div>";
   };
 
   /* Pantalla de carga al enviar: el mismo logo animado del inicio de sesión (Ui.logoAnimado), un ciclo completo en CARGA_MS */
@@ -81,7 +81,8 @@
       const ro = readOnly(), dis = ro;
       const nombreEquipo = d.colegio ? d.colegio : d.nombre;
       scroll.innerHTML =
-        '<a class="ef-back" href="#/" data-act="volver" data-testid="evaluacion-volver" aria-label="Volver">' + Ui.icon("m-chevron_left", { size: 32, color: "var(--orange-700)" }) + "</a>" +
+        Ui.topbar("Formulario de evaluación", "evaluacion-barra") +
+        '<a class="backlink" href="#/" data-act="volver" data-testid="evaluacion-volver" aria-label="Volver">' + Ui.icon("m-chevron_left", { size: 32, color: "var(--orange-700)" }) + "</a>" +
         '<h1 class="t-h1 ef-h1">Formulario de evaluación</h1>' +
         '<p class="ef-desc">Completa el formulario con la evaluación técnico-metodológica del deportista. </p>' +
         '<div class="ef-div"></div>' +
@@ -104,7 +105,7 @@
         CAMPOS.slice(3).map((c) => campo({ k: c.k, t: c.t, ph: c.ph, v: inicial[c.k], area: true, disabled: dis })).join('<div class="ef-gap"></div>') +
         (ro
           ? '<div class="ef-end">' + Ui.button({ title: "Volver al perfil", variant: "cream-outlined", testid: "evaluacion-volver-perfil", act: "volver" }) + "</div>"
-          : '<div class="ef-actions">' + Ui.button({ title: "Cancelar", variant: "outline", size: "medium", testid: "evaluacion-cancelar", act: "cancelar" }) +
+          : '<div class="ef-actions">' + Ui.button({ title: "Cancelar", variant: "tertiary", size: "medium", testid: "evaluacion-cancelar", act: "cancelar" }) +
             Ui.button({ title: "Guardar evaluación", size: "medium", testid: "evaluacion-guardar", act: "guardar" }) + "</div>");
       /* El enlace ‹ usa el historial (como Navigator.maybePop) */
       /* Cada campo (modo editable) conserva lo escrito en `inicial` para repintar sin perderlo */
@@ -132,6 +133,7 @@
     const hayErrores = (m) => Object.keys(m).some((k) => m[k]);
 
     pintar();
+    Ui.seguirTitulo(scroll, scroll.querySelector(".ef-h1"));
 
     /* ── Eventos ── */
     const onClick = (e) => {

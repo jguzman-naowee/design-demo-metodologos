@@ -1,24 +1,33 @@
 /* Detalle de evento (evento_detalle_page.dart + widgets). Solo variables de tokens.css. */
-.evd{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;padding:var(--sp-m-M) var(--sp-m-M) 0}
+/* DC-012: un solo scroll de página (bloque, nada se encoge); solo las pestañas quedan fijas */
+.evd{flex:1 1 auto;min-height:0;display:block;padding:var(--sp-m-M) var(--sp-m-M) var(--sp-m-XL)}
 .evd-gap16{flex:none;height:var(--sp-m-M)}.evd-gap2{flex:none;height:var(--sp-s-S)}
-.backlink{flex:none;align-self:flex-start;display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-6px -6px 2px -6px;border-radius:50%} /* icono 32; margen: ocupa 32 + gap 8 de la app */
 
-.evd-head{flex:none;display:flex;align-items:flex-start;gap:var(--sp-m-S)}
-.evd-thumb{flex:none;display:block;width:72px;height:72px;border-radius:50%;overflow:hidden;background:var(--gray-200);border:1px solid var(--gray-300)}
-.evd-thumb img{display:block;width:100%;height:100%;object-fit:cover}
-.evd-info{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:flex-start}
+/* Hero del evento (patrón de la plataforma COC): a sangre, imagen de fondo y velo navy; el nombre es el nivel primario.
+   Márgenes negativos = padding de .evd. Sin imagen queda el degradado de marca. Scrollea con el contenido (DC-012). */
+.evd-hero{position:relative;display:flex;flex-direction:column;justify-content:flex-end;min-height:356px;margin:calc(-1 * var(--sp-m-M)) calc(-1 * var(--sp-m-M)) 0;overflow:hidden;background:var(--white-alpha-100)}
+/* Degradado de marca de respaldo (sin imagen): no llega al borde inferior para que no asome un filo bajo el blanco (DC-031) */
+.evd-hero::before{content:"";position:absolute;inset:0 0 20% 0;background:linear-gradient(135deg,var(--blue-jic-900) 0%,var(--blue-jic-700) 55%,var(--blue-jic-500) 100%)}
+.evd-hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right center;display:block}
+/* DC-027: la imagen se funde en blanco con el fondo; el texto va sobre el blanco (alfa ≥ .9 bajo el texto) */
+.evd-hero-veil{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,255,255,0) 0%,rgba(255,255,255,0) 45%,rgba(255,255,255,.9) 72%,var(--white-alpha-100) 82%)}
+.backlink.evd-hero-back{position:absolute;top:var(--sp-s-XL);left:var(--sp-s-XL);z-index:1;margin:0;background:rgba(24,30,71,.45)}
+.evd-hero-in{position:relative;display:flex;flex-direction:column;align-items:flex-start;padding:var(--sp-l-L) var(--sp-m-M) var(--sp-m-L)}
 .evd-chip{display:block;max-width:100%}
-.evd-title{margin:var(--sp-s-M) 0 0;font-size:var(--fs-subtitle);font-weight:var(--fw-bold);color:var(--blue-jic-900);line-height:1.2;
+/* DC-029: chip del hero más grande, con borde blanco al 8% */
+.evd-chip .chip{padding:var(--sp-s-L) var(--sp-m-S);font-size:var(--fs-tag);border:1px solid rgba(255,255,255,.08)}
+.evd-title{margin:var(--sp-s-XL) 0 0;font-size:var(--fs-sujeto);font-weight:var(--fw-bold);color:var(--navy);line-height:1.2;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .evd-sub{margin:var(--sp-s-M) 0 0;font-size:var(--fs-body-small);color:var(--gray-700)}
 
 /* OcDeportesCalificarSection */
 /* Deportes a calificar: fila resumen */
-.dsum{flex:none;display:flex;align-items:center;gap:var(--sp-m-S);width:100%;height:74px;padding:0 var(--sp-m-S) 0 var(--sp-m-M);background:var(--white-alpha-100);border:1px solid var(--gray-300);border-radius:var(--r-xlarge);text-align:left;color:var(--black-alpha-100)}
+/* Lo pendiente va en superficie cálida, sin borde */
+.dsum{flex:none;display:flex;align-items:center;gap:var(--sp-m-S);width:100%;height:74px;padding:0 var(--sp-m-S) 0 var(--sp-m-M);background:var(--orange-50);border:0;border-radius:var(--r-xlarge);text-align:left;color:var(--black-alpha-100)}
 .dsum-stack{display:flex;flex:none}
-.dsum-c{display:flex;align-items:center;justify-content:center;width:32px;height:32px;margin-left:-10px;background:var(--orange-50);border:2px solid var(--white-alpha-100);border-radius:50%}
+.dsum-c{display:flex;align-items:center;justify-content:center;width:32px;height:32px;margin-left:-10px;background:var(--white-alpha-100);border:2px solid var(--orange-50);border-radius:50%}
 .dsum-c:first-child{margin-left:0}
-.dsum-c.n{font-size:var(--fs-caption-small);font-weight:var(--fw-bold);color:var(--orange-700);background:var(--orange-100)}
+.dsum-c.n{font-size:var(--fs-caption-small);font-weight:var(--fw-bold);color:var(--orange-800);background:var(--orange-100)}
 .dsum-t{flex:1 1 auto;min-width:0}
 .dsum-t b{display:block;font-size:var(--fs-label);font-weight:var(--fw-bold)}
 .dsum-t small{display:flex;font-size:var(--fs-caption);line-height:1.3;color:var(--gray-700)}
@@ -35,14 +44,26 @@
 /* Buscador + botón de filtro (OcSearchBar._FilterButton) */
 .evd-search{flex:none}
 .fbtn-wrap{position:relative;flex:none;display:block;width:44px;height:44px}
-.fbtn{display:flex;align-items:center;justify-content:center;width:44px;height:44px;background:var(--white-alpha-100);border:.5px solid var(--gray-500);border-radius:var(--r-large);color:var(--gray-700)}
+.fbtn{display:flex;align-items:center;justify-content:center;width:44px;height:44px;background:var(--white-alpha-100);border:.5px solid var(--gray-600);border-radius:var(--r-large);color:var(--gray-700)}
 .fbtn.on{background:var(--orange-50);border:1.5px solid var(--orange-600);color:var(--orange-700)}
 .fbadge{position:absolute;right:-4px;top:-4px;display:flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 var(--sp-s-L);border-radius:10px;background:var(--orange-700);color:var(--white-alpha-100);
   font-size:var(--fs-tag);font-weight:var(--fw-tag);text-align:center;line-height:1;box-sizing:border-box} /* DC-012: círculo perfecto con un dígito (antes 18×22, ovalado); con dos dígitos crece como píldora */
 
 /* OcSegmentedTabs */
-.tabs{flex:none;display:flex;border-bottom:1px solid var(--gray-300)}
-.evd-tabs{padding-top:10px} /* DC-003: aire sobre las pestañas del evento (no hay token de 10px; la escala va 8 → 12) */
+.tabs{flex:none;display:flex;border-bottom:1px solid var(--gray-200)}
+.evd-tabs{padding-top:10px} /* DC-003: aire sobre las pestañas */
+/* DC-022/042: el nombre del evento va en una barra propia, fija arriba y sin alto en el flujo; solo se ve cuando las pestañas se pegan
+   (debajo de ella), así sin scroll no queda espacio vacío sobre las pestañas. */
+.evd{--nombre-h:52px}
+.evd-nombre{position:sticky;top:calc(-1 * var(--sp-m-M));z-index:6;display:flex;align-items:center;justify-content:center;height:var(--nombre-h);margin:0 calc(-1 * var(--sp-m-M)) calc(-1 * (var(--nombre-h) + var(--sp-m-M)));padding:0 var(--sp-m-M);
+  background:var(--white-alpha-100);font-size:var(--fs-body);font-weight:var(--fw-bold);color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0;visibility:hidden;transition:opacity 180ms ease,visibility 0s 180ms}
+.evd-nombre.on{opacity:1;visibility:visible;transition:opacity 180ms ease,visibility 0s}
+@media (prefers-reduced-motion:reduce){.evd-nombre,.evd-nombre.on{transition:none}}
+/* DC-012: las pestañas son la barra fija del detalle. Las sombras laterales extienden el blanco a sangre sin mover
+   la línea gris en el margen del contenido (DC-004). top negativo: el sticky respeta el padding del scroll. */
+.tabs.evd-tabs{position:sticky;top:calc(var(--nombre-h) - var(--sp-m-M));z-index:5;background:var(--white-alpha-100);
+  box-shadow:calc(-1 * var(--sp-m-M)) 0 0 var(--white-alpha-100),var(--sp-m-M) 0 0 var(--white-alpha-100)}
+/* La sombra al pegarse es la común (.fija.a-sangre en components.css) */
 .tab{position:relative;flex:1 1 0;min-width:0;display:flex;justify-content:center;align-items:stretch}
 .tab::after{content:"";position:absolute;inset:-8px 0}
 .tab-in{display:flex;flex-direction:column;justify-content:flex-end;max-width:100%}
@@ -53,19 +74,20 @@
 
 /* Lista */
 .evd-listhead{flex:none;display:flex;align-items:center;gap:var(--sp-s-XL);padding-bottom:10px} /* DC-009/011: 10px de aire bajo el título de la lista (no hay token de 10px) */
-.evd-listhead{position:relative;z-index:2;background:var(--white-alpha-100)}
-/* Sombra suave bajo el encabezado cuando la lista se desplaza por debajo (clase .sombra la pone evento-detalle.js) */
-.evd-listhead::after{content:"";position:absolute;left:calc(-1 * var(--sp-m-M));right:calc(-1 * var(--sp-m-M));top:100%;height:16px;pointer-events:none;opacity:0;
-  background:linear-gradient(to bottom,color-mix(in srgb,var(--blue-jic-900) 7%,transparent),transparent);transition:opacity 200ms ease}
-.evd-listhead.sombra::after{opacity:1}
-.evd-h2{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* El título de la lista no compite con el nombre del evento */
+.evd-h2{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:var(--fs-body)}
 .evd-count{flex:none;display:flex}
-.evd-list{flex:1 1 auto;min-height:0}
-.dtile{display:flex;align-items:center;padding:var(--sp-m-M) 0;border-bottom:1px solid var(--gray-300)}
+/* Alto mínimo ≈ lo visible bajo la barra fija (pestañas 38 + título 56 − relleno): la barra no se suelta con listas cortas */
+.evd-list{display:flex;flex-direction:column;min-height:calc(100% - 56px)} /* la barra llega a pegarse aun con pocos deportistas */
+.evd-list > .empty{flex:none;min-height:0;justify-content:flex-start;padding-top:var(--sp-l-L)} /* a la vista, no centrado en el alto mínimo */
+/* Pendiente = superficie tonal; calificado = en reposo (blanco + contorno, título gray-800) */
+.dtile{display:flex;align-items:center;margin-bottom:var(--sp-s-XL);padding:var(--sp-m-S) var(--sp-m-S) var(--sp-m-S) var(--sp-m-M);background:var(--gray-100);border-radius:var(--r-large)}
+.dtile:has(.chip.calificado){background:var(--white-alpha-100);box-shadow:inset 0 0 0 1px var(--gray-200)}
+.dtile:has(.chip.calificado) .dt-title{color:var(--gray-800)}
 .dt-main{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:flex-start}
 .dt-main .chip{margin:0}
 .dt-title{margin-top:var(--sp-s-L);font-size:18px;font-weight:var(--fw-bold);color:var(--black-alpha-100)}
-.dt-sub{margin-top:var(--sp-s-S);font-size:var(--fs-body);color:var(--black-alpha-100)}
+.dt-sub{margin-top:var(--sp-s-S);font-size:var(--fs-body-small);color:var(--gray-700)}
 .dt-extra{margin-top:var(--sp-s-S);font-size:var(--fs-body-small);color:var(--gray-700)}
 
 /* OcDeportistaFilterSheet */
@@ -75,22 +97,25 @@
 .sheet-filter .sheet-handle,.sheet-filter .sheet-head,.sheet-filter .sheet-div{flex:none}
 .fs-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;scrollbar-width:none}
 .fs-scroll::-webkit-scrollbar{display:none}
-.fs-div{flex:none;height:1px;background:var(--gray-300)}
+/* Dentro del scroll las secciones se separan por aire; solo queda la línea que separa el pie */
+.fs-div{flex:none;height:1px;background:var(--gray-200)}
+.fs-scroll .fs-div{height:var(--sp-s-XL);background:transparent}
 .fs-sec{padding:var(--sp-m-M) var(--sp-m-XL)}
-.fs-label{margin:0;font-size:var(--fs-label);font-weight:var(--fw-bold);color:var(--gray-700);letter-spacing:.4px}
+.fs-label{margin:0;font-size:var(--fs-caption);font-weight:var(--fw-bold);color:var(--gray-700);letter-spacing:var(--ls-rotulo)}
 .fs-gap8{height:var(--sp-s-XL)}
 .fs-sec.chips .fs-label{margin-bottom:var(--sp-m-S)}
 .fs-wrap{display:flex;flex-wrap:wrap;gap:var(--sp-s-XL)}
-.fchip{padding:9px var(--sp-m-M);background:var(--white-alpha-100);border:1px solid var(--gray-300);border-radius:22px;font-size:var(--fs-label);font-weight:var(--fw-tag);color:var(--black-alpha-100);line-height:normal}
-.fchip.sel{background:var(--orange-100);border-color:var(--orange-700);color:var(--orange-700)}
-.dsel{display:flex;align-items:center;width:100%;padding:var(--sp-m-S) var(--sp-m-M);background:var(--white-alpha-100);border:.5px solid var(--gray-500);border-radius:var(--r-large);font-size:var(--fs-label);font-weight:var(--fw-tag);color:var(--black-alpha-100)}
+.fchip{position:relative;padding:9px var(--sp-m-M);background:var(--gray-100);border:1px solid var(--gray-100);border-radius:22px;font-size:var(--fs-label);font-weight:var(--fw-tag);color:var(--black-alpha-100);line-height:normal}
+.fchip::after{content:"";position:absolute;inset:-4px 0} /* objetivo táctil ≥ 44 sin mover el diseño */
+.fchip.sel{background:var(--orange-100);border-color:var(--orange-700);color:var(--orange-800)} /* 800: 700 sobre 100 da 3.9:1 */
+.dsel{display:flex;align-items:center;width:100%;padding:var(--sp-m-S) var(--sp-m-M);background:var(--white-alpha-100);border:.5px solid var(--gray-600);border-radius:var(--r-large);font-size:var(--fs-label);font-weight:var(--fw-tag);color:var(--black-alpha-100)}
 .dsel.open{border:1.5px solid var(--orange-700)}
 .dsel > span:first-child{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dsel > span.def{color:var(--gray-700)}
-.dmenu{max-height:260px;margin-top:var(--sp-s-XL);overflow-y:auto;border:1px solid var(--gray-300);border-radius:var(--r-large);background:var(--white-alpha-100)}
-.dopt{display:flex;align-items:center;width:100%;padding:var(--sp-m-S) var(--sp-m-M);font-size:var(--fs-label);font-weight:500;color:var(--black-alpha-100);background:var(--white-alpha-100)}
-.dopt + .dopt{border-top:1px solid var(--gray-300)}
+.dmenu{max-height:260px;margin-top:var(--sp-s-XL);overflow-y:auto;border:0;border-radius:var(--r-large);background:var(--gray-100)}
+.dopt{display:flex;align-items:center;width:100%;padding:var(--sp-m-S) var(--sp-m-M);font-size:var(--fs-label);font-weight:500;color:var(--black-alpha-100);background:transparent}
+.dopt + .dopt{border-top:1px solid var(--white-alpha-100)}
 .dopt > span:first-child{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.dopt.sel{background:var(--orange-100);color:var(--orange-700);font-weight:var(--fw-bold)}
+.dopt.sel{background:var(--orange-100);color:var(--orange-800);font-weight:var(--fw-bold)}
 .fs-foot{flex:none;display:flex;gap:var(--sp-m-S);padding:var(--sp-m-M) var(--sp-m-XL) calc(var(--sp-m-XL) + var(--safe-bottom))}
 .fs-foot .btn:first-child{flex:1 1 0}.fs-foot .btn:last-child{flex:2 1 0}

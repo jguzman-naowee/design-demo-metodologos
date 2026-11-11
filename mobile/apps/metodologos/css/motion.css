@@ -34,7 +34,8 @@
 .evcard{transition:transform var(--mo-fast) var(--mo-out)}
 .evcard:has(.evcard-link:active){transform:scale(.985)}
 .dtile,.dopt,.linkrow,.checkrow{transition:background-color var(--mo-fast) ease}
-.dtile:active,.dopt:active,.linkrow:active{background:var(--gray-100)}
+.linkrow:active{background:var(--gray-100)}
+.dtile:active,.dopt:active{background:var(--gray-200)} /* su reposo ya es gray-100 */
 .checkrow:active .checkbox{transform:scale(.88)}
 
 /* ── 3. Selección: casillas, chips y campos cambian de estado con suavidad ── */
@@ -59,8 +60,8 @@
 [data-enter] > :nth-child(4){--i:3}[data-enter] > :nth-child(5){--i:4}[data-enter] > :nth-child(n+6){--i:5}
 
 /* ── 6. Imágenes de evento: aparecen con un fundido cuando cargan ── */
-.evcard-img,.evd-thumb img{opacity:0;transition:opacity 320ms ease}
-.evcard-img.ld,.evd-thumb img.ld{opacity:1}
+.evcard-img,.evd-hero-img{opacity:0;transition:opacity 320ms ease}
+.evcard-img.ld,.evd-hero-img.ld{opacity:1}
 
 /* ── 7. Desplegables ── */
 /* Aviso del evento (acordeón): el alto se abre con grid-template-rows y la flecha gira */

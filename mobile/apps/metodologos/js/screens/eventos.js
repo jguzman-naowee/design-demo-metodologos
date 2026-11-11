@@ -31,17 +31,18 @@
   Router.add("/eventos", {
     render() {
       return Ui.page({
-        nav: "eventos", testid: "pantalla-eventos",
-        body: '<div class="content"><h1 class="t-h1">Eventos</h1>' +
+        nav: "eventos", testid: "pantalla-eventos", bodyClass: "tonal",
+        body: '<div class="content scroll evs" data-testid="eventos-scroll"><h1 class="t-h1">Eventos</h1>' +
           '<p class="lead">¡Estos son tus eventos asignados para diligenciar!</p>' +
-          '<div class="searchrow">' + Ui.search("", { placeholder: "Buscar por nombre", testid: "eventos-buscar" }) +
+          '<div class="searchrow fija a-sangre" data-testid="eventos-barra">' + Ui.search("", { placeholder: "Buscar por evento", testid: "eventos-buscar" }) +
             '<button type="button" class="trigger" data-testid="eventos-filtro-estado" data-act="filtro-estado" aria-haspopup="dialog"><span>Estado</span>' + Ui.icon("m-keyboard_arrow_down", { size: 24, color: "currentColor" }) + "</button></div>" +
-          '<div class="list scroll" data-testid="eventos-lista" aria-live="polite"></div></div>',
+          '<div class="list" data-testid="eventos-lista" aria-live="polite"></div></div>',
       });
     },
     mount(root) {
       const input = root.querySelector("input[type=search]"), trigger = root.querySelector(".trigger"), list = root.querySelector(".list");
       const estados = new Set();
+      const sombra = Ui.fijar(root.querySelector(".evs"), root.querySelector(".evs > .searchrow"));
 
       const filtrados = () => {
         const q = Data.norm(input.value.trim());
@@ -60,7 +61,7 @@
 
       /* Las filas entran una tras otra solo al abrir la pantalla; al buscar o filtrar no se animan */
       list.setAttribute("data-enter", ""); setTimeout(() => list.removeAttribute("data-enter"), 900);
-      input.addEventListener("input", paint);
+      input.addEventListener("input", () => { paint(); sombra(); });
       Ui.on(list, "keydown", "[data-act=aviso]", (e, btn) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); btn.click(); } });
       Ui.on(list, "click", "[data-act=aviso]", (e, btn) => btn.setAttribute("aria-expanded", String(btn.getAttribute("aria-expanded") !== "true")));
 

@@ -1,6 +1,14 @@
 /* Componentes de la app (equivalen a lib/shared/design_system y lib/shared/widgets).
    Cada bloque cita su widget Flutter de origen. Solo usan variables de tokens.css. */
 
+/* Tokens de jerarquía (docs/JERARQUIA.md). Van aquí porque tokens.css lo edita otra tarea; moverlos allá al consolidar. */
+:root{
+  --fs-sujeto:24px;                                                  /* nombre del deportista/equipo/usuario: manda sobre el rótulo */
+  --sombra-reposo:0 1px 2px rgba(24,30,71,.06),0 6px 18px rgba(24,30,71,.06);
+  --sombra-pegada:linear-gradient(to bottom,rgba(24,30,71,.09),transparent); /* bajo una barra fija con contenido pasando por detrás */
+  --ls-rotulo:.6px;--topbar-h:62px;
+}
+
 *,*::before,*::after{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{font-family:var(--font);font-size:var(--fs-body);color:var(--negro);background:var(--white-alpha-100);
@@ -33,20 +41,42 @@ svg.ic{display:block;flex:none}
 .page-safe{padding-top:var(--safe-top)}            /* SafeArea(top) */
 .page-body{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
 .scroll{scrollbar-width:none;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+/* Lienzo tonal: en los listados las cards blancas se separan por superficie, no por borde */
+.page-body.tonal{background:var(--gray-100)}
+
+/* ── OcBackLink: chevron 32 en caja táctil de 44 (detalle, perfil, formulario, notificaciones) ── */
+.backlink{flex:none;align-self:flex-start;display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-6px -6px 2px -6px;border-radius:50%;color:var(--orange-700)}
+
+/* ── Barra compacta (DC-013): al salir el h1 de vista aparece fija arriba con volver + título pequeño.
+   Va como primer hijo del scroll y no ocupa alto (margen negativo): el contenido no salta al aparecer. ── */
+.topbar{flex:none;position:sticky;top:0;z-index:6;display:flex;align-items:center;gap:var(--sp-s-M);height:var(--topbar-h);margin-bottom:calc(-1 * var(--topbar-h));
+  padding:0 var(--sp-m-M) 0 var(--sp-s-L);background:var(--white-alpha-100);border-bottom:1px solid var(--gray-200);
+  opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity 180ms ease,transform 220ms var(--mo-out,ease-out),visibility 0s 220ms}
+.topbar.on{opacity:1;visibility:visible;transform:none;transition:opacity 180ms ease,transform 220ms var(--mo-out,ease-out),visibility 0s}
+.topbar .backlink{margin:0;align-self:center}
+.topbar-t{flex:1 1 auto;min-width:0;font-size:var(--fs-body);font-weight:var(--fw-bold);color:var(--negro);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (prefers-reduced-motion:reduce){.topbar,.topbar.on{transform:none;transition:opacity 120ms ease,visibility 0s}}
+
+/* Sombra de toda barra fija (DC-016): solo con scroll y la barra pegada (Ui.fijar pone .pegada; la topbar, al estar .on) */
+.fija::after,.topbar::after{content:"";position:absolute;left:0;right:0;top:100%;height:16px;pointer-events:none;opacity:0;background:var(--sombra-pegada);transition:opacity 200ms ease}
+.fija.pegada::after,.topbar.on::after{opacity:1}
+.fija.a-sangre::after{left:calc(-1 * var(--sp-m-M));right:calc(-1 * var(--sp-m-M))}
 
 /* ── OcAppBar (shared/widgets/oc_app_bar.dart): padding 16/8, borde inferior 1px gray300, logo 40, menú 24 ── */
 .appbar{flex:none;display:flex;align-items:center;justify-content:space-between;padding:6px var(--sp-m-M);
-  background:var(--white-alpha-100);border-bottom:1px solid var(--gray-300)}
+  background:var(--white-alpha-100);border-bottom:1px solid var(--gray-200)}
 .appbar-btn{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%}
 .appbar-btn.logo{margin-left:-2px}.appbar-btn.menu{margin-right:-10px;color:var(--blue-jic-900)}
 .appbar-r{display:flex;align-items:center}
+.appbar-l{display:flex;align-items:center;gap:var(--sp-s-M);min-width:0}
+.appbar-app{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:18px;font-weight:var(--fw-bold);color:var(--gray-800)} /* DC-017/019: acompaña al logo, no compite */
 .appbar-btn.bell{position:relative;margin-right:-2px}
-.bell-badge{position:absolute;top:3px;right:-1px;box-sizing:border-box;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:var(--error-600);color:var(--white-alpha-100);font-size:11px;font-weight:var(--fw-bold);line-height:14px;text-align:center;border:2px solid var(--white-alpha-100)}
+.bell-badge{position:absolute;top:3px;right:-1px;box-sizing:border-box;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:var(--error-700);color:var(--white-alpha-100);font-size:11px;font-weight:var(--fw-bold);line-height:14px;text-align:center;border:2px solid var(--white-alpha-100)}
 .bell-badge[hidden]{display:none}
 .appbar-btn img{width:40px;height:40px;object-fit:contain;display:block}
 
 /* ── OcBottomNav (shared/widgets/oc_bottom_nav.dart) ── */
-.bnav{flex:none;display:flex;justify-content:space-evenly;background:var(--white-alpha-100);border-top:1px solid var(--gray-300);
+.bnav{flex:none;display:flex;justify-content:space-evenly;background:var(--white-alpha-100);border-top:1px solid var(--gray-200);
   padding:var(--sp-m-S) 0 max(var(--sp-s-XL),var(--safe-bottom))}
 .bnav-item{display:flex;flex-direction:column;align-items:center;min-width:44px;color:var(--gray-700)}
 .bnav-item .t-tag{color:inherit;margin:var(--sp-s-M) 0}
@@ -63,8 +93,10 @@ svg.ic{display:block;flex:none}
 .btn.fit{width:auto}
 .btn.primary{background:var(--orange-700);color:var(--white-alpha-100)}
 .btn.dark{background:var(--black-alpha-100);color:var(--white-alpha-100)}
-.btn.cream{background:var(--orange-100);color:var(--orange-700)}
-.btn.cream-outlined{background:var(--orange-100);color:var(--orange-700);border-color:var(--orange-700)}
+/* Niveles: primary = la acción · cream = secundaria · tertiary = salir/limpiar · outline = alternativa neutra.
+   cream-outlined queda como alias de cream: el borde competía con la primaria. orange-800 porque 700 sobre 100 da 3.9:1. */
+.btn.cream,.btn.cream-outlined{background:var(--orange-100);color:var(--orange-800)}
+.btn.tertiary{background:var(--gray-100);color:var(--black-alpha-100)}
 .btn.outline{background:var(--white-alpha-100);color:var(--black-alpha-100);border-color:var(--gray-300)}
 .btn:disabled,.btn[aria-disabled="true"]{background:var(--gray-300);color:var(--gray-500);border-color:transparent;cursor:default}
 .btn:active:not(:disabled){filter:brightness(.94)}
@@ -73,7 +105,7 @@ svg.ic{display:block;flex:none}
 .chip{display:inline-block;max-width:100%;padding:var(--sp-s-M) var(--sp-s-XL);border-radius:var(--r-pill);font-size:10px;font-weight:var(--fw-tag);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:normal}
 .chip.calificado,.chip.enCurso{background:var(--success-100);color:var(--success-text)}
-.chip.sinCalificacion{background:var(--orange-100);color:var(--orange-700)}
+.chip.sinCalificacion{background:var(--orange-100);color:var(--orange-800)}
 .chip.programado{background:var(--gray-300);color:var(--blue-jic-900)}
 .chip.finalizado{background:var(--finalizado-bg);color:var(--finalizado-text)}
 .chip.info{background:var(--informative-quiet);color:var(--blue-900);font-size:14px;padding:var(--sp-s-M) 14px}
@@ -81,7 +113,7 @@ svg.ic{display:block;flex:none}
 /* ── OcSearchBar + OcTextField (molecules/oc_search_bar.dart, atoms/oc_text_field.dart) ── */
 .searchrow{display:flex;align-items:center;gap:var(--sp-s-XL)}
 .search{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:10px;height:44px;padding:0 18px;
-  background:var(--white-alpha-100);border:.5px solid var(--gray-500);border-radius:26px;color:var(--gray-700)}
+  background:var(--white-alpha-100);border:.5px solid var(--gray-600);border-radius:26px;color:var(--gray-700)} /* gray-600: 3.4:1, mínimo de control */
 .search input{flex:1 1 auto;min-width:0;width:100%;height:100%;border:0;background:transparent;outline:0;padding:0;
   font-size:var(--fs-label);color:var(--negro);caret-color:var(--orange-700)}
 .search input::placeholder{color:var(--gray-700);opacity:1}
@@ -95,14 +127,18 @@ svg.ic{display:block;flex:none}
 
 /* Disparador de filtro "Estado" (eventos_page.dart::_estadoTrigger): 132px, radio 12, padding 18/14 */
 .trigger{flex:none;width:132px;height:44px;display:flex;align-items:center;padding:0 14px 0 18px;
-  background:var(--white-alpha-100);border:.5px solid var(--gray-500);border-radius:var(--r-large);color:var(--negro)}
+  background:var(--white-alpha-100);border:.5px solid var(--gray-600);border-radius:var(--r-large);color:var(--negro)}
 .trigger > span{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:var(--fs-label);font-weight:var(--fw-regular)}
 .trigger.on{border:1.5px solid var(--orange-700);color:var(--orange-700)}
 
 /* ── Card genérica (molecules/oc_card.dart) y tarjeta de evento (oc_evento_card.dart) ── */
 .card{background:var(--white-alpha-100);border:1px solid var(--gray-300);border-radius:var(--r-xlarge);padding:var(--sp-m-M)}
-.evcard{display:block;width:100%;margin-bottom:22px;overflow:hidden;background:var(--white-alpha-100);border:1px solid var(--gray-300);
-  box-shadow:0 2px 10px rgba(24,30,71,.05);text-align:left}
+/* Sin borde: la card se separa del lienzo tonal (.page-body.tonal) por superficie y una sombra levísima */
+.evcard{display:block;width:100%;margin-bottom:22px;overflow:hidden;background:var(--white-alpha-100);border-radius:var(--r-xlarge);
+  box-shadow:var(--sombra-reposo);text-align:left}
+/* Finalizado = en reposo: ya no pide acción */
+.evcard:has(.chip.finalizado) .evcard-img{filter:saturate(.45)}
+.evcard:has(.chip.finalizado) .evcard-title{color:var(--gray-800)}
 .evcard-link{display:block}
 .evcard-aviso{padding:var(--sp-s-XL) var(--sp-m-M) var(--sp-m-M)}
 .evcard-body.has-aviso{padding-bottom:0}
@@ -111,14 +147,14 @@ svg.ic{display:block;flex:none}
 .evcard-meta{display:flex;align-items:center;justify-content:space-between;min-height:20px}
 .evcard-title{margin:var(--sp-s-XL) 0 var(--sp-s-M);font-size:var(--fs-subtitle);font-weight:var(--fw-bold);color:var(--navy);line-height:1.2;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.evcard-sub{margin:0;font-size:var(--fs-label);color:var(--gray-700)}
+.evcard-sub{margin:0;font-size:var(--fs-body-small);color:var(--gray-700)}
 
 /* Aviso de plazo de edición de la tarjeta del evento: NwtAlert del SDK (css/sdk-naowee.css + sdk-adaptador.css) */
 
 /* ── OcEmptyState (molecules/oc_empty_state.dart) ── */
 .empty{flex:1 1 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:var(--sp-l-S) var(--sp-m-L);text-align:center;min-height:100%}
 .empty .ic{color:var(--gray-400);margin-bottom:var(--sp-m-S)}
-.empty p{margin:0;font-size:var(--fs-caption);color:var(--gray-700)}
+.empty p{margin:0;font-size:var(--fs-body-small);color:var(--gray-700)}
 
 /* ── Bottom sheet modal (showModalBottomSheet: esquinas superiores 20, scrim negro 54%) ── */
 .scrim{position:absolute;inset:0;z-index:50;background:rgba(0,0,0,.54);opacity:0;transition:opacity .25s ease-out}
@@ -132,10 +168,10 @@ svg.ic{display:block;flex:none}
 .sheet-head{display:flex;align-items:center;padding:0 var(--sp-m-XL)}
 .sheet-head h2{flex:1 1 auto;margin:0}
 .sheet-x{display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-10px -10px -10px 0;color:var(--blue-jic-900)}
-.sheet-div{height:1px;background:var(--gray-300);margin:var(--sp-m-M) 0 var(--sp-s-XL)}
+.sheet-div{height:1px;background:var(--gray-200);margin:var(--sp-m-M) 0 var(--sp-s-XL)}
 .sheet-pad{padding:0 var(--sp-m-XL)}
 .checkrow{display:flex;align-items:center;gap:var(--sp-m-M);width:100%;min-height:44px;padding:var(--sp-m-S) 0;font-size:var(--fs-body);color:var(--black-alpha-100)}
-.checkbox{flex:none;display:flex;align-items:center;justify-content:center;width:20px;height:20px;border:2px solid var(--gray-300);border-radius:4px;background:var(--white-alpha-100);color:var(--white-alpha-100)}
+.checkbox{flex:none;display:flex;align-items:center;justify-content:center;width:20px;height:20px;border:2px solid var(--gray-600);border-radius:4px;background:var(--white-alpha-100);color:var(--white-alpha-100)}
 .checkrow[aria-checked="true"] .checkbox{background:var(--orange-700);border-color:var(--orange-700)}
 .checkbox .ic{display:none}.checkrow[aria-checked="true"] .checkbox .ic{display:block}
 
@@ -146,13 +182,11 @@ svg.ic{display:block;flex:none}
 .sidepanel .x{display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-10px 0 0 -10px;color:var(--orange-700)}
 .sidepanel h2{margin:var(--sp-m-M) 0 var(--sp-s-XL);font-size:var(--naotech-heading6-font-size)} /* DC-015: título del panel con el token del SDK (20px) */
 .sidepanel p{margin:0 0 var(--sp-l-S);font-size:17px;color:var(--gray-700);text-align:justify}
-.linkrow{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:44px;padding:var(--sp-m-S) 0;color:var(--black-alpha-100);border-bottom:1px solid var(--gray-300)}
+.linkrow{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:44px;padding:var(--sp-m-S) 0;color:var(--black-alpha-100);border-bottom:1px solid var(--gray-200)}
 
 /* Avisos de abajo: NwtToast del SDK (css/sdk-naowee.css + sdk-adaptador.css) */
 
-/* ── Login (login_page.dart) ── */
-.login{flex:1 1 auto;display:flex;flex-direction:column;padding:var(--sp-m-M);padding-bottom:var(--sp-m-M)}
-.login-mid{flex:1 1 0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+/* ── Logo animado del COC (Ui.logoAnimado; lo usa la carga de evaluación) ── */
 /* Logo de bienvenida animado: caja de 110px (la misma del logo estático). Ciclo de 3000 ms con la coreografía del indicador de carga:
    la ola se dibuja → cada letra de COLOMBIA sube suavemente, sin rebote, con un escalonado corto → cada aro aparece con su «pop» (azul, amarillo, negro, verde, rojo) → se sostiene → se desvanece. */
 @property --lg-r{syntax:"<percentage>";inherits:false;initial-value:100%}
@@ -196,10 +230,6 @@ svg.ic{display:block;flex:none}
   .login-logo-in,.lg-wave,.lg-word img,.lg-rings img{animation:none}
   .lg-wave{-webkit-mask-image:none;mask-image:none}
 }
-}
-.login-mid h1{margin:var(--sp-m-L) 0 var(--sp-s-XL)}
-.login-mid p{margin:0;font-size:var(--fs-body);color:var(--gray-700)}
-.login .btn{margin-bottom:var(--sp-m-S)}
 
 /* ── Contenido de listados (eventos_page.dart) ── */
 .content{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;padding:var(--sp-m-M) var(--sp-m-M) 0}
@@ -207,6 +237,17 @@ svg.ic{display:block;flex:none}
 .content .lead{margin:var(--sp-s-M) 0 var(--sp-m-M);font-size:var(--fs-body-small);color:var(--gray-700)}
 .content .searchrow{margin-bottom:var(--sp-m-M)}
 .list{flex:1 1 auto;min-height:0}
+/* Eventos (DC-015): un solo scroll; solo la fila del buscador queda fija, sobre el lienzo tonal.
+   Relleno 8 con margen −8: mismo layout, y aire bajo la barra cuando las cards pasan por detrás. top −16: el sticky respeta el padding. */
+.content.evs{display:block;padding-bottom:var(--sp-m-XL)}
+.evs > .searchrow{position:sticky;top:calc(-1 * var(--sp-m-M));z-index:5;margin:calc(-1 * var(--sp-s-XL)) 0 var(--sp-s-XL);padding:var(--sp-s-XL) 0;background:var(--gray-100);
+  box-shadow:calc(-1 * var(--sp-m-M)) 0 0 var(--gray-100),var(--sp-m-M) 0 0 var(--gray-100)}
+/* DC-024: pegada, el filtro «Estado» se oculta y el buscador ocupa todo el ancho (la barra conserva su alto) */
+.evs > .searchrow .trigger{transition:width 200ms ease,margin 200ms ease,opacity 150ms ease,visibility 0s}
+.evs > .searchrow.pegada .trigger{width:0;margin-left:calc(-1 * var(--sp-s-XL));padding:0;border-width:0;opacity:0;visibility:hidden;overflow:hidden;transition:width 200ms ease,margin 200ms ease,opacity 150ms ease,visibility 0s 200ms}
+@media (prefers-reduced-motion:reduce){.evs > .searchrow .trigger,.evs > .searchrow.pegada .trigger{transition:none}}
+.evs > .list{display:flex;flex-direction:column;min-height:calc(100% - 44px)} /* la barra no se suelta al filtrar con pocos resultados */
+.evs > .list > .empty{flex:none;min-height:0;justify-content:flex-start;padding-top:var(--sp-l-L)}
 
 @media (prefers-reduced-motion:reduce){.scrim,.sheet,.sidepanel{transition:none}}
 .scroll::-webkit-scrollbar,.sheet::-webkit-scrollbar,.sidepanel::-webkit-scrollbar{display:none}
