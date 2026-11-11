@@ -6,12 +6,13 @@ body{height:100dvh;display:flex;flex-direction:column;overflow:hidden}
 .top{flex:none;min-height:72px;display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;padding:8px 24px;background:#fff;border-bottom:1px solid var(--line);position:relative;z-index:30}
 .brand{display:flex;align-items:center;gap:14px;min-width:0}
 .logo{display:block;height:20px;width:auto;flex:none}
+.logo-md{height:44px}
 .sep{width:1px;height:32px;background:var(--line)}
 .ttl{display:flex;flex-direction:column;line-height:1.2;min-width:0}
 .top h1{font-size:16px;font-weight:500;margin:0}
 .sub{font-size:16px;font-weight:300;color:var(--mut)}
 .tools{margin-left:auto;display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px}
-.appsel{font:inherit;font-size:13px;min-height:44px;border-radius:10px;border:1px solid #D0D4E6;padding:0 10px;background:#fff;color:var(--ink)}
+.appsel{font:inherit;font-size:13px;min-height:44px;border-radius:10px;border:1px solid #D0D4E6;padding:0 34px 0 12px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2352547A' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 8 5 5 5-5'/%3E%3C/svg%3E") no-repeat right 10px center/16px;color:var(--ink);appearance:none;-webkit-appearance:none;cursor:pointer}
 .pill{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 14px;border:1px solid #D0D4E6;border-radius:999px;background:#fff;color:var(--ink);font-size:14px;font-weight:600;letter-spacing:-.01em;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.08);transition:background .15s,border-color .15s}
 .pill:hover{background:#F8F8FC;border-color:#9A9BB8}
 .pill[aria-expanded=true]{border-color:var(--v);color:var(--v)}
@@ -61,27 +62,60 @@ body{height:100dvh;display:flex;flex-direction:column;overflow:hidden}
 @keyframes press{50%{scale:.6}}
 
 /* ── Panel de casos (drawer) ── */
-.panel{display:none;flex-direction:column;gap:14px;width:380px;max-width:100%;background:#fff;border-left:1px solid var(--line);padding:12px 16px 20px;overflow-y:auto}
+.panel{display:none;flex-direction:column;gap:14px;width:440px;max-width:100%;background:#fff;border-left:1px solid var(--line);padding:12px 16px 20px;overflow-y:auto}
 body.panel-open .panel{display:flex}
-.phd{display:flex;align-items:center;justify-content:space-between}
+.phd{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;background:#fff;transition:box-shadow .15s}
+.phd.sh{box-shadow:0 10px 10px -8px rgba(20,22,38,.2)}
+.ctrl{position:relative;z-index:1;transition:box-shadow .15s}
+.ctrl.sh{box-shadow:0 -10px 10px -8px rgba(20,22,38,.2)}
 .k{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--mut)}
-.cases{list-style:none;margin:0;padding:2px;display:flex;flex-direction:column;gap:6px;max-height:min(300px,32dvh);overflow-y:auto;flex:none}
-.case{width:100%;display:flex;align-items:center;gap:12px;text-align:left;min-height:48px;padding:6px 12px;border:1px solid #E1E3EE;border-radius:10px;background:#fff;cursor:pointer}
-.case.on{border-color:var(--v);background:#F1ECFB}
+.cases{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;min-height:160px;overflow-y:auto;flex:1 1 auto}
+.cases li+li{border-top:1px solid var(--line)}
+.case{width:100%;display:flex;align-items:center;gap:12px;text-align:left;font-size:14px;min-height:56px;padding:16px 8px;border:0;border-radius:0;background:transparent;cursor:pointer}
+.cases li.grp{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;padding:16px 8px 8px;border-top:0}
+.cases li.grp:not(:first-child){margin-top:12px;border-top:1px solid var(--line)}
+.cases li.grp a{font-size:12px;font-weight:700;color:var(--v)}
+.cases li.grp small{flex-basis:100%;color:var(--mut);font-size:12px}
+.cases li.fila{display:flex;align-items:stretch}
+.cases li.fila .case{flex:1;min-width:0}
+.ver{flex:none;width:44px;min-height:44px;border:0;background:transparent;color:var(--v);font-size:22px;cursor:pointer;border-radius:0}
+.ver:hover{background:#F8F8FC}
+.det{flex:1 1 auto;min-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:16px}
+.det[hidden]{display:none}
+.det .dh{display:flex;align-items:center;gap:8px}
+.det .dn{font-size:12px;color:var(--mut)}
+.det h2{margin:0;font-size:20px;line-height:1.25}
+.det #detPlay{align-self:flex-start;display:inline-flex;align-items:center;gap:8px}
+.det .res{margin:0;color:var(--mut);font-size:14px;line-height:1.5}
+.det section{display:flex;flex-direction:column;gap:8px;padding-top:16px;border-top:1px solid var(--line)}
+.det h3{margin:0;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.det ul,.det ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;font-size:14px;line-height:1.5}
+.det code{font:12.5px ui-monospace,Menlo,monospace;background:#F1ECFB;border-radius:4px;padding:1px 5px;word-break:break-word}
+.case:hover{background:#F8F8FC}
+.case.on{background:#F1ECFB}
 .case b{flex:none;width:32px;height:26px;border-radius:13px;background:#8A8FAE;color:#fff;font-size:11.5px;display:flex;align-items:center;justify-content:center}
 .case.on b{background:var(--v)}
-.say{min-height:76px;padding:12px 14px;border-radius:10px;background:var(--bg);border:1px solid var(--line);font-size:14px}
+.say:empty{display:none}
+.say{padding:12px 14px;border-radius:10px;background:var(--bg);border:1px solid var(--line);font-size:14px}
 .say .falta{display:block;margin-top:8px;padding:8px 10px;border-radius:8px;background:var(--warn-bg);color:var(--warn);font-size:12.5px}
-.ctrl{background:var(--bg);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px;border:1px solid var(--line)}
-.seg{display:flex;gap:6px}
+.ctrl{flex:none;background:#fff;margin:0 -16px -20px;padding:16px;display:flex;flex-wrap:wrap;align-items:center;gap:12px 8px}
+.seg{display:flex;gap:6px;flex:none}
 .seg button,.btn{min-height:44px;min-width:44px;border-radius:10px;border:1.5px solid var(--v);font-weight:700;font-size:13px;cursor:pointer;padding:0 16px}
+.ctrl .seg button,.ctrl .btn{padding:0 12px;font-size:12.5px;white-space:nowrap}
+.ctrl .seg button.ic{min-width:44px;padding:0;display:inline-flex;align-items:center;justify-content:center}
+.ctrl .seg button{flex:none}
+.ctrl .btn.ic{padding:0;min-width:44px;width:44px;font-size:16px}
 .seg button{flex:1;background:#fff;color:var(--ink);border-color:#D0D4E6}
 .seg button.on{background:var(--v);border-color:var(--v);color:#fff}
 .btn{background:var(--v);color:#fff}
 .btn.ghost{background:#fff;color:var(--v)}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .row{display:flex;align-items:center;gap:10px}
-.cnt{flex:1;text-align:center;font-size:12px;font-weight:700;color:var(--mut)}
+.cnt{flex:1 0 100%;display:flex;gap:4px}
+.cnt[hidden]{display:none}
+.cnt i{flex:1;height:4px;border-radius:2px;background:#D0D4E6;transition:background .2s}
+.cnt i.on{background:var(--v)}
+.ctrl #next{flex:1}
 .dev{display:flex;flex-direction:column;gap:10px;padding:14px;border:1.5px dashed #B3261E;border-radius:var(--r)}
 .dev .row{flex-wrap:wrap}
 .dev textarea{width:100%;font:12px/1.4 ui-monospace,Menlo,monospace;border:1px solid #D0D4E6;border-radius:10px;padding:10px;resize:vertical}
@@ -90,7 +124,7 @@ body.panel-open .panel{display:flex}
 
 /* < 1100 px: el panel flota sobre el escenario (no empuja el teléfono). */
 @media (max-width:1099px){
-  .panel{position:fixed;z-index:20;top:var(--hdr);right:0;bottom:0;width:min(380px,100%);box-shadow:-12px 0 32px rgba(20,22,38,.18)}
+  .panel{position:fixed;z-index:20;top:var(--hdr);right:0;bottom:0;width:min(440px,100%);border-left:0;box-shadow:-12px 0 32px rgba(20,22,38,.18)}
 }
 /* Móvil real: hoja inferior. */
 @media (max-width:699px){
@@ -98,10 +132,10 @@ body.panel-open .panel{display:flex}
   .sep,.sub{display:none}
   .tools{margin-left:0;width:100%}
   .scroller{padding:16px}
-  .zoom{display:none} /* en el móvil el teléfono ya ocupa el ancho; «Reiniciar» está en la hoja de casos */
+  .zoom{display:none} /* en el móvil el teléfono ya ocupa el ancho; el reinicio está en la hoja de casos */
   .pill{padding:0 10px;gap:8px}
   #casosBtn span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-  .panel{top:auto;left:0;width:100%;max-height:72dvh;border-left:0;border-top:1px solid var(--line);border-radius:16px 16px 0 0;box-shadow:0 -12px 32px rgba(20,22,38,.22)}
+  .panel{top:auto;left:0;width:100%;max-height:72dvh;border-left:0;border-top:0;border-radius:16px 16px 0 0;box-shadow:0 -12px 32px rgba(20,22,38,.22)}
 }
 
 /* ── Vista plana: solo la app, sin teléfono ni cromo; queda el interruptor flotante ── */

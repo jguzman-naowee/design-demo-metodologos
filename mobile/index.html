@@ -12,27 +12,28 @@
   <div class="brand">
     <img class="logo" src="../shared/logos/naowee.svg" alt="Naowee" width="106" height="20">
     <span class="sep" aria-hidden="true"></span>
+    <img class="logo logo-md" src="../shared/logos/mindeporte.svg" alt="Ministerio del Deporte" width="24" height="20">
+    <span class="sep" aria-hidden="true"></span>
     <div class="ttl"><h1 id="appNombre">Demo móvil</h1><span class="sub" id="appSub">Demo móvil</span></div>
   </div>
   <div class="tools">
     <span class="devtag" id="devtag" hidden>DEV</span>
     <label class="sr" for="appSel">App</label><select id="appSel" class="appsel"></select>
+    <button type="button" class="pill" id="planaBtn" role="switch" aria-checked="false" title="Mostrar solo la app, sin teléfono (Esc para salir)">
+      <span>Vista plana</span><span class="track" aria-hidden="true"><span class="knob"></span></span>
+    </button>
     <button type="button" class="pill" id="casosBtn" aria-expanded="false" aria-controls="panel">
       <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       <span>Casos</span>
-    </button>
-    <button type="button" class="pill" id="planaBtn" role="switch" aria-checked="false" title="Mostrar solo la app, sin teléfono (Esc para salir)">
-      <span>Vista plana</span><span class="track" aria-hidden="true"><span class="knob"></span></span>
     </button>
   </div>
 </header>
 <main class="stage" id="stage">
   <section class="device" id="device" aria-label="Teléfono">
-    <div class="zoom" role="group" aria-label="Zoom y reinicio">
+    <div class="zoom" role="group" aria-label="Zoom">
       <button type="button" class="zb" id="zOut" aria-label="Alejar" title="Alejar"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M6.5 9h5M13.5 13.5 17 17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
       <button type="button" class="zb" id="zFit" aria-label="Ajustar al espacio disponible" title="Ajustar al espacio disponible"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M16 10a6 6 0 1 1-1.9-4.4M16 3v3.5h-3.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <button type="button" class="zb" id="zIn" aria-label="Acercar" title="Acercar"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M6.5 9h5M9 6.5v5M13.5 13.5 17 17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
-      <button type="button" class="zb" id="zPlay" aria-label="Reiniciar el caso" title="Reiniciar el caso"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M6 4.5v11l9-5.5z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></button>
     </div>
     <div class="scroller" id="scroller">
       <div class="holder" id="holder">
@@ -62,17 +63,17 @@
       <button type="button" class="zb" id="closePanel" aria-label="Cerrar el panel de casos"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M5 5l10 10M15 5 5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
     </div>
     <ol class="cases" id="cases"></ol>
+    <article class="det" id="detalle" hidden aria-label="Detalle del caso"></article>
     <div class="say" id="say" aria-live="polite"></div>
     <div class="ctrl">
+      <div class="cnt" id="cnt" role="progressbar" aria-label="Avance del caso"></div>
       <div class="seg" role="group" aria-label="Modo">
         <button type="button" data-mode="paso" class="on">Paso a paso</button>
-        <button type="button" data-mode="auto">Automático</button>
+        <button type="button" data-mode="auto" class="ic" aria-label="Automático" title="Automático"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M6 4.5v11l9-5.5z" fill="currentColor"/></svg></button>
       </div>
-      <div class="row">
-        <button type="button" class="btn ghost" id="restart">↺ Reiniciar</button>
-        <span class="cnt" id="cnt"></span>
-        <button type="button" class="btn" id="next">Siguiente ▸</button>
-      </div>
+      <button type="button" class="btn ghost ic" id="restart" aria-label="Reiniciar el caso" title="Reiniciar el caso">↺</button>
+      <button type="button" class="btn ghost ic" id="stop" aria-label="Detener la ejecución" title="Detener la ejecución" disabled>■</button>
+      <button type="button" class="btn" id="next">Siguiente ▸</button>
     </div>
     <section class="dev" id="dev" hidden aria-label="Modo dev">
       <div class="k">MODO DEV</div>

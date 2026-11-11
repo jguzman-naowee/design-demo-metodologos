@@ -2,41 +2,9 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Layouts de demos · Naowee</title>
-<link rel="stylesheet" href="shared/base.css">
-<style>
-main{max-width:880px;margin:0 auto;padding:clamp(24px,6vw,72px) 16px}
-h1{font-size:clamp(26px,4vw,38px);margin:0 0 8px}
-p.lead{color:var(--mut);margin:0 0 32px;max-width:56ch}
-.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-.opt{display:flex;flex-direction:column;gap:12px;padding:24px;border:1.5px solid var(--line);border-radius:var(--r);background:#fff;color:inherit;text-decoration:none;min-height:220px}
-a.opt:hover{border-color:var(--v);box-shadow:0 8px 28px rgba(74,42,128,.14)}
-.opt h2{margin:0;font-size:20px}
-.opt p{margin:0;color:var(--mut);font-size:14px}
-.opt svg{width:56px;height:56px;color:var(--v)}
-.opt .tag{margin-top:auto;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--warn);background:#FFE7B3;border-radius:999px;padding:4px 10px;align-self:flex-start}
-.opt.off{opacity:.6;cursor:not-allowed}
-</style>
+<title>Metodólogos · Naowee</title>
+<meta http-equiv="refresh" content="0;url=mobile/?app=metodologos">
+<script>location.replace("mobile/?app=metodologos" + location.hash);</script>
 </head>
-<body>
-<main>
-  <img src="shared/logos/naowee.svg" alt="Naowee" width="127" height="24" style="display:block;margin-bottom:32px">
-  <h1>¿Qué demo quieres ver?</h1>
-  <p class="lead">Elige el formato. Cada uno corre los casos de forma guiada sobre el diseño, con las mismas reglas.</p>
-  <div class="opts">
-    <a class="opt" href="mobile/">
-      <svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><rect x="16" y="4" width="24" height="48" rx="5"/><path d="M25 46h6"/></svg>
-      <h2>Demo móvil</h2>
-      <p>El diseño dentro de un teléfono, con el recorrido guiado al lado.</p>
-    </a>
-    <div class="opt off" aria-disabled="true">
-      <svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><rect x="4" y="10" width="48" height="32" rx="4"/><path d="M20 48h16M28 42v6"/></svg>
-      <h2>Demo web</h2>
-      <p>El diseño en navegador de escritorio.</p>
-      <span class="tag">PRÓXIMAMENTE</span>
-    </div>
-  </div>
-</main>
-</body>
+<body></body>
 </html>

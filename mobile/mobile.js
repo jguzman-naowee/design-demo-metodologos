@@ -5,7 +5,7 @@
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const qs = new URLSearchParams(location.search), DEV = qs.has("dev");
-  const S = { app: null, caso: null, i: 0, mode: "paso", token: 0, busy: false, pick: false };
+  const S = { stopped: false, app: null, caso: null, i: 0, mode: "paso", token: 0, busy: false, pick: false };
 
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const doc = () => frame.contentDocument;
@@ -58,12 +58,10 @@
       if (my !== S.token || S.busy || S.mode !== "paso") return;
       spot.classList.add("hint");
       if (st.t === "click") { S.fxClick = true; cur.hidden = false; cur.style.transform = "translate(" + (r.x + r.w / 2) + "px," + (r.y + r.h / 2) + "px)"; }
-      say.innerHTML = esc(st.body || "");
     } catch (e) { /* sin guía: el paso mostrará su error al ejecutarse */ }
   }
 
   async function runStep(st) {
-    say.innerHTML = esc(st.body || "");
     if (st.t === "goto") { hideFx(); await load(st.url || S.app.inicio || "index.html"); return; }
     const el = find(st.sel), r = await focus(el);
     if (st.t === "click") {
@@ -81,9 +79,13 @@
 
   const paint = () => {
     const n = S.caso.steps.length;
-    $("cnt").textContent = Math.min(S.i, n) + " / " + n;
+    const hecho = Math.min(S.i, n), cnt = $("cnt");
+    cnt.hidden = hecho === 0 && !S.busy; /* el avance aparece al iniciar el recorrido */
+    cnt.innerHTML = Array.from({ length: n }, (_, k) => "<i" + (k < hecho ? ' class="on"' : "") + "></i>").join("");
+    cnt.setAttribute("aria-valuemin", 0); cnt.setAttribute("aria-valuemax", n); cnt.setAttribute("aria-valuenow", hecho);
     $("next").textContent = (S.i >= n ? "Terminado" : "Siguiente") + " ▸";
     $("next").disabled = S.i >= n || S.busy;
+    $("stop").disabled = !(S.busy || S.mode === "auto");
     document.querySelectorAll(".case").forEach((b) => b.classList.toggle("on", b.dataset.id === S.caso.id));
   };
 
@@ -95,15 +97,22 @@
     S.busy = false; paint();
     if (S.i >= S.caso.steps.length) setTimeout(hideFx, RM ? 0 : 1200);
     if (S.i >= S.caso.steps.length && S.caso.falta) say.innerHTML += '<span class="falta"><b>Pendiente:</b> ' + esc(S.caso.falta) + "</span>";
-    if (S.mode === "paso" && my === S.token) hint();
+    if (S.mode === "paso" && (my === S.token || S.stopped)) { S.stopped = false; hint(); }
     if (S.mode === "auto" && my === S.token && S.i < S.caso.steps.length) { await sleep(RM ? 0 : 1400); if (my === S.token) next(); }
   }
 
+  /* Detener: corta el encadenado del modo automático y vuelve a paso a paso; el paso en curso termina solo. */
+  function stop() {
+    S.token++; S.stopped = S.busy; S.mode = "paso";
+    document.querySelectorAll(".seg button").forEach((x) => x.classList.toggle("on", x.dataset.mode === "paso"));
+    paint(); if (!S.busy) hint();
+  }
+
   function pick(id) {
-    S.token++; S.busy = false; S.i = 0; hideFx();
+    S.token++; S.stopped = false; S.busy = false; S.i = 0; hideFx();
     S.caso = window.CASOS.find((c) => c.id === id) || window.CASOS[0];
     const g = S.caso.steps[0]; /* el caso puede arrancar en otra pantalla (goto con url): se ve ya ahí, no en el login */
-    load((g && g.t === "goto" && g.url) || S.app.inicio || "index.html"); say.textContent = "Pulsa «Siguiente» para empezar.";
+    load((g && g.t === "goto" && g.url) || S.app.inicio || "index.html"); say.textContent = "";
     paint();
     if (S.mode === "auto") next();
   }
@@ -149,7 +158,15 @@
   const ZMIN = 0.5, ZMAX = 2, ZSTEP = 0.25;
   let zoom = 1;
   const isSolo = () => body.classList.contains("solo");
+  /* Sombra en lo que queda fijo (encabezado y controles del panel) solo cuando la lista corre por detrás. */
+  function shade() {
+    const c = $("cases");
+    document.querySelector(".phd").classList.toggle("sh", c.scrollTop > 1);
+    document.querySelector(".ctrl").classList.toggle("sh", c.scrollTop + c.clientHeight < c.scrollHeight - 1);
+  }
+  $("cases").addEventListener("scroll", shade);
   function layout() {
+    shade();
     document.documentElement.style.setProperty("--hdr", $("top").offsetHeight + "px");
     if (isSolo()) return;
     const cs = getComputedStyle($("scroller")), pad = parseFloat(cs.paddingLeft) || 0;
@@ -172,7 +189,6 @@
   $("zOut").addEventListener("click", () => setZoom(zoom - ZSTEP));
   $("zIn").addEventListener("click", () => setZoom(zoom + ZSTEP));
   $("zFit").addEventListener("click", () => setZoom(1));
-  $("zPlay").addEventListener("click", () => S.caso && pick(S.caso.id));
   if (window.ResizeObserver) new ResizeObserver(layout).observe(device); else addEventListener("resize", layout);
 
   function setPanel(open) {
@@ -212,8 +228,25 @@
     const s = document.createElement("script");
     s.src = base() + "casos.js?t=" + Date.now();
     s.onload = () => {
-      $("cases").innerHTML = window.CASOS.map((c) => '<li><button type="button" class="case" data-id="' + esc(c.id) + '"><b>' + esc(c.id) + "</b>" + esc(c.titulo) + "</button></li>").join("");
-      pick(window.CASOS[0].id);
+      const d = document.createElement("script"); d.src = base() + "casos-detalle.js?t=" + Date.now();
+      d.onload = d.onerror = () => arrancar(); /* el detalle es opcional */
+      document.head.appendChild(d);
+    };
+    const arrancar = () => {
+      const det = window.CASOS_DETALLE || {};
+      const fila = (c) => '<li class="fila"><button type="button" class="case" data-id="' + esc(c.id) + '"><b>' + esc(c.id) + "</b>" + esc(c.titulo) + "</button>" +
+        (det[c.id] ? '<button type="button" class="ver" data-id="' + esc(c.id) + '" aria-label="Ver detalle de ' + esc(c.titulo) + '" title="Ver detalle">›</button>' : "") + "</li>";
+      const gs = window.CASOS_GRUPOS;
+      if (!gs) $("cases").innerHTML = window.CASOS.map(fila).join("");
+      else {
+        const tomados = new Set(gs.flatMap((g) => g.ids || []));
+        $("cases").innerHTML = gs.map((g) => {
+          const cs = g.resto ? window.CASOS.filter((c) => !tomados.has(c.id)) : g.ids.map((i) => window.CASOS.find((c) => c.id === i)).filter(Boolean);
+          const enlace = g.url ? ' <a href="' + esc(g.url) + '" target="_blank" rel="noopener">' + esc(g.ref) + " ↗</a>" : "";
+          return '<li class="grp"><span class="k">' + esc(g.titulo) + "</span>" + enlace + (g.nota ? "<small>" + esc(g.nota) + "</small>" : "") + "</li>" + cs.map(fila).join("");
+        }).join("");
+      }
+      pick(window.CASOS[0].id); shade();
     };
     s.onerror = () => { say.innerHTML = '<b style="color:#B3261E">Falta ' + esc(base()) + "casos.js</b>"; };
     document.head.appendChild(s);
@@ -221,12 +254,40 @@
 
   $("appSel").innerHTML = window.APPS.map((a) => '<option value="' + esc(a.id) + '">' + esc(a.nombre || a.id) + "</option>").join("");
   $("appSel").addEventListener("change", () => { history.replaceState(null, "", "?app=" + $("appSel").value + (DEV ? "&dev=1" : "")); openApp($("appSel").value); });
-  $("cases").addEventListener("click", (e) => { const b = e.target.closest(".case"); if (b) pick(b.dataset.id); });
+  $("cases").addEventListener("click", (e) => {
+    const v = e.target.closest(".ver"); if (v) return abrirDetalle(v.dataset.id);
+    const b = e.target.closest(".case"); if (b) pick(b.dataset.id);
+  });
+
+  /* ── Detalle de un caso: Play + resumen y secciones de window.CASOS_DETALLE (los `...` salen en monoespaciado) ── */
+  const inline = (t) => esc(t).replace(/`([^`]+)`/g, "<code>$1</code>");
+  function abrirDetalle(id) {
+    const c = window.CASOS.find((x) => x.id === id), d = (window.CASOS_DETALLE || {})[id];
+    if (!c || !d) return;
+    const sec = (d.secciones || []).filter((s) => s.items && s.items.length).map((s) => {
+      const t = s.titulo === "Cómo se hace" ? "ol" : "ul";
+      return "<section><h3>" + esc(s.titulo) + "</h3><" + t + ">" + s.items.map((i) => "<li>" + inline(i) + "</li>").join("") + "</" + t + "></section>";
+    }).join("");
+    $("detalle").innerHTML = '<div class="dh"><button type="button" class="zb" id="detVolver" aria-label="Volver a la lista de casos">‹</button><b class="dn">' + esc(c.id) + "</b></div>" +
+      "<h2>" + esc(c.titulo) + '</h2><button type="button" class="btn" id="detPlay"><span aria-hidden="true">▶</span> Reproducir caso</button>' +
+      (d.resumen ? '<p class="res">' + inline(d.resumen) + "</p>" : "") + sec;
+    $("cases").hidden = true; $("detalle").hidden = false; $("detalle").scrollTop = 0;
+    $("detVolver").addEventListener("click", cerrarDetalle);
+    $("detPlay").addEventListener("click", () => {
+      S.mode = "auto";
+      document.querySelectorAll(".seg button").forEach((x) => x.classList.toggle("on", x.dataset.mode === "auto"));
+      pick(id); /* en modo automático pick() arranca solo */
+    });
+    if (!S.caso || S.caso.id !== id) pick(id);
+  }
+  function cerrarDetalle() { $("detalle").hidden = true; $("cases").hidden = false; shade(); }
   $("next").addEventListener("click", next);
+  $("stop").addEventListener("click", stop);
   $("restart").addEventListener("click", () => S.caso && pick(S.caso.id));
   document.querySelectorAll(".seg button").forEach((b) => b.addEventListener("click", () => {
     S.mode = b.dataset.mode;
     document.querySelectorAll(".seg button").forEach((x) => x.classList.toggle("on", x === b));
+    paint();
     if (S.mode === "auto") next(); else hint();
   }));
   if (DEV) {

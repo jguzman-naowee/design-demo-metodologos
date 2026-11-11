@@ -3,11 +3,9 @@
 window.CASOS = [
   { id: "1.1", titulo: "Iniciar sesión", falta: "El inicio de sesión real pasa por Keycloak y valida correo y contraseña; aquí «Iniciar sesión» entra con un usuario fijo sin pedir datos. «Recuperar» y los textos legales solo avisan.",
     steps: [
-      { t: "goto", body: "La app arranca en el login." },
-      { t: "note", sel: "[data-testid=\"login-ingresar\"]", body: "Se ingresa con la cuenta del Comité Olímpico Colombiano." },
-      { t: "click", sel: "[data-testid=\"login-ingresar\"]", body: "Pulsamos «Ingresar»: se abre el inicio de sesión." },
-      { t: "note", sel: "[data-testid=\"iniciar-sesion-form\"]", body: "Aquí iría el correo y la contraseña; en la demo no hace falta escribir nada." },
-      { t: "click", sel: "[data-testid=\"iniciar-sesion-enviar\"]", body: "Pulsamos «Iniciar sesión»: entra con la sesión de mentira." },
+      { t: "goto", body: "La app abre con el splash del Ciclo Olímpico, que se transforma en el inicio de sesión." },
+      { t: "note", sel: "[data-testid=\"login-form\"]", body: "Correo y contraseña de la cuenta del Comité Olímpico Colombiano; en la demo no hace falta escribir nada." },
+      { t: "click", sel: "[data-testid=\"login-ingresar\"]", body: "Pulsamos «Iniciar sesión»: entra con la sesión de mentira." },
       { t: "note", sel: "[data-testid=\"eventos-lista\"]", body: "Llegamos a los eventos asignados." }
     ] },
   { id: "1.2", titulo: "Filtrar eventos por estado", falta: "La búsqueda por texto no se puede escribir desde un caso; funciona al teclear en la app.",
@@ -176,7 +174,7 @@ window.CASOS = [
       { t: "click", sel: "[data-testid=\"nav-perfil\"]", body: "Abrimos la pestaña «Mi perfil»." },
       { t: "note", sel: "[data-testid=\"perfil-info-personal\"]", body: "Nombre, rol y correo del metodólogo." },
       { t: "click", sel: "[data-testid=\"perfil-cerrar-sesion\"]", body: "Pulsamos «Cerrar sesión»." },
-      { t: "note", sel: "[data-testid=\"login-ingresar\"]", body: "Volvemos al login." }
+      { t: "note", sel: "[data-testid=\"login-form\"]", body: "Volvemos al inicio de sesión, ya sin splash." }
     ] },
   { id: "6.1", titulo: "Aviso: tu deportista va a competir", falta: "Los avisos son simulados: no hay notificaciones push reales ni reloj del evento. El celular marca siempre la misma hora.",
     steps: [
@@ -214,4 +212,11 @@ window.CASOS = [
       { t: "note", sel: "[data-testid=\"perfil-prueba-0\"]", body: "Ahí está su prueba, lista para calificar." },
       { t: "note", sel: "[data-testid=\"campana-insignia\"]", body: "Y el aviso quedó leído: la campana cuenta uno menos." }
     ] }
+];
+
+/* Secciones del panel: HU de la tarea de Jira y, aparte, las mejoras de interfaz (splash en adelante). */
+window.CASOS_GRUPOS = [
+  { titulo: "HU · Solicitudes COC App", ref: "PROD-59", url: "https://naowee.atlassian.net/browse/PROD-59",
+    ids: ["3.3", "3.4", "2.5", "6.1", "6.2", "6.3", "6.4"] },
+  { titulo: "Mejoras de interfaz", nota: "Del splash en adelante: jerarquía, hero, barras fijas.", resto: true }
 ];
