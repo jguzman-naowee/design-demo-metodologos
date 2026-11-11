@@ -29,7 +29,7 @@ Columna «Cubierta»: qué casos de `mobile/apps/metodologos/casos.js` recorren 
 
 | Id | Flujo | Pantallas | Estado |
 |---|---|---|---|
-| 1.1 | Iniciar sesión | Login → «Iniciar sesión» (Keycloak) → Eventos | caso hecho |
+| 1.1 | Iniciar sesión | Splash → formulario de inicio de sesión → Eventos | caso hecho |
 | 1.2 | Filtrar eventos por estado | Eventos + sheet | caso hecho (la búsqueda por texto no se puede teclear desde un caso) |
 | 1.3 | Abrir «Conoce más» | Eventos + panel | caso hecho |
 | 2.1 | Abrir un evento y filtrar deportistas (Estado + Género → Aplicar) | Eventos → Detalle + sheet | caso hecho |
@@ -92,7 +92,7 @@ Qué **no** hace la demo: no manda notificaciones push reales, no tiene reloj de
 ## 4. Inicio propio (se quita en la demo)
 
 - **Splash / BootGate** (`oc_splash_page.dart`, `boot_gate.dart`): valida sesión y precarga eventos. Se quita: la app arranca en `#/login`.
-- **WebView de Keycloak** (`auth_webview_page.dart`): se reproduce su pantalla «Iniciar sesión» en `#/iniciar-sesion` (barra «‹ Iniciar sesión» + formulario); no pide ni valida datos y entra con sesión simulada en memoria. Los demás casos arrancan ya con sesión (`index.html?sesion=1#/eventos`).
+- **Inicio de sesión:** el splash «Noche olímpica» se transforma en el formulario dentro de `#/login` (sin pantalla intermedia ni WebView de Keycloak); no pide ni valida datos y entra con la sesión simulada.
 - **Guard de versión** (`app_guard`): en la app real corre antes del login; en la demo es una pantalla alcanzable por ruta (caso 4.1), no un paso previo.
 - Sin onboarding ni selector de plataforma.
 

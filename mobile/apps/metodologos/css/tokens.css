@@ -48,7 +48,7 @@
   --icon-xs:14px;--icon-s:16px;--touch-target:36px;
 
   /* ── Tipografía: escala de la Guía COC (Helvetica). Títulos navy, cuerpo negro ── */
-  --font:"Helvetica",Arial,sans-serif;
+  --font:"Google Sans",Arial,sans-serif;--naotech-sdk-font-family-base:var(--font);
   --navy:var(--blue-jic-900);--negro:var(--black-alpha-100);
   --fs-display:44px;--fs-h1:28px;--fs-h2:22px;--fs-subtitle:20px;--fs-body:16px;--fs-label:15px;--fs-body-small:14px;--fs-caption:13px;--fs-caption-small:11px;--fs-tag:12px;
   --fw-regular:400;--fw-bold:700;--fw-tag:600;
