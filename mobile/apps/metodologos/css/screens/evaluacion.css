@@ -6,6 +6,7 @@
 /* Barra compacta (DC-013) a sangre: el sticky respeta el padding del scroll, se compensa con top y márgenes negativos */
 .ef-scroll > .topbar{top:calc(-1 * var(--sp-m-M));margin:calc(-1 * var(--sp-m-M)) calc(-1 * var(--sp-m-M)) calc(var(--sp-m-M) - var(--topbar-h))}
 .ef-h1{margin:0 0 var(--sp-s-XL)}
+.ef-ev{display:block;margin-top:var(--sp-s-S);font-size:var(--fs-body);font-weight:var(--fw-regular);color:var(--gray-700)}
 .ef-desc{margin:0;font-size:var(--fs-label);color:var(--gray-700);text-align:justify}
 .ef-div{height:1px;margin:var(--sp-m-M) calc(-1 * var(--sp-m-M)) 0;background:var(--gray-200)}   /* extremo a extremo */
 /* Cada sección abre con una banda tonal: el formulario se lee por bloques */

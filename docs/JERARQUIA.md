@@ -7,7 +7,7 @@ Sistema de énfasis de la demo (`mobile/apps/metodologos/`). Parte de la explora
 
 | Nivel | Qué es | Cómo se ve | Dónde |
 |---|---|---|---|
-| **Primario** | la acción de la pantalla, lo pendiente | `btn.primary` (orange-700); superficie cálida `orange-50` sin borde | Iniciar formulario, Aplicar, Guardar; resumen «N deportes por calificar», prueba pendiente, aviso sin leer |
+| **Primario** | la acción de la pantalla, lo pendiente | `btn.primary` (orange-700); superficie cálida `orange-50` sin borde | Iniciar calificación, Aplicar, Guardar; resumen «N deportes por calificar», prueba pendiente, aviso sin leer |
 | **Secundario** | contenido para leer y actuar después | superficie tonal `gray-100` sin borde (o card blanca con `--sombra-reposo` sobre lienzo `gray-100`); botón `btn.cream` (orange-100 + orange-800) | tarjetas de evento, filas de deportista, `pf-card`, `mp-card`, Descargar historial, Cerrar sesión, «No, seguir editando» |
 | **Terciario** | salir, limpiar, cancelar | `btn.tertiary`: gray-100, sin borde, texto negro | Limpiar (filtro), Cancelar (formulario) |
 | **En reposo** | lo cerrado o bloqueado | blanco + contorno `gray-200` (inset), títulos `gray-800`, imagen desaturada | deportista calificado, evaluación con plazo vencido, prueba/equipo bloqueado, evento finalizado, aviso leído |

@@ -26,8 +26,8 @@
         '<svg class="lg-orbit" aria-hidden="true" viewBox="0 0 390 844" preserveAspectRatio="xMidYMin slice" fill="none" stroke="#DFB550" stroke-width="1.2">' +
           '<circle cx="195" cy="300" r="90"/><circle cx="195" cy="300" r="150" stroke-dasharray="3 9"/><circle cx="195" cy="300" r="225"/><circle cx="195" cy="300" r="310" stroke-dasharray="3 9"/></svg>' +
         logo() +
-        '<div class="lg-name" aria-hidden="true"><div class="lg-name-t">Ciclo<br>Olímpico</div><div class="lg-rule"></div><div class="lg-tag">Para metodólogos</div></div>' +
-        '<div class="lg-head"><h1>Ciclo Olímpico</h1><p>Para metodólogos</p></div>' +
+        '<div class="lg-name" aria-hidden="true"><div class="lg-name-t">Ciclo<br>Olímpico</div><div class="lg-rule"></div></div>' +
+        '<div class="lg-head"><h1>Ciclo Olímpico</h1></div>' +
         '<form class="lg-form" novalidate autocomplete="off" data-testid="login-form">' +
           '<label class="lg-label" for="lg-correo">Correo electrónico <span aria-hidden="true">*</span></label>' +
           '<input class="lg-input" id="lg-correo" type="email" inputmode="email" placeholder="correo@ejemplo.com" autocomplete="off" data-testid="login-correo">' +

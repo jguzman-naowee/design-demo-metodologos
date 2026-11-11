@@ -26,8 +26,10 @@
     const r = el.getBoundingClientRect(), f = frame.getBoundingClientRect(), s = screen.getBoundingClientRect(), k = s.width / screen.offsetWidth || 1;
     return { x: (f.left - s.left) / k + r.left, y: (f.top - s.top) / k + r.top, w: r.width, h: r.height };
   };
-  const find = (sel) => {
-    const el = doc().querySelector(sel);
+  /* Espera hasta 3 s: la app anima sheets y pantallas, y un clic anticipado no debe romper el caso. */
+  const find = async (sel) => {
+    let el = doc().querySelector(sel);
+    for (let n = 0; !el && n < 30; n++) { await sleep(100); el = doc().querySelector(sel); }
     if (!el) throw new Error("No se encontró «" + sel + "» en la pantalla.");
     return el;
   };
@@ -63,7 +65,7 @@
 
   async function runStep(st) {
     if (st.t === "goto") { hideFx(); await load(st.url || S.app.inicio || "index.html"); return; }
-    const el = find(st.sel), r = await focus(el);
+    const el = await find(st.sel), r = await focus(el);
     if (st.t === "click") {
       S.fxClick = true; cur.hidden = false;
       cur.style.transform = "translate(" + (r.x + r.w / 2) + "px," + (r.y + r.h / 2) + "px)";
@@ -80,7 +82,7 @@
   const paint = () => {
     const n = S.caso.steps.length;
     const hecho = Math.min(S.i, n), cnt = $("cnt");
-    cnt.hidden = hecho === 0 && !S.busy; /* el avance aparece al iniciar el recorrido */
+    cnt.hidden = false; /* la barra de avance se ve desde que se abre el caso */
     cnt.innerHTML = Array.from({ length: n }, (_, k) => "<i" + (k < hecho ? ' class="on"' : "") + "></i>").join("");
     cnt.setAttribute("aria-valuemin", 0); cnt.setAttribute("aria-valuemax", n); cnt.setAttribute("aria-valuenow", hecho);
     $("next").textContent = (S.i >= n ? "Terminado" : "Siguiente") + " ▸";

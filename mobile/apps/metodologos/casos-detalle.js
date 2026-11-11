@@ -11,7 +11,7 @@ window.CASOS_DETALLE = {
         "El splash se ve una sola vez por arranque. Al cerrar sesión (caso 5.1) se vuelve directo al formulario."
       ] },
       { titulo: "Qué se agregó", items: [
-        "Extra de la demo, el splash «Noche olímpica»: órbitas concéntricas en SVG (trazo `#DFB550`, opacidad .42), el nombre «Ciclo Olímpico» a 58 px, una regla amarilla, el rótulo «PARA METODÓLOGOS», el logo de MinDeporte en blanco y una barra de carga amarilla.",
+        "Extra de la demo, el splash «Noche olímpica»: órbitas concéntricas en SVG (trazo `#DFB550`, opacidad .42), el nombre «Ciclo Olímpico» a 58 px, una regla amarilla, el logo de MinDeporte en blanco y una barra de carga amarilla.",
         "Logo del COC armado por capas (`assets/images/coc_logo_wave.png`, `coc_logo_l0…l7.png`, `coc_logo_r0…r4.png`). Primero se dibuja la ola, después cada letra de COLOMBIA sube de forma escalonada y cada aro aparece con un «pop».",
         "Botón de ojo para mostrar u ocultar la contraseña. Cambia el icono, `aria-pressed` y la etiqueta accesible.",
         "«Recuperar», «Política de tratamiento de datos» y «Términos y condiciones» solo muestran el toast «Próximamente» del SDK (`NwtToast`, tema informative)."
@@ -35,7 +35,7 @@ window.CASOS_DETALLE = {
         "Logo: caja de 200×200 centrada en `top: 19%` con escala 1.3. En la fase de formulario queda en `top: 40` con escala 0.68 (origen arriba al centro).",
         "Ola: se revela con un recorte de izquierda a derecha en 800 ms, `Cubic(.42,0,.58,1)`, con 150 ms de retraso. Letras: opacidad + `translateY(8)` en 520 ms, `Cubic(.22,.61,.36,1)`, con retraso de `650 + 55·k` ms. Aros: escala .3 → 1 con la curva de rebote `Cubic(.175,.885,.32,1.275)` y retraso de `1150 + 120·k` ms.",
         "Nombre del splash: 58 px bold, interletrado −0.035em, blanco. Debajo, una regla de 56×3 con radio 2 en `yellow-jic-500` `#DFB550` y un rótulo de 12 px bold con interletrado .3em, en mayúsculas y `yellow-jic-400` `#E5C473`. En la fase de formulario el nombre sube a `top: 28%`, se escala a .45 y se desvanece.",
-        "Cabecera del formulario: «Ciclo Olímpico» a 28 px bold navy (`--fs-h1`) y «PARA METODÓLOGOS» a 11 px bold, interletrado .3em, en `yellow-jic-800` `#7A662A`. Va a 194 px del borde superior.",
+        "Cabecera del formulario: «Ciclo Olímpico» a 28 px bold navy (`--fs-h1`). Va a 194 px del borde superior.",
         "Formulario: márgenes laterales de 24 (`spacingsMedium.XL`), anclado a 150 px del borde inferior. Etiqueta: 15 px bold `gray-900`, con el `*` en `error-700` `#DA1630`. Campo: 52 de alto, radio 12, borde de 1 en `gray-400`, padding horizontal 16 y texto de 16 px. Con foco, el borde pasa a 2 en `orange-700` `#D74009`. El ojo va en una caja táctil de 44, a 4 px del borde.",
         "«¿Olvidaste la contraseña? Recuperar»: 14 px `gray-700`, alineado a la derecha; «Recuperar» va en bold `gray-900`.",
         "Botón «Iniciar sesión»: `OcButton` variante dark (fondo `#282834`, texto blanco), 52 de alto, radio 12, texto 16/700. Textos legales a 12 px `gray-700` con enlaces en `#4850E5` (`--link`).",
@@ -295,7 +295,7 @@ window.CASOS_DETALLE = {
     secciones: [
       { titulo: "Qué cambió", items: [
         "Antes el metodólogo veía 0 atletas en un evento «Programado», aunque tuviera boxeo, lucha y esgrima asignados. Ahora la lista muestra los atletas y equipos asignados sea cual sea el estado del evento.",
-        "En la prueba, «Iniciar formulario» se reemplaza por el motivo del bloqueo («El evento aún no inicia») y «No se puede calificar». En el equipo, «Calificar en conjunto» se reemplaza por el mismo bloqueo.",
+        "En la prueba, «Iniciar calificación» se reemplaza por el motivo del bloqueo («El evento aún no inicia») y «No se puede calificar». En el equipo, «Calificar en conjunto» se reemplaza por el mismo bloqueo.",
         "La prueba o el equipo bloqueado queda «en reposo»: fondo blanco con contorno `gray-200` en vez de la superficie cálida de lo pendiente.",
         "El texto del motivo pasa de `gray-500` a `gray-700` para llegar a contraste AA."
       ] },
@@ -331,7 +331,7 @@ window.CASOS_DETALLE = {
   },
 
   "3.1": {
-    resumen: "Desde el detalle del evento se abre a Valentina Ríos: barra fija con volver y «Perfil del deportista», cabecera con avatar, «Info. Deportiva» y la tarjeta de su prueba pendiente con «Iniciar formulario».",
+    resumen: "Desde el detalle del evento se abre a Valentina Ríos: barra fija con volver y «Perfil del deportista», cabecera con avatar, «Info. Deportiva» y la tarjeta de su prueba pendiente con «Iniciar calificación».",
     secciones: [
       { titulo: "Qué cambió", items: [
         "El volver y el título van ahora en la misma fila (DC-020), y esa fila es la barra fija del perfil. Su alto pasó de 52 a 62 px (DC-032).",
@@ -339,7 +339,7 @@ window.CASOS_DETALLE = {
         "Jerarquía: el título de la página baja a 20 px y el nombre de la persona pasa a 24 px (`--fs-sujeto`), que es lo que más pesa.",
         "Las tarjetas pierden el borde `gray-300` y pasan a superficie `gray-100`. La prueba pendiente usa la superficie cálida `orange-50`.",
         "En «Info. Deportiva», las etiquetas bajan a 13 px y el título de la tarjeta a 16 px. La intro de cada sección pasa de navy a 14 px `gray-700`.",
-        "El botón «Iniciar formulario» (alto 40) tiene ahora un área táctil de 44 sin que cambie el diseño."
+        "El botón «Iniciar calificación» (alto 40) tiene ahora un área táctil de 44 sin que cambie el diseño."
       ] },
       { titulo: "Qué se agregó", items: [
         "Las pestañas «Calificar» e «Historial», con un subrayado que se desliza (ver 3.3).",
@@ -350,7 +350,7 @@ window.CASOS_DETALLE = {
         "Datos reales: el deportista y sus pruebas vienen de `candidates` y `disciplines`, y el estado de cada prueba de `opinions` (`alreadyEvaluated`, `evaluable`, `editable`). En la demo, `Data.deportistaById(id)`, con d2 = Valentina Ríos, Paranatación, Juvenil, S10, prueba «50m libre».",
         "La pantalla se arma así: barra fija (volver + título), cabecera (avatar con la inicial, nombre, colegio con icono de casa), tarjeta «Info. Deportiva» en grilla de 2 columnas y pestañas.",
         "Las celdas de «Info. Deportiva» son Deporte (pastilla con icono), Tipo de deporte, Sexo (o «No registrado»), Clasificación funcional (solo si existe y no es «—») y Estado (chip). El estado es Calificado solo si todas las pruebas lo están.",
-        "La pestaña «Calificar» muestra el título «Calificar deportista», la intro y las pruebas del evento actual que están pendientes o que todavía se pueden editar. Una prueba pendiente y evaluable lleva el chip «Sin calificación» y el botón «Iniciar formulario», que lleva a `#/evaluacion/:id/:indice`.",
+        "La pestaña «Calificar» muestra el título «Calificar deportista», la intro y las pruebas del evento actual que están pendientes o que todavía se pueden editar. Una prueba pendiente y evaluable lleva el chip «Sin calificación» y el botón «Iniciar calificación», que lleva a `#/evaluacion/:id/:indice`.",
         "Sin pendientes: «No hay evaluaciones pendientes. Las completadas están en el historial.»",
         "Volver: regresa al detalle del evento conservando su estado (ver 2.1)."
       ] },
@@ -362,7 +362,7 @@ window.CASOS_DETALLE = {
         "Pastilla del deporte: blanca, con borde de 2 en `orange-600` y halo de 2 en `orange-100`. Radio 8, padding 6/8, icono de 16 y texto de 12 px/600.",
         "Título de sección: 20 px bold negro. Intro: 14 px `gray-700`, justificado, interlineado 1.4. Separaciones de 4, 16 y 20 (`spacingsSmall.M`, `spacingsMedium.M`, `spacingsMedium.L`).",
         "Tarjeta de prueba pendiente: fondo `orange-50`, radio 16, padding 22/20 y 8 de separación. «Prueba» a 13 px `gray-700`; el nombre a 17 px bold con 2 de margen; 8 de aire y el chip «Sin calificación» (`orange-100` con texto `orange-800`).",
-        "«Iniciar formulario»: `OcButton` primario small, 40 de alto (área táctil de 44), padding 0 12, 15 px/600, ancho según el contenido y 8 de separación a la izquierda.",
+        "«Iniciar calificación»: `OcButton` primario small, 40 de alto (área táctil de 44), padding 0 12, 15 px/600, ancho según el contenido y 8 de separación a la izquierda.",
         "Pestañas: las mismas de 2.3, con el indicador deslizante en 280 ms `Cubic(.4,0,.2,1)`. Al cambiar de pestaña, el panel entra con opacidad + `translateY(6)` en 220 ms ease-out."
       ] },
       { titulo: "Pendiente", items: [
@@ -643,7 +643,7 @@ window.CASOS_DETALLE = {
         "Backend: un proceso programado que, 30 minutos antes del inicio de cada prueba, envía una notificación a los metodólogos que tienen ese deportista asignado. El dato del horario de la prueba tiene que existir en el servicio.",
         "App: recibe la notificación con un payload que trae el id del deportista y el id del evento. Al tocarla, abre `#/deportista/:id?evento=:eventoId` (en la demo `d2` y `e1`) y, si no hay sesión, pasa antes por el login.",
         "El mismo aviso queda guardado en la bandeja de la app (ver 6.4).",
-        "Demo: al tocar el aviso se ejecutan `Session.login()` y `Router.go(destino)`, y la app abre en el perfil de Valentina Ríos con la prueba «50m libre» lista para «Iniciar formulario»."
+        "Demo: al tocar el aviso se ejecutan `Session.login()` y `Router.go(destino)`, y la app abre en el perfil de Valentina Ríos con la prueba «50m libre» lista para «Iniciar calificación»."
       ] },
       { titulo: "Spec Flutter", items: [
         "Sugerencia (no confirmada en el repo): `firebase_messaging` para el push y `flutter_local_notifications` para mostrarlo con la app abierta. El deep link lleva al mismo router (`app_router.dart`).",
@@ -670,7 +670,7 @@ window.CASOS_DETALLE = {
       ] },
       { titulo: "Cómo se hace", items: [
         "Backend: al marcarse una prueba como terminada (o a su hora de fin), se envía el aviso a los metodólogos asignados, siempre que no exista una opinión registrada para esa prueba.",
-        "La app recibe el payload con el deportista, la prueba y el evento, y abre el perfil. Desde ahí el metodólogo pulsa «Iniciar formulario» (`perfil-iniciar-0`) y sigue el flujo de 4.1.",
+        "La app recibe el payload con el deportista, la prueba y el evento, y abre el perfil. Desde ahí el metodólogo pulsa «Iniciar calificación» (`perfil-iniciar-0`) y sigue el flujo de 4.1.",
         "El aviso también queda en la bandeja (6.4) como «terminó su prueba».",
         "Demo: el mismo mecanismo de 6.1 (`Alertas.aviso(termino)`), con destino `/deportista/d2?evento=e1`."
       ] },

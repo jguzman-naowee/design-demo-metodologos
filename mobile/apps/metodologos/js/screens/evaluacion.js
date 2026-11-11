@@ -79,11 +79,12 @@
 
     function pintar() {
       const ro = readOnly(), dis = ro;
+      const evNombre = ((Data.evento(p.eventoId || "e1") || {}).nombre || "");
       const nombreEquipo = d.colegio ? d.colegio : d.nombre;
       scroll.innerHTML =
-        Ui.topbar("Formulario de evaluación", "evaluacion-barra") +
+        Ui.topbar(evNombre || "Formulario de evaluación", "evaluacion-barra") +
         '<a class="backlink" href="#/" data-act="volver" data-testid="evaluacion-volver" aria-label="Volver">' + Ui.icon("m-chevron_left", { size: 32, color: "var(--orange-700)" }) + "</a>" +
-        '<h1 class="t-h1 ef-h1">Formulario de evaluación</h1>' +
+        '<h1 class="t-h1 ef-h1">' + (evNombre ? esc(evNombre) + '<small class="ef-ev">Formulario de evaluación</small>' : "Formulario de evaluación") + "</h1>" +
         '<p class="ef-desc">Completa el formulario con la evaluación técnico-metodológica del deportista. </p>' +
         '<div class="ef-div"></div>' +
         (ro ? '<div class="ef-banner-wrap"><div class="oc-banner" data-testid="evaluacion-banner-solo-lectura">' + Ui.icon("check", { size: 20, color: "var(--success-text)" }) + "<span>Evaluación registrada · solo lectura</span></div>" + infoEdicion() + "</div>" : "") +

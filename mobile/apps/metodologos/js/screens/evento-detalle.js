@@ -18,6 +18,7 @@
   /* Estado que sobrevive solo al ir al perfil del deportista y volver (en la app la página sigue en la pila) */
   let saved = null;
 
+  const fila = (n) => '<li class="dfila" data-testid="deporte-pill-' + slug(n) + '">' + Ui.icon(Data.deporteIcono(n), { size: 20, color: "var(--orange-700)" }) + "<span>" + esc(n) + "</span></li>";
   const pill = (n) => '<span class="dpill" data-testid="deporte-pill-' + slug(n) + '">' + Ui.icon(Data.deporteIcono(n), { size: 16, color: "var(--orange-600)" }) + "<span>" + esc(n) + "</span></span>";
 
   /* Deportes a calificar: una sola fila resumen (iconos apilados, conteo y nombres) que abre la hoja con la lista completa.
@@ -53,7 +54,7 @@
     const sh = Ui.openSheet({ title: "Deportes a calificar", body: "" });
     sh.el.classList.add("sheet-plain");
     sh.el.querySelectorAll(".sheet-handle,.sheet-head,.sheet-div").forEach((n) => n.remove());
-    sh.el.querySelector(".sheet-pad").innerHTML = '<h2 class="t-h2">Deportes a calificar</h2><p class="dsheet-txt">' + esc(EXPLICACION) + '</p><div class="dsheet-wrap" data-testid="deportes-sheet-lista">' + deportes.map(pill).join("") + "</div>";
+    sh.el.querySelector(".sheet-pad").innerHTML = '<h2 class="t-h2">Deportes a calificar</h2><p class="dsheet-txt">' + esc(EXPLICACION) + '</p><ul class="dlista" data-testid="deportes-sheet-lista">' + deportes.map(fila).join("") + "</ul>";
     sh.el.setAttribute("data-testid", "deportes-sheet");
   }
 

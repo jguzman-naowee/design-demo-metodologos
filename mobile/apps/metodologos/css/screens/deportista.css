@@ -6,10 +6,10 @@
 .pf h1.t-h1{font-size:var(--fs-subtitle)}
 /* DC-020: volver y título en la misma fila */
 /* DC-039: la fila es la barra fija del perfil (sombra al pegarse, a sangre; top −16 por el padding del scroll) */
-.pf-titlerow{position:sticky;top:calc(-1 * var(--sp-m-M));z-index:5;display:flex;align-items:center;gap:var(--sp-s-M);height:52px;background:var(--white-alpha-100);
+.pf-titlerow{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:var(--sp-s-M);height:52px;background:var(--white-alpha-100);
   box-shadow:calc(-1 * var(--sp-m-M)) 0 0 var(--white-alpha-100),var(--sp-m-M) 0 0 var(--white-alpha-100)}
 .pf-titlerow h1{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pf-titlerow .backlink{margin:0 0 0 -14px;align-self:center}
+.pf-titlerow .backlink{margin:0 0 0 -10px;align-self:center}
 .pf-head .t-h2{font-size:var(--fs-sujeto)}
 .pf-gap-s{height:var(--sp-s-M)}.pf-gap-m{height:var(--sp-m-M)}.pf-gap-l{height:var(--sp-m-L)}.pf-gap-xl{height:var(--sp-s-XL)}.pf-gap-12{height:var(--sp-m-S)}
 /* Cards sin borde sobre superficie tonal; lo pendiente en cálido (.pf-prueba), lo bloqueado en reposo */

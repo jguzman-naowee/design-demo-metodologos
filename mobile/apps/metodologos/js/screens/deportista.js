@@ -104,7 +104,7 @@
     const p = conMeta(d, i), cal = calificada(d, i), estado = cal ? "calificado" : "sinCalificacion", t = "perfil-prueba-" + i;
     if (cal) return calificadaCard(d, i, !enHistorial, soloVer);
     return '<article class="pf-card row pf-prueba" data-testid="' + t + '"><div class="pf-flex1">' + pruebaHeader(p) + '<div class="chipgap" style="height:8px"></div>' + Ui.chip(estado) + "</div>" +
-      '<div class="pf-cta">' + (evaluable(p) ? Ui.button({ title: "Iniciar formulario", variant: "primary", size: "small", fit: true, href: url(d, i), testid: "perfil-iniciar-" + i }) : bloqueado(p, false, "perfil-bloqueado-" + i)) + "</div></article>";
+      '<div class="pf-cta">' + (evaluable(p) ? Ui.button({ title: "Iniciar calificación", variant: "primary", size: "small", fit: true, href: url(d, i), testid: "perfil-iniciar-" + i }) : bloqueado(p, false, "perfil-bloqueado-" + i)) + "</div></article>";
   }
 
   /* Pestañas del perfil individual: «Calificar» (pendientes y evaluaciones aún editables) e «Historial» (todas las completadas). */

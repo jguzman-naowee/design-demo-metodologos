@@ -39,7 +39,10 @@
 .sheet.sheet-plain{padding:0}
 .sheet-plain .sheet-pad{padding:var(--sp-m-XL) var(--sp-m-XL) calc(var(--sp-m-XL) + var(--safe-bottom))}
 .dsheet-txt{margin:var(--sp-s-XL) 0 var(--sp-m-L);font-size:var(--fs-body);color:var(--gray-700)}
-.dsheet-wrap{display:flex;flex-wrap:wrap;gap:var(--sp-s-XL)}
+/* DC-045: lista informativa, sin borde ni sombra para que no parezca botón */
+.dlista{margin:0;padding:0;list-style:none}
+.dfila{display:flex;align-items:center;gap:var(--sp-m-S);padding:var(--sp-m-S) 0;border-bottom:1px solid var(--gray-200);font-size:var(--fs-body);color:var(--negro)}
+.dfila:last-child{border-bottom:0}
 
 /* Buscador + botón de filtro (OcSearchBar._FilterButton) */
 .evd-search{flex:none}

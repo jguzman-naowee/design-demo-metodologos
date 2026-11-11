@@ -54,7 +54,7 @@ svg.ic{display:block;flex:none}
   opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity 180ms ease,transform 220ms var(--mo-out,ease-out),visibility 0s 220ms}
 .topbar.on{opacity:1;visibility:visible;transform:none;transition:opacity 180ms ease,transform 220ms var(--mo-out,ease-out),visibility 0s}
 .topbar .backlink{margin:0;align-self:center}
-.topbar-t{flex:1 1 auto;min-width:0;font-size:var(--fs-body);font-weight:var(--fw-bold);color:var(--negro);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar-t{flex:1 1 auto;min-width:0;font-size:var(--fs-body);font-weight:var(--fw-bold);color:var(--negro);line-height:1.25;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden} /* DC-050: hasta 2 líneas */
 @media (prefers-reduced-motion:reduce){.topbar,.topbar.on{transform:none;transition:opacity 120ms ease,visibility 0s}}
 
 /* Sombra de toda barra fija (DC-016): solo con scroll y la barra pegada (Ui.fijar pone .pegada; la topbar, al estar .on) */
