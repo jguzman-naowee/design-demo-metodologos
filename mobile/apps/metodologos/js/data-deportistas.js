@@ -23,7 +23,9 @@
   const D = window.Data;
 
   /* Defaults de PruebaVm / DeportistaVm que data.js no rellena */
-  const all = D.deportistas.concat(D.deportistas.flatMap((d) => d.miembros));
+  /* Todos los deportistas conocidos: la lista común y las propias de cada evento (p. ej. Dakar), con sus integrantes */
+  const base = [...new Set(D.deportistas.concat(D.eventos.flatMap((e) => e.deportistas)))];
+  const all = base.concat(base.flatMap((d) => d.miembros));
   all.forEach((d) => {
     ["eventCode", "organizationCode"].forEach((k) => { if (d[k] == null) d[k] = ""; });
     d.pruebas.forEach((p) => ["participantCode", "disciplineCode", "liteDisciplineCode"].forEach((k) => { if (p[k] == null) p[k] = ""; }));
@@ -58,6 +60,8 @@
   D.deportes = deportesOrdenados(null);
   D.categorias = unicos(D.deportistas.map((d) => d.categoria));
   D.deportistaById = (id) => all.find((d) => d.id === id) || null;
+  /* Equipo al que pertenece un integrante (los equipos viven en la lista de cada evento) */
+  D.equipoDeMiembro = (id) => base.find((t) => t.miembros.some((m) => m.id === id)) || null;
   D.eventoDeDeportista = (id) => D.eventos.find((e) => e.deportistas.some((d) => d.id === id || d.miembros.some((m) => m.id === id))) || null;
   D.deportesDelEvento = deportesDelEvento;
   D.deportesOrdenados = deportesOrdenados;

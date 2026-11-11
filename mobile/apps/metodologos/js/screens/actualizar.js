@@ -13,6 +13,6 @@ Router.add("/actualizar", {
     });
   },
   mount(root) {
-    Ui.on(root, "click", "[data-act=actualizar]", () => Ui.toast("En la app real se abre la tienda de aplicaciones; aquí no hay tienda.", "info"));
+    Ui.on(root, "click", "[data-act=actualizar]", () => Ui.toast("En la app real se abre la tienda de aplicaciones; aquí no hay tienda.", "info", 0, "Solo en la app real"));
   },
 });

@@ -9,21 +9,22 @@
   function card(e, avisoAbierto) {
     const sub = e.lugar ? e.fecha + " " + e.lugar : e.fecha;
     const aviso = e.estado === "finalizado" && e.editableUntil; /* avisoEdicionVigente (fecha fija en la demo) */
-    const fecha = aviso ? Data.fechaLarga(e.editableUntil) : "";
+    const fecha = aviso ? Data.fechaLarga(e.editableUntil) : "", fechaC = aviso ? Data.fechaCorta(e.editableUntil) : "";
     return '<article class="evcard">' +
       '<a class="evcard-link" href="#/evento/' + Ui.esc(e.id) + '" data-testid="evento-card-' + Ui.esc(e.id) + '" aria-label="' + Ui.esc(e.nombre + ", " + e.estadoLabel + ", " + sub) + '">' +
-        '<img class="evcard-img" src="' + Ui.esc(e.imagen || Data.eventoGenerico) + '" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'' + Data.eventoGenerico + '\'">' +
+        '<img class="evcard-img" src="' + Ui.esc(e.imagen || Data.eventoGenerico) + '" alt="" loading="lazy" onload="this.classList.add(\'ld\')" onerror="this.onerror=null;this.src=\'' + Data.eventoGenerico + '\'">' +
         '<div class="evcard-body' + (aviso ? " has-aviso" : "") + '">' +
           '<div class="evcard-meta">' + Ui.chip(e.estado, e.estadoLabel) + Ui.icon("arrow-right-select", { size: 20, color: "var(--orange-700)" }) + "</div>" +
           '<h2 class="evcard-title">' + Ui.esc(e.nombre) + "</h2>" +
           '<p class="evcard-sub">' + Ui.esc(sub) + "</p>" +
         "</div>" +
       "</a>" +
-      (aviso ? '<div class="evcard-aviso"><button type="button" class="aviso" data-act="aviso" data-testid="evento-aviso-' + Ui.esc(e.id) + '" aria-expanded="false" aria-label="Plazo de edición hasta el ' + Ui.esc(fecha) + '">' +
-        '<span class="aviso-row">' + Ui.icon("m-info_outline", { size: 16, color: "var(--orange-700)" }) + "<b>Puedes editar hasta el " + Ui.esc(fecha) + "</b>" +
-        '<span style="display:contents" class="av-down">' + Ui.icon("m-keyboard_arrow_down", { size: 24, color: "var(--orange-700)" }) + "</span>" +
-        '<span style="display:contents" class="av-up" hidden>' + Ui.icon("m-keyboard_arrow_up", { size: 24, color: "var(--orange-700)" }) + "</span></span>" +
-        '<span class="aviso-more" hidden>Puedes editar las evaluaciones que registraste durante los 10 días posteriores a la finalización del evento, hasta el ' + Ui.esc(fecha) + ".</span></button></div>" : "") +
+      (aviso ? '<div class="evcard-aviso"><div class="nwt-alert nwt-alert--visible" nwt-theme="caution" nwt-variant="quiet" role="button" tabindex="0" data-act="aviso" data-testid="evento-aviso-' + Ui.esc(e.id) + '" aria-expanded="false" aria-label="Plazo de edición hasta el ' + Ui.esc(fecha) + '">' +
+        '<div class="nwt-alert__content"><div class="nwt-alert__icon">' + Ui.icon("nwt-exclamacion", { size: 16, color: "currentColor" }) + "</div>" +
+        '<span class="nwt-alert__label"><span>Editable hasta el ' + Ui.esc(fechaC) + "</span>" +
+        '<span class="aviso-wrap"><span class="aviso-more"><span>Puedes editar las evaluaciones que registraste hasta 10 días después de que termine el evento.</span></span></span></span>' +
+        '<span class="av-chev">' + Ui.icon("m-keyboard_arrow_down", { size: 20, color: "currentColor" }) + "</span>" +
+        "</div></div></div>" : "") +
     "</article>";
   }
 
@@ -57,12 +58,11 @@
         trigger.querySelector(".icbox").style.color = acento;
       };
 
+      /* Las filas entran una tras otra solo al abrir la pantalla; al buscar o filtrar no se animan */
+      list.setAttribute("data-enter", ""); setTimeout(() => list.removeAttribute("data-enter"), 900);
       input.addEventListener("input", paint);
-      Ui.on(list, "click", "[data-act=aviso]", (e, btn) => {
-        const more = btn.querySelector(".aviso-more"), abrir = more.hidden;
-        more.hidden = !abrir; btn.setAttribute("aria-expanded", String(abrir));
-        btn.querySelector(".av-down").hidden = abrir; btn.querySelector(".av-up").hidden = !abrir;
-      });
+      Ui.on(list, "keydown", "[data-act=aviso]", (e, btn) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); btn.click(); } });
+      Ui.on(list, "click", "[data-act=aviso]", (e, btn) => btn.setAttribute("aria-expanded", String(btn.getAttribute("aria-expanded") !== "true")));
 
       trigger.addEventListener("click", () => {
         const sel = new Set(estados);

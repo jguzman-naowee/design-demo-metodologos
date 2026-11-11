@@ -1,0 +1,100 @@
+/* Capa de movimiento de la demo. Reglas:
+   · Todo < 300 ms; entradas con ease-out fuerte (rápidas al empezar); la salida es más corta que la entrada.
+   · Solo transform y opacity (más el grid-template-rows del desplegable).
+   · Nada se anima desde scale(0); lo que se toca con frecuencia (buscar, escribir) no se anima.
+   · prefers-reduced-motion: sin desplazamientos, solo fundidos cortos. */
+:root{
+  --mo-out:cubic-bezier(.23,1,.32,1);          /* entradas y respuesta al toque */
+  --mo-inout:cubic-bezier(.77,0,.175,1);       /* movimiento sobre la pantalla */
+  --mo-drawer:cubic-bezier(.32,.72,0,1);       /* hojas y paneles, como iOS */
+  --mo-fast:140ms;--mo-base:240ms;--mo-slow:300ms;
+}
+
+/* ── 1. Entre páginas: el contenido entra según de dónde viene (el router pone data-nav en #app) ── */
+@keyframes moPush{from{opacity:0;transform:translateX(22px)}to{opacity:1;transform:none}}
+@keyframes moBack{from{opacity:0;transform:translateX(-22px)}to{opacity:1;transform:none}}
+@keyframes moTab{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes moFade{from{opacity:0}to{opacity:1}}
+#app[data-nav=push] .page > .page-body,#app[data-nav=push] .page > .login,#app[data-nav=push] .page > .is{animation:moPush var(--mo-slow) var(--mo-drawer) both}
+#app[data-nav=back] .page > .page-body,#app[data-nav=back] .page > .login,#app[data-nav=back] .page > .is{animation:moBack var(--mo-slow) var(--mo-drawer) both}
+#app[data-nav=tab] .page > .page-body{animation:moTab 220ms var(--mo-out) both}
+#app[data-nav=fade] .page > .page-body,#app[data-nav=fade] .page > .login{animation:moFade 260ms ease-out both}
+
+/* Barra inferior: al cambiar de pestaña el subrayado crece desde el centro */
+@keyframes moBar{from{opacity:0;transform:scaleX(.3)}to{opacity:1;transform:none}}
+#app[data-nav=tab] .bnav-item[aria-current="page"] .bar{animation:moBar 280ms var(--mo-out) both}
+.bnav-item{transition:color var(--mo-fast) ease}
+
+/* ── 2. Respuesta al toque: todo lo que se pulsa se hunde un poco ── */
+.btn,.fchip,.fbtn,.dsel,.pf-iconbtn,.appbar-btn,.backlink,.trigger,.tab,.bnav-item,.linkrow,.sheet-x,.dsum,.sidepanel .x,.checkrow{
+  transition:transform var(--mo-fast) var(--mo-out),background-color var(--mo-fast) ease,border-color var(--mo-fast) ease,color var(--mo-fast) ease,opacity var(--mo-fast) ease;
+  -webkit-tap-highlight-color:transparent}
+.btn:active,.fchip:active,.fbtn:active,.dsel:active,.pf-iconbtn:active,.appbar-btn:active,.backlink:active,.trigger:active,.tab:active,.bnav-item:active,.sheet-x:active,.dsum:active{transform:scale(.985)}
+.btn:disabled:active{transform:none}
+.evcard{transition:transform var(--mo-fast) var(--mo-out)}
+.evcard:has(.evcard-link:active){transform:scale(.985)}
+.dtile,.dopt,.linkrow,.checkrow{transition:background-color var(--mo-fast) ease}
+.dtile:active,.dopt:active,.linkrow:active{background:var(--gray-100)}
+.checkrow:active .checkbox{transform:scale(.88)}
+
+/* ── 3. Selección: casillas, chips y campos cambian de estado con suavidad ── */
+.checkbox{transition:background-color var(--mo-fast) ease,border-color var(--mo-fast) ease,transform var(--mo-fast) var(--mo-out)}
+@keyframes moPop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+.checkrow[aria-checked="true"] .checkbox .ic{animation:moPop 200ms var(--mo-out) both}
+.ef-box{transition:border-color var(--mo-fast) ease,background-color var(--mo-fast) ease}
+.ef-cap:not([hidden]){animation:moTab 200ms var(--mo-out) both}
+.ef-confirm{animation:moFade 200ms ease-out both}
+.ef-confirm-in{animation:moTab 280ms var(--mo-out) both}
+
+/* ── 4. Hojas, panel lateral y fondo: entran con curva de iOS y salen más rápido ── */
+.sheet,.sidepanel{transition:transform var(--mo-slow) var(--mo-drawer)}
+.sheet:not(.show),.sidepanel:not(.show){transition-duration:200ms}
+.scrim{transition:opacity 260ms ease}
+.scrim:not(.show){transition-duration:180ms}
+
+/* ── 5. Listas: al abrir la pantalla las filas entran una tras otra (solo la primera vez, no al filtrar ni al buscar) ── */
+@keyframes moRise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+[data-enter] > *{animation:moRise 300ms var(--mo-out) both;animation-delay:calc(var(--i,0) * 45ms)}
+[data-enter] > :nth-child(1){--i:0}[data-enter] > :nth-child(2){--i:1}[data-enter] > :nth-child(3){--i:2}
+[data-enter] > :nth-child(4){--i:3}[data-enter] > :nth-child(5){--i:4}[data-enter] > :nth-child(n+6){--i:5}
+
+/* ── 6. Imágenes de evento: aparecen con un fundido cuando cargan ── */
+.evcard-img,.evd-thumb img{opacity:0;transition:opacity 320ms ease}
+.evcard-img.ld,.evd-thumb img.ld{opacity:1}
+
+/* ── 7. Desplegables ── */
+/* Aviso del evento (acordeón): el alto se abre con grid-template-rows y la flecha gira */
+.nwt-alert[data-act=aviso] .av-chev{transition:transform var(--mo-base) var(--mo-out)}
+.nwt-alert[data-act=aviso][aria-expanded=true] .av-chev{transform:rotate(180deg)}
+.aviso-wrap{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows var(--mo-base) var(--mo-out),opacity 200ms ease}
+.nwt-alert[aria-expanded=true] .aviso-wrap{grid-template-rows:1fr;opacity:1}
+.aviso-wrap > .aviso-more{min-height:0;overflow:hidden;visibility:hidden;transition:visibility 0s var(--mo-base)}
+.nwt-alert[aria-expanded=true] .aviso-wrap > .aviso-more{visibility:visible;transition-delay:0s}
+.aviso-more > span{display:block;margin-top:var(--naotech-sizing-8);padding-top:var(--naotech-sizing-8);border-top:1px solid var(--naotech-app-color-300)} /* DC-017: divisor gris */
+
+/* Lista de deportes del filtro */
+.dsel .icbox{transition:transform var(--mo-base) var(--mo-out)}
+.dsel.open .icbox{transform:rotate(180deg)}
+.dmenu-wrap{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows var(--mo-base) var(--mo-out),opacity 180ms ease}
+.dmenu-wrap.open{grid-template-rows:1fr;opacity:1}
+.dmenu-wrap > .dmenu-clip{min-height:0;overflow:hidden;visibility:hidden;transition:visibility 0s var(--mo-base)}
+.dmenu-wrap.open > .dmenu-clip{visibility:visible;transition-delay:0s}
+.dopt .icbox{visibility:hidden}.dopt.sel .icbox{visibility:visible}
+
+/* Pestañas: el subrayado se desliza (evento y perfil) */
+.tabs{position:relative}
+.tab-ind{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--orange-700);pointer-events:none;transition:transform 280ms var(--mo-out),width 280ms var(--mo-out)}
+.tab-ind.sin-anim{transition:none}
+.evd-tabs .tab.on .tab-bar{background:transparent}
+.tab-txt{transition:color var(--mo-fast) ease}
+
+/* ── Movimiento reducido: sin desplazamientos ni giros; los fundidos se quedan cortos ── */
+@media (prefers-reduced-motion:reduce){
+  #app[data-nav] .page > .page-body,#app[data-nav] .page > .login,#app[data-nav] .page > .is{animation-name:moFade!important;animation-duration:120ms!important}
+  #app[data-nav] .bnav-item .bar,[data-enter] > *,.checkrow[aria-checked="true"] .checkbox .ic,.ef-cap:not([hidden]),.ef-confirm-in{animation:none!important}
+  .btn:active,.fchip:active,.fbtn:active,.dsel:active,.pf-iconbtn:active,.appbar-btn:active,.backlink:active,.trigger:active,.tab:active,.bnav-item:active,.evcard:has(.evcard-link:active),.checkrow:active .checkbox{transform:none}
+  .nwt-alert[data-act=aviso] .av-chev,.dsel .icbox,.tab-ind{transition:none}
+  .nwt-alert[data-act=aviso][aria-expanded=true] .av-chev,.dsel.open .icbox{transform:none}
+  .aviso-wrap,.dmenu-wrap{transition:none}
+  .sheet,.sidepanel{transition-duration:1ms!important}
+}

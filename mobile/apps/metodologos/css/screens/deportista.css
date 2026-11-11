@@ -12,7 +12,8 @@
 .pf-head{display:flex;align-items:center}
 .pf-avatar{flex:none;width:88px;height:88px;margin-right:var(--sp-m-S);border-radius:50%;background:var(--success-100);color:var(--success-text);
   display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:var(--fw-bold);line-height:1;overflow:hidden}
-.pf-avatar span{position:relative;top:5.4px} /* Alignment(0, 0.2): (88-34)/2 * 0.2 */
+/* DC-007: la inicial va centrada. La app original la baja 5.4px (Alignment 0,0.2); aquí solo se compensa 1.2px de la métrica de la fuente */
+.pf-avatar span{position:relative;top:1.2px}
 .pf-head-txt{flex:1 1 auto;min-width:0}
 .pf-colegio{display:flex;align-items:center;margin-top:var(--sp-s-S)}
 .pf-colegio .t-body{margin-left:var(--sp-s-M);min-width:0;color:var(--gray-700)}
@@ -76,3 +77,26 @@
 .pf-aviso{display:flex;align-items:flex-start}
 .pf-aviso .icbox{color:var(--orange-700);margin-right:var(--sp-s-XL)}
 .pf-aviso p{margin:0;flex:1 1 auto;min-width:0}
+
+/* Pestañas del perfil individual (reusa .tabs/.tab) y rótulo de evento en el historial */
+/* DC-004: la línea gris queda con el margen del contenido (como en el detalle del evento), no a sangre */
+.pf .tabs{position:relative}
+/* DC-005: el subrayado naranja se desliza entre pestañas; el de cada pestaña se apaga para no duplicarlo */
+.pf .tab.on .tab-bar{background:transparent}
+.pf .tab-txt{transition:color .2s ease}
+.pf-tabind{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--orange-700);transform:translateX(0);transition:transform .28s cubic-bezier(.4,0,.2,1),width .28s cubic-bezier(.4,0,.2,1);pointer-events:none}
+.pf-tabind.sin-anim{transition:none}
+@media (prefers-reduced-motion:reduce){.pf-tabind,.pf .tab-txt{transition:none}}
+.pf-evgrupo{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-s-XL);margin:var(--sp-m-S) 0 var(--sp-s-XL)}
+.pf-evgrupo .nm{min-width:0;color:var(--negro);font-weight:var(--fw-bold);font-size:var(--fs-body-small)} /* DC-006: 14px */
+
+/* Card compacta de prueba calificada (Calificar / Historial): una columna de lectura a la izquierda, acciones a la derecha */
+.pf-ccard{display:flex;align-items:center;gap:var(--sp-s-XL);width:100%;margin-bottom:var(--sp-s-XL);padding:14px 12px 14px var(--sp-m-L);background:var(--white-alpha-100);border:1px solid var(--gray-300);border-radius:var(--r-xlarge)}
+.pf-cmain{flex:1 1 auto;min-width:0}
+.pf-ctitle{display:flex;align-items:center;flex-wrap:wrap;gap:var(--sp-s-XL)}
+.pf-ctitle b{font-size:17px;font-weight:var(--fw-bold);color:var(--negro)}
+.pf-cmeta{display:flex;flex-direction:column;gap:var(--sp-s-S);margin-top:var(--sp-s-XL)}
+.pf-cmrow{display:flex;align-items:center;gap:var(--sp-s-L);font-size:var(--fs-caption);color:var(--gray-700)}
+.pf-cmrow:first-child{color:var(--negro)}
+.pf-cmrow .tx{min-width:0}
+

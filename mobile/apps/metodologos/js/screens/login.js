@@ -2,7 +2,7 @@
 Router.add("/login", {
   render() {
     return '<div class="page page-safe" data-testid="pantalla-login"><div class="login">' +
-      '<div class="login-mid"><img src="assets/images/coc_logo.png" alt="Comité Olímpico Colombiano" width="110" height="110">' +
+      '<div class="login-mid">' + Ui.logoAnimado() +
       '<h1 class="t-h1">¡Bienvenido!</h1><p>Ingresa con tu cuenta del Comité Olímpico Colombiano.</p></div>' +
       Ui.button({ title: "Ingresar", variant: "dark", testid: "login-ingresar", act: "ingresar" }) +
     "</div></div>";

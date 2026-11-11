@@ -45,10 +45,14 @@
     '<p class="t-subtitle">Pantalla pendiente</p><p class="t-body-small c-gray-700" style="margin:8px 0 20px">La ruta <b>#' + Ui.esc(path) + "</b> aún no está montada en la demo.</p>" +
     '<a class="btn dark fit" href="#/eventos" data-testid="pendiente-volver">Volver a Eventos</a></div></div>';
 
+  const TABS = ["/eventos", "/perfil"];
   function render() {
     const { path, query } = parse();
     const redirect = guardFn && guardFn(path);
     if (redirect && redirect !== path) { location.replace("#" + redirect); return; }
+    /* Dirección de la transición: volver (la ruta anterior de la pila), cambiar de pestaña, primera pantalla o avanzar */
+    const volver = stack.length > 1 && stack[stack.length - 2] === path, prev = current.path;
+    const dir = !prev ? "fade" : (TABS.includes(prev) && TABS.includes(path)) ? "tab" : volver ? "back" : "push";
     /* Pila propia para Router.back(): volver a la ruta anterior desapila; cualquier otra se apila */
     if (stack.length > 1 && stack[stack.length - 2] === path) stack.pop(); else if (stack[stack.length - 1] !== path) stack.push(path);
     if (typeof cleanup === "function") { try { cleanup(); } catch (e) { console.error(e); } }
@@ -57,7 +61,7 @@
     const ctx = { path, query };
     current = { path, params: hit ? hit.params : {}, query };
     let out = hit ? hit.r.h.render(current.params, ctx) : pendiente(path);
-    el.innerHTML = "";
+    el.innerHTML = ""; el.dataset.nav = dir;
     if (typeof out === "string") el.insertAdjacentHTML("beforeend", out); else if (out) el.appendChild(out);
     if (hit && hit.r.h.mount) cleanup = hit.r.h.mount(el, current.params, ctx) || null;
   }
