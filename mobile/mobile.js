@@ -188,7 +188,6 @@
   const setZoom = (z) => { zoom = Math.min(ZMAX, Math.max(ZMIN, Math.round(z * 100) / 100)); layout(); };
   $("zOut").addEventListener("click", () => setZoom(zoom - ZSTEP));
   $("zIn").addEventListener("click", () => setZoom(zoom + ZSTEP));
-  $("zFit").addEventListener("click", () => setZoom(1));
   if (window.ResizeObserver) new ResizeObserver(layout).observe(device); else addEventListener("resize", layout);
 
   function setPanel(open) {
