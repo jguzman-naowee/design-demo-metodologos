@@ -116,3 +116,5 @@
 .pf-cmrow{display:flex;align-items:center;gap:var(--sp-s-L);font-size:var(--fs-caption);color:var(--gray-700)}
 .pf-cmrow .tx{min-width:0}
 
+.pf-block-ico{display:none}
+.pf-prog{display:none}

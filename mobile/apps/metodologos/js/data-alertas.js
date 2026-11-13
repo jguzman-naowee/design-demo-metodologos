@@ -52,10 +52,13 @@
   window.Alertas = {
     lista: ALERTAS,
     /* Bandeja: cada aviso con sus textos armados */
-    bandeja() { return BANDEJA.map((n) => { const a = ALERTAS[n.tipo], c = contexto(n); return Object.assign({}, n, { tema: a.tema, icono: a.icono, tituloTxt: a.titulo(c), mensajeTxt: a.mensaje(c), nombre: c.d.nombre, accionTxt: a.accion, pruebaTxt: c.p.nombre + " · " + c.d.deporte, eventoTxt: c.ev.nombre, destino: "/deportista/" + n.deportistaId + "?evento=e1" }); }); },
+    bandeja() { return BANDEJA.map((n) => { const a = ALERTAS[n.tipo], c = contexto(n); return Object.assign({}, n, { tema: a.tema, icono: a.icono, tituloTxt: a.titulo(c), mensajeTxt: a.mensaje(c), nombre: c.d.nombre, accionTxt: a.accion || a.titulo(c), pruebaTxt: c.p.nombre + " · " + c.d.deporte, eventoTxt: c.ev.nombre, destino: a.destino === null ? null : "/deportista/" + n.deportistaId + "?evento=e1" }); }); },
+    /* Demo web (recorrido): hace «llegar» un aviso nuevo a la bandeja, arriba y sin leer */
+    llegar(tipo, deportistaId, idx) { const n = item("w" + Date.now(), tipo, deportistaId, idx || 0, "ahora", "hoy", false); BANDEJA.unshift(n); return n.id; },
     sinLeer() { return BANDEJA.filter((n) => !n.leida).length; },
     marcarLeida(id) { const n = BANDEJA.find((x) => x.id === id); if (n) n.leida = true; },
     marcarTodas() { BANDEJA.forEach((n) => { n.leida = true; }); },
+    eliminar(id) { const i = BANDEJA.findIndex((x) => x.id === id); if (i >= 0) BANDEJA.splice(i, 1); },
     /* Aviso listo para pintar: parámetros + textos ya armados con el caso de muestra */
     aviso(id) { const a = ALERTAS[id] || ALERTAS.compite, c = ctx(); return Object.assign({}, a, { tituloTxt: a.titulo(c), mensajeTxt: a.mensaje(c) }); },
   };
