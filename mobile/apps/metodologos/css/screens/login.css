@@ -58,6 +58,11 @@
 .lg-link{display:inline-flex;align-items:center;min-height:44px;color:var(--link)}
 .lg-legal{margin:var(--sp-s-L) 0 0;text-align:center;font-size:var(--fs-tag);color:var(--gray-700)}
 
+/* Elementos de la versión web (web.css los muestra) y contenedor transparente del formulario en móvil */
+.lg-web{display:none!important}
+.lg > .lg-main{display:contents}
+.lg-main > *{position:absolute;transition:transform var(--lg-t) var(--lg-ease),opacity var(--lg-t) var(--lg-ease),top var(--lg-t) var(--lg-ease),visibility var(--lg-t)} /* lo que antes eran hijos directos de .lg */
+
 /* Solo durante el splash: MinDeporte y barra de carga */
 .lg-min{left:50%;bottom:70px;width:80px;height:auto;margin-left:-40px;filter:brightness(0) invert(1);opacity:0}
 .lg-carga{left:25%;right:25%;bottom:42px;height:4px;border-radius:2px;background:var(--white-alpha-20);overflow:hidden;opacity:0}

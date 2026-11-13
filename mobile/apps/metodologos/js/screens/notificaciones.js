@@ -17,7 +17,9 @@
     render() {
       return Ui.page({
         nav: "eventos", testid: "pantalla-notificaciones", scroll: true,
-        body: Ui.topbar("Notificaciones", "notificaciones-barra") + '<div class="content nt"><a class="backlink" href="#/eventos" data-act="volver" data-testid="notificaciones-volver" aria-label="Volver">' + Ui.icon("m-chevron_left", { size: 32, color: "var(--orange-700)" }) + "</a>" +
+        body: Ui.topbar("Notificaciones", "notificaciones-barra") + '<div class="content nt">' + (document.documentElement.classList.contains("web") && matchMedia("(min-width:900px)").matches
+            ? '<a class="web-volver" href="#/eventos" data-act="volver" data-testid="notificaciones-volver">' + Ui.icon("m-arrow_back", { size: 24, color: "currentColor" }) + "<span>Volver a eventos</span></a>"
+            : '<a class="backlink" href="#/eventos" data-act="volver" data-testid="notificaciones-volver" aria-label="Volver">' + Ui.icon("m-chevron_left", { size: 32, color: "var(--orange-700)" }) + "</a>") +
           '<div class="nt-head"><h1 class="t-h2">Notificaciones</h1><button type="button" class="nt-todas" data-act="todas" data-testid="notificaciones-marcar-todas" aria-label="Marcar todas como leídas" title="Marcar todas como leídas">' + Ui.icon("nwt-doble-check", { size: 26, color: "currentColor" }) + "</button></div>" +
           '<div class="tabs nt-tabs" role="tablist" data-testid="notificaciones-tabs">' + GRUPOS.map((g, i) => '<button type="button" role="tab" class="tab' + (i ? "" : " on") + '" aria-selected="' + (i ? "false" : "true") + '" data-tab="' + i + '" data-testid="notificaciones-tab-' + g[0] + '"><span class="tab-in"><span class="tab-txt">' + g[1] + ' <span class="nt-cnt" data-cnt="' + i + '"></span></span><span class="tab-bar"></span></span></button>').join("") + "</div>" +
           '<div class="nt-lista" data-testid="notificaciones-lista" aria-live="polite"></div></div>',

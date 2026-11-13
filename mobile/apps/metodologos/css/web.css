@@ -1,0 +1,605 @@
+/* Capa web (web.html): reacomoda la app móvil para escritorio SIN tocar sus pantallas. Solo aplica desde 900 px; por debajo se ve como la app móvil.
+   Look de los portales Naowee: encabezado con campana y usuario, menú lateral (NwtSidebar) con secciones, fondo blanco, tarjetas con borde
+   y pie flotante de Naowee. Listas en grilla y hojas como diálogos (NwtModal). */
+:root{--wside-w:17.125rem;--wtop-h:4.25rem;--web-max:1240px}
+
+/* Encabezado, menú lateral y pie no existen en móvil */
+.wside,.wtop,.wpie{display:none}
+
+@media (min-width:900px){
+  html.web body{overflow:auto;background:var(--white-alpha-100)}
+  html.web #app{background:var(--white-alpha-100);transition:left 200ms var(--naotech-animation-standard,ease)}
+  html.web.con-menu #app{left:var(--wside-w);top:var(--wtop-h)}
+  html.web.con-menu.menu-colapsado #app{left:4rem}
+
+  /* Menú lateral: lo pinta NwtSidebar (SDK). Su barra superior (hamburguesa + logos) se alinea con el encabezado */
+  html.web.con-menu .wside{position:fixed;z-index:10;top:0;left:0;bottom:0;display:flex;--naotech-toolbar-height:var(--wtop-h)}
+  html.web.con-menu .wside .nwt-sidebar{height:100%}
+  .wside .nwt-sidebar__toolbar{padding:0 var(--naotech-sizing-16)}
+  .wside-marca{display:flex;align-items:center;gap:var(--naotech-sizing-12,12px);color:var(--naotech-app-color-900,#181e47)}
+  .wside-marca img{width:44px;height:44px;object-fit:contain}
+  .wside-sep,.wpie-sep{align-self:stretch;width:1px;margin:10px 0;background:var(--gray-300)}
+  .wside .nwt-sidebar__menu__icon .icbox{display:flex}
+  .wside .nwt-sidebar__menu__section span{text-transform:uppercase;letter-spacing:.06em}
+  .wside-nombre,.wside-titulo{font-size:var(--naotech-subtitle-font-size);font-weight:var(--naotech-subtitle-font-weight);line-height:var(--naotech-subtitle-line-height)} /* tokens de subtítulo del SDK */
+  .nwt-modal .sheet-pad > h2:first-child{display:none} /* el NwtModal ya trae el título en su cabecera */
+
+  /* Encabezado: campana con insignia (NwtBadge) y usuario (NwtAvatar) a la derecha */
+  html.web.con-menu .wtop{position:fixed;z-index:9;top:0;right:0;left:var(--wside-w);height:var(--wtop-h);display:flex;align-items:center;justify-content:flex-end;gap:12px;padding:0 24px;background:var(--white-alpha-100);border-bottom:1px solid var(--gray-200);transition:left 200ms var(--naotech-animation-standard,ease)}
+  html.web.con-menu.menu-colapsado .wtop{left:4rem}
+  .wtop-bell{position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border:1px solid var(--gray-200);border-radius:50%;color:var(--gray-700);transition:background-color 140ms ease,transform 140ms var(--mo-out,ease-out)}
+  .wtop-bell:hover{background:var(--gray-100)}.wtop-bell:active{transform:scale(.96)}
+  .wtop-bell .wside-badge{position:absolute;top:-10px;right:-8px}
+  .wside-badge[hidden]{display:none}
+  /* Perfil: NwtAvatar + texto (tokens del SDK) y menú con la superficie de NwtPopover y las opciones de NwtDropdown */
+  .wtop-user{position:relative}
+  .wtop-chip{display:flex;align-items:center;gap:var(--naotech-sizing-12);height:44px;padding:0 var(--naotech-sizing-16) 0 var(--naotech-sizing-6);gap:var(--naotech-sizing-10);border:1px solid var(--naotech-app-color-200);border-radius:var(--naotech-sizing-32);background:transparent;color:var(--naotech-app-color-700);transition:background-color 140ms ease,transform 140ms var(--mo-out,ease-out)}
+  .wtop-chip:hover{border-color:var(--naotech-app-color-300)}.wtop-chip:active{transform:scale(.98)}
+  .wtop-chip[aria-expanded=true]{border-color:var(--naotech-app-color-300)}
+  .wtop-chip .wtop-flecha{transition:transform 180ms var(--mo-out,ease-out)}
+  .wtop-chip[aria-expanded=true] .wtop-flecha{transform:rotate(180deg)}
+  .wtop-av{position:relative}
+  .wtop-en{position:absolute;left:23px;top:23px;width:10px;height:10px;border-radius:50%;background:var(--naotech-color-green-700);border:2px solid #fff}
+  .wtop-id{display:flex;flex-direction:column;gap:var(--naotech-sizing-2);text-align:left}
+  .wtop-id b{font-size:var(--naotech-sizing-14);line-height:var(--naotech-sizing-18);font-weight:var(--naotech-font-weight-bold);color:var(--naotech-app-color-900)}
+  .wtop-id small{font-size:var(--naotech-sizing-12);line-height:var(--naotech-sizing-16);font-weight:var(--naotech-font-weight-regular);color:var(--naotech-app-color-700)}
+  .wtop-menu{position:absolute;right:0;top:calc(100% + var(--naotech-sizing-8));z-index:20;min-width:15rem;transform-origin:top right;animation:wtopMenu 160ms var(--mo-out,ease-out)}
+  .wtop-menu[hidden]{display:none}
+  .wtop-menu{min-width:21rem}
+  .wtop-menu .nwt-popover__surface{width:100%;background:#fff;border:1px solid var(--naotech-app-color-200);border-radius:var(--naotech-sizing-16);box-shadow:var(--naotech-shadow-medium)}
+  .wtop-seccion{padding:var(--naotech-sizing-12) var(--naotech-sizing-12) var(--naotech-sizing-8);font-size:var(--naotech-sizing-12);line-height:var(--naotech-sizing-16);font-weight:var(--naotech-font-weight-bold);letter-spacing:.06em;text-transform:uppercase;color:var(--naotech-app-color-500)}
+  .wtop-fila{display:flex;align-items:center;gap:var(--naotech-sizing-12);padding:var(--naotech-sizing-12);border-radius:var(--naotech-sizing-12);background:var(--naotech-color-amber-100);color:var(--naotech-color-orange-700)}
+  .wtop-fila .wtop-id{flex:1}.wtop-fila .wtop-id b{color:var(--naotech-color-orange-700)}
+  .wtop-menu .nwt-popover__content{gap:0;padding:var(--naotech-sizing-8) var(--naotech-sizing-4)}
+  .wtop-menu .nwt-dropdown__option{margin-top:var(--naotech-sizing-4);width:100%;height:var(--naotech-sizing-40);color:var(--naotech-app-color-900);text-align:left}
+  .wtop-menu .nwt-dropdown__option .nwt-icon,.wtop-menu .nwt-dropdown__option svg{flex:0 0 auto}
+  @keyframes wtopMenu{from{opacity:0;transform:scale(.96) translateY(-4px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.wtop-menu{animation:none}.wtop-chip .wtop-flecha{transition:none}}
+
+  /* Pie flotante de Naowee, abajo a la derecha */
+  html.web.con-menu .wpie{position:fixed;z-index:8;right:20px;bottom:16px;display:flex;align-items:center;gap:12px;height:44px;padding:0 18px;border:1px solid var(--gray-200);border-radius:999px;background:var(--white-alpha-100);box-shadow:0 2px 10px rgba(24,30,71,.06);font-size:var(--fs-caption);color:var(--gray-700)}
+  .wpie img{height:24px;width:auto}.wpie-sep{margin:8px 0}
+
+  /* Con menú lateral, la barra superior y la inferior de la app móvil sobran */
+  html.web.con-menu .appbar,html.web.con-menu .bnav{display:none}
+
+  /* Contenido: fondo blanco, ancho amplio y centrado */
+  html.web.con-menu .page,html.web.con-menu .page-body.tonal{background:var(--white-alpha-100)}
+  html.web.con-menu .page{padding-top:0}
+  html.web.con-menu .page-body{background:transparent;align-items:center}
+  html.web.con-menu .page-body > *{width:100%;max-width:var(--web-max)}
+  html.web.con-menu .content{padding:36px 48px 96px}
+  html.web.con-menu .content h1.t-h1,html.web.con-menu .nt-head h1,html.web.con-menu .mp > h1{font-size:clamp(28px,2.4vw,36px);line-height:1.15;color:var(--gray-900);letter-spacing:-.01em}
+  html.web.con-menu .content .lead{font-size:var(--fs-body);color:var(--gray-700);margin-bottom:28px}
+
+  /* Barras fijas sobre el contenido: también en blanco (en la app son grises) */
+  html.web.con-menu .evs > .searchrow,html.web.con-menu .evd-listhead,html.web.con-menu .evd-listhead + *,html.web.con-menu .evd-search{background:var(--white-alpha-100)}
+
+  html.web.con-menu .evs > .searchrow{box-shadow:none}
+  html.web.con-menu .evd{padding:36px 48px 96px}
+  html.web.con-menu .pf-card,html.web.con-menu .mp-card{background:var(--white-alpha-100);border:1px solid var(--gray-200)}
+
+  /* Eventos: tarjetas con borde (no sombra) en grilla */
+  html.web .evs .list{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:24px;align-items:stretch;align-content:start}
+  html.web .evs .list .evcard{margin-bottom:0;box-shadow:none;border:1px solid var(--gray-200);display:flex;flex-direction:column;height:100%}
+  html.web .evs .list .evcard-link{flex:1 1 auto;display:flex;flex-direction:column}
+  html.web .evs .list .evcard-body{flex:1 1 auto;display:flex;flex-direction:column}
+  html.web .evs .list .evcard-meta{margin-bottom:0}
+  html.web .evs .list .evcard-title{margin-top:auto}
+  html.web .evs .list .evcard-body.has-aviso{padding-bottom:var(--sp-m-M)}
+  /* En web el aviso va sobre la imagen (pegado a su borde inferior) y el texto largo sale como tooltip
+     al hover/foco: la tarjeta no cambia de alto, así que no mueve la fila. */
+  html.web .evs .list .evcard{position:relative}
+  html.web .evs .list .evcard-aviso{position:absolute;top:150px;left:12px;right:12px;padding:0;transform:translateY(calc(-100% - 12px));z-index:2}
+  html.web .evs .list .nwt-alert[data-act=aviso]{position:relative;cursor:help;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+  html.web .evs .list .nwt-alert[data-act=aviso] .av-chev{display:none}
+  html.web .evs .list .nwt-alert[data-act=aviso] .nwt-alert__content{align-items:center}
+  html.web .evs .list .nwt-alert[data-act=aviso] .aviso-wrap{display:block;position:absolute;top:100%;left:0;right:0;margin-top:8px;padding:10px 12px;
+    background:var(--navy);color:#fff;border-radius:12px;font-size:var(--fs-body-small);line-height:1.35;
+    box-shadow:0 6px 18px rgba(0,0,0,.28);opacity:0;visibility:hidden;pointer-events:none;transition:opacity 160ms ease;z-index:3}
+  html.web .evs .list .nwt-alert[data-act=aviso]:hover .aviso-wrap,
+  html.web .evs .list .nwt-alert[data-act=aviso]:focus-visible .aviso-wrap{opacity:1;visibility:visible}
+  html.web .evs .list .nwt-alert[data-act=aviso] .aviso-more{visibility:visible;color:#fff}
+  html.web .evs .list .nwt-alert[data-act=aviso] .aviso-more > span{margin:0;padding:0;border:0}
+  html.web .evs .list > .empty{grid-column:1 / -1}
+  html.web .evs{padding-top:36px}
+
+  /* Detalle del evento: portada contenida, deportistas en grilla y filas con borde */
+  /* Encabezado del evento en web: tarjeta horizontal — texto a la izquierda, imagen a la derecha que se funde con el blanco */
+  html.web.con-menu .evd-hero{min-height:260px;margin:0;flex-direction:row;align-items:stretch;justify-content:flex-start;border:1px solid var(--naotech-app-color-200);border-radius:var(--naotech-sizing-20);background:#fff}
+  html.web.con-menu .evd-hero::before,html.web.con-menu .evd-hero-veil{display:none}
+  html.web.con-menu .evd-hero-img{inset:0 0 0 auto;width:70%;-webkit-mask-image:linear-gradient(to right,transparent 0,rgba(0,0,0,.18) 20%,rgba(0,0,0,.55) 42%,rgba(0,0,0,.9) 62%,#000 78%);mask-image:linear-gradient(to right,transparent 0,rgba(0,0,0,.18) 20%,rgba(0,0,0,.55) 42%,rgba(0,0,0,.9) 62%,#000 78%)}
+  html.web.con-menu .evd-hero-in{z-index:1;justify-content:center;gap:var(--naotech-sizing-12);width:50%;padding:var(--naotech-sizing-40) var(--naotech-sizing-40) var(--naotech-sizing-32)}
+  html.web.con-menu .evd-title{margin:0;font-size:var(--naotech-sizing-40);line-height:1.1;letter-spacing:-.01em}
+  html.web.con-menu .evd-sub{margin:0;font-size:var(--naotech-sizing-16);color:var(--naotech-app-color-700)}
+  /* «‹ Perfil del evento» sobre la tarjeta, como «‹ Perfil del deportista» */
+  html.web.con-menu .evd-hero{overflow:visible;margin-top:var(--naotech-sizing-40)}
+  html.web.con-menu .evd-hero-img{border-radius:0 var(--naotech-sizing-20) var(--naotech-sizing-20) 0}
+  /* Deportes por calificar: franja compacta bajo el encabezado */
+  html.web.con-menu .dsum{width:auto;min-width:22rem;max-width:36rem;margin-top:var(--naotech-sizing-16);height:64px;border-radius:var(--naotech-sizing-16);transition:background-color 140ms ease,transform 140ms var(--mo-out,ease-out)}
+  /* Banda a todo el ancho: lista completa de deportes a la vista y «Ver lista» antes del chevron */
+  html.web.con-menu .dsum{width:100%;min-width:0;max-width:none;height:auto;min-height:72px;padding:var(--naotech-sizing-12) var(--naotech-sizing-20)}
+  html.web.con-menu .dsum .dsum-n,html.web.con-menu .dsum .dsum-m{display:none}
+  html.web.con-menu .dsum .dsum-all{display:block;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  html.web.con-menu .dsum::after{content:"Ver lista";order:1;flex:none;font-size:var(--naotech-sizing-14);font-weight:var(--naotech-font-weight-bold);color:var(--orange-700)}
+  html.web.con-menu .dsum > .icbox{order:2}
+  html.web.con-menu .dsum:hover{background:var(--orange-100)}html.web.con-menu .dsum:active{transform:scale(.99)}
+  html.web .evd-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));column-gap:16px;align-content:start}
+  html.web .evd-list > .empty{grid-column:1 / -1}
+  html.web.con-menu .dtile,html.web.con-menu .dtile:has(.chip.calificado){background:var(--white-alpha-100);box-shadow:none;border:1px solid var(--gray-200)}
+
+  /* Pantallas de lectura y formulario: columna angosta y centrada para que las líneas no se estiren */
+  html.web.con-menu .ef-scroll{padding-left:max(32px,calc((100% - 760px) / 2));padding-right:max(32px,calc((100% - 760px) / 2))}
+  html.web.con-menu .nt,html.web.con-menu .mp{max-width:760px;margin-left:auto;margin-right:auto}
+  html.web.con-menu .mp{padding:36px 48px}
+
+  /* «Conoce más» → panel lateral angosto (las hojas inferiores pasan a NwtModal, ver js/web.js) */
+  html.web .sidepanel{width:440px;max-width:100%}
+
+  /* Inicio de sesión (modelo de los portales Naowee): el SPLASH queda igual (azul a pantalla completa, órbitas, logo animado). Al llegar al
+     formulario la pantalla se compone en dos: franja superior con Mindeporte, panel de imagen a la izquierda y el formulario centrado a la
+     derecha, con ayuda y pie Naowee. El logo del splash se desvanece; el panel trae el suyo. */
+  html.web .lg{--lg-pw:clamp(340px,31%,520px);--lg-top:76px}
+  html.web .lg-orbit{overflow:visible;left:50%;width:780px;height:1690px;margin-left:-390px;transform-origin:50% 600px}
+  html.web .lg-carga{left:50%;right:auto;width:280px;margin-left:-140px}
+  html.web .lg-web{display:flex!important}
+  html.web .lg[data-fase=login] .lg-bg{background:linear-gradient(90deg,var(--gray-100) 0 var(--lg-pw),var(--white-alpha-100) var(--lg-pw))}
+  html.web .lg[data-fase=login] .lg-orbit{opacity:0}
+  /* El logo del Comité del splash viaja a la esquina de la franja superior (en vez de desvanecerse): escala .35 y su centro a 61 px del borde */
+  html.web .lg-logo{z-index:2;transition:transform var(--lg-t) var(--lg-ease),opacity var(--lg-t) var(--lg-ease),top var(--lg-t) var(--lg-ease),left var(--lg-t) var(--lg-ease),visibility var(--lg-t)}
+  html.web .lg[data-fase=login] .lg-logo{top:2px;left:61px;transform:scale(.35)}
+  html.web .lg-head{display:none}
+
+  html.web .lg-top{left:0;right:0;top:0;height:var(--lg-top);align-items:center;padding:0 28px;background:var(--white-alpha-100);border-bottom:1px solid var(--gray-200);opacity:0;transform:translateY(-12px)}
+  html.web .lg-panel{left:16px;top:calc(var(--lg-top) + 16px);bottom:16px;width:calc(var(--lg-pw) - 32px);overflow:hidden;border-radius:24px;opacity:0;transform:translateX(-24px)}
+  /* Fotos de los eventos del ciclo: fundido cruzado, 5 s cada una (5 fotos = ciclo de 25 s). Solo opacity. */
+  html.web .lg-panel-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--pos,50% 50%);opacity:0;will-change:transform,opacity;
+    animation:lgFoto 25s linear infinite both;animation-delay:calc(var(--i) * 5s)}
+  html.web .lg-panel-img:first-of-type{opacity:1}
+  /* Zoom lento (efecto Ken Burns) mientras la foto está a la vista: unas se acercan y otras se alejan, cada una desde un punto distinto.
+     Solo transform y opacity. Cada foto vive 5,8 s de un ciclo de 25 s: entra 0,8 s, se sostiene y sale mientras entra la siguiente. */
+  html.web .lg-panel-img:nth-of-type(1){transform-origin:50% 38%}
+  html.web .lg-panel-img:nth-of-type(2){transform-origin:50% 30%;animation-name:lgFotoOut}
+  html.web .lg-panel-img:nth-of-type(3){transform-origin:50% 72%}
+  html.web .lg-panel-img:nth-of-type(4){transform-origin:30% 45%;animation-name:lgFotoOut}
+  html.web .lg-panel-img:nth-of-type(5){transform-origin:50% 38%}
+  @keyframes lgFoto{0%{opacity:0;transform:scale(1)}3.2%,20%{opacity:1}23.2%{opacity:0;transform:scale(1.14)}100%{opacity:0;transform:scale(1.14)}}
+  @keyframes lgFotoOut{0%{opacity:0;transform:scale(1.14)}3.2%,20%{opacity:1}23.2%{opacity:0;transform:scale(1)}100%{opacity:0;transform:scale(1)}}
+  @media (prefers-reduced-motion:reduce){html.web .lg-panel-img{animation:none}html.web .lg-panel-img:not(:first-of-type){display:none}}
+  html.web .lg[data-fase=login] .lg-top,html.web .lg[data-fase=login] .lg-panel{opacity:1;transform:none}
+  html.web .lg[data-fase=login] .lg-panel{transition-delay:120ms}
+
+  html.web .lg > .lg-main{display:flex;flex-direction:column;align-items:center;justify-content:center;left:var(--lg-pw);right:0;top:var(--lg-top);bottom:64px;padding:24px 32px;overflow-y:auto}
+  html.web .lg-main > *{position:static;width:min(440px,100%);margin:0;transition:transform var(--lg-t) var(--lg-ease),opacity var(--lg-t) var(--lg-ease),visibility var(--lg-t)}
+  html.web .lg-bienv,html.web .lg-ayuda{flex-direction:column;opacity:0;visibility:hidden;transform:translateY(40px)}
+  html.web .lg[data-fase=login] .lg-bienv,html.web .lg[data-fase=login] .lg-ayuda{opacity:1;visibility:visible;transform:none}
+  html.web .lg[data-fase=login] .lg-ayuda{transition-delay:320ms}
+  html.web .lg-bienv{align-items:center;text-align:center;margin-bottom:28px}
+  html.web .lg-bienv h2{margin:0;font-size:clamp(28px,2.6vw,36px);line-height:1.15;font-weight:var(--fw-regular);color:var(--navy)}
+  html.web .lg-bienv h2 b{font-weight:var(--fw-bold)}
+  html.web .lg-bienv p{margin:12px 0 0;font-size:var(--fs-body);color:var(--gray-700)}
+  html.web .lg-foot{margin-top:24px}
+  html.web .lg-foot .btn{background:var(--orange-700);color:var(--white-alpha-100)}
+  html.web .lg-olvido .lg-link{color:var(--orange-700);text-decoration:underline}
+  html.web .lg-legal .lg-link{text-decoration:underline}
+  html.web .lg-ayuda{align-items:center;margin-top:28px;text-align:center}
+  html.web .lg-ayuda b{font-size:var(--fs-caption);letter-spacing:.08em;text-transform:uppercase;color:var(--gray-700)}
+  html.web .lg-ayuda p{margin:10px 0 0;font-size:var(--fs-body-small);color:var(--gray-700)}
+  html.web .lg-ayuda .lg-link{text-decoration:underline}
+  html.web .lg-pie{right:24px;bottom:16px;align-items:center;gap:12px;opacity:0}
+  html.web .lg-pie img{height:28px;width:auto}
+  html.web .lg-pie span{font-size:var(--fs-caption);color:var(--gray-700)}
+  html.web .lg[data-fase=login] .lg-pie{opacity:1}
+}
+
+/* ── Detalle de evento en web: tabla de deportistas (NwtDatatable + NwtSearchbox + NwtPagination), como en la demo de incentivos ── */
+.evd-web{display:none}
+@media (min-width:900px){
+  html.web .evd-search,html.web .evd-list{display:none}
+  html.web .evd-card{display:flex;flex-direction:column;margin-top:var(--naotech-sizing-24);padding:var(--naotech-sizing-8) var(--naotech-sizing-20) var(--naotech-sizing-20);background:#fff;border:1px solid var(--naotech-app-color-200);border-radius:var(--naotech-sizing-16)}
+  html.web .evd-card > .evd-gap16:first-child{display:none}
+  html.web .tabs.evd-tabs{position:relative;top:auto;padding-top:var(--naotech-sizing-8);box-shadow:none;background:transparent;justify-content:flex-start}
+  html.web .evd-tabs .tab{flex:0 0 auto;padding:0 var(--naotech-sizing-24) 0 0}
+  html.web .evd-tabs .tab+.tab{padding-left:var(--naotech-sizing-24)}
+  html.web .evd-tabs.fija::after{display:none}
+  html.web .evd-listhead{padding:var(--naotech-sizing-4) 0 var(--naotech-sizing-8)}
+  html.web .evd-web{display:flex;flex-direction:column;gap:var(--naotech-sizing-16)}
+  .evw-bar{display:flex;align-items:center;justify-content:space-between;gap:var(--naotech-sizing-12);flex-wrap:wrap}
+  .evw-bar-l{display:flex;align-items:center;gap:var(--naotech-sizing-12);flex-wrap:wrap}
+  .evd-web .nwt-searchbox{width:21rem;max-width:100%}
+  .evd-web .nwt-input-box__control{display:flex;align-items:center;height:var(--naotech-sizing-48);padding:0 var(--naotech-sizing-16);border:1px solid var(--naotech-app-color-300);border-radius:var(--naotech-sizing-32);background:#fff;transition:border-color 140ms ease,box-shadow 140ms ease}
+  .evd-web .nwt-input-box__control:focus-within{border-color:var(--naotech-color-orange-700);box-shadow:0 0 0 3px rgba(215,64,9,.15)}
+  .evd-web .nwt-input-box__control input:focus,.evd-web .nwt-input-box__control input:focus-visible,html.web.con-menu .evs .search input:focus,html.web.con-menu .evs .search input:focus-visible{outline:0;box-shadow:none}
+  .evd-web .nwt-searchbox__container{height:auto}
+  .evw-ddw{position:relative;display:inline-flex}
+  .evw-dd{display:inline-flex;align-items:center;justify-content:space-between;gap:var(--naotech-sizing-8);height:var(--naotech-sizing-48);padding:0 var(--naotech-sizing-12) 0 var(--naotech-sizing-16);border:1px solid var(--naotech-app-color-500);border-radius:var(--naotech-sizing-12);background:#fff;font-size:var(--naotech-sizing-14);font-weight:var(--naotech-font-weight-semibold);color:var(--naotech-app-color-900);transition:border-color 140ms ease,box-shadow 140ms ease,transform 140ms var(--mo-out,ease-out)}
+  .evw-dd:hover{border-color:var(--naotech-app-color-700)}.evw-dd:active{transform:scale(.98)}
+  .evw-dd[aria-expanded=true]{border-color:var(--naotech-color-orange-700);box-shadow:0 0 0 3px rgba(215,64,9,.15)}
+  .evw-dd svg{color:var(--naotech-app-color-700);transition:transform 180ms var(--mo-out,ease-out)}
+  .evw-dd[aria-expanded=true] svg{transform:rotate(180deg)}
+  .evw-menu{position:absolute;top:calc(100% + var(--naotech-sizing-6));left:0;z-index:30;min-width:100%;max-height:20rem;overflow-y:auto;padding:var(--naotech-sizing-8) var(--naotech-sizing-4);background:#fff;border:1px solid var(--naotech-app-color-200);border-radius:var(--naotech-sizing-12);box-shadow:var(--naotech-shadow-medium);white-space:nowrap;transform-origin:top left;animation:wtopMenu 160ms var(--mo-out,ease-out)}
+  .evw-menu[hidden]{display:none}
+  .evw-menu .nwt-dropdown__option{width:100%;justify-content:space-between;text-align:left;color:var(--naotech-app-color-900)}
+  .evw-menu .nwt-dropdown__option>span:first-of-type{flex:1;text-align:left}
+  .evw-menu .nwt-dropdown__option[aria-selected=true]{--pvt-signal-background:var(--naotech-color-orange-700);background:var(--naotech-color-amber-100);color:var(--naotech-color-orange-700);font-weight:var(--naotech-font-weight-semibold)}
+  .evd-web .nwt-datatable__table{overflow:visible}
+  .evd-web .nwt-datatable__header{border-radius:var(--naotech-sizing-12)}
+  .evd-web .nwt-datatable__record{align-items:center;cursor:pointer}
+  .evd-web .nwt-datatable__record:hover{background:color-mix(in srgb,var(--naotech-app-color-100) 50%,#fff)} /* gris más claro que el tono base */
+  .evd-web .nwt-datatable__cell{min-height:var(--naotech-sizing-56);padding:var(--naotech-sizing-12) 0}
+  .evw-nombre{font-weight:var(--naotech-font-weight-semibold);color:var(--naotech-app-color-900);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .evw-nombre:hover{color:var(--naotech-color-orange-700);text-decoration:underline}
+  .evw-vacio{width:100%}
+  .evw-foot{font-size:var(--naotech-sizing-14);line-height:var(--naotech-sizing-18);color:var(--naotech-app-color-700)}
+  .evw-foot:empty{display:none}
+  .evw-pie{display:flex;align-items:center;justify-content:space-between;gap:var(--naotech-sizing-12);flex-wrap:wrap}
+  .evw-pie .evw-foot{margin-right:auto}
+  @media (prefers-reduced-motion:reduce){.evw-menu{animation:none}.evw-dd svg{transition:none}}
+}
+
+/* ── Eventos en web: buscador y filtro con el mismo aspecto que la tabla del detalle (NwtSearchbox + desplegable de filtro) ── */
+@media (min-width:900px){
+  html.web.con-menu .evs > .searchrow{position:relative;justify-content:flex-start;gap:var(--naotech-sizing-12);margin:0 0 var(--naotech-sizing-24);padding:0}
+  html.web.con-menu .evs > .searchrow::after{display:none}
+  html.web.con-menu .evs .search{flex:0 1 21rem;width:21rem;height:var(--naotech-sizing-48);padding:0 var(--naotech-sizing-16);gap:var(--naotech-sizing-8);border:1px solid var(--naotech-app-color-300);border-radius:var(--naotech-sizing-32);background:#fff;box-shadow:none;transition:border-color 140ms ease,box-shadow 140ms ease}
+  html.web.con-menu .evs .search:focus-within{outline:0;border-color:var(--naotech-color-orange-700);box-shadow:0 0 0 3px rgba(215,64,9,.15)}
+  html.web.con-menu .evs .search input{font-size:var(--naotech-sizing-14);color:var(--naotech-app-color-900)}
+  html.web.con-menu .evs > .searchrow .trigger,html.web.con-menu .evs > .searchrow.pegada .trigger{flex:none;width:auto;min-width:9.5rem;height:var(--naotech-sizing-48);margin:0;padding:0 var(--naotech-sizing-12) 0 var(--naotech-sizing-16);gap:var(--naotech-sizing-8);border:1px solid var(--naotech-app-color-500);border-radius:var(--naotech-sizing-8);background:#fff;color:var(--naotech-app-color-900);opacity:1;visibility:visible;overflow:visible;transition:border-color 140ms ease,transform 140ms var(--mo-out,ease-out)}
+  html.web.con-menu .evs > .searchrow .trigger > span{flex:1 1 auto;font-size:var(--naotech-sizing-14);font-weight:var(--naotech-font-weight-semibold)}
+  html.web.con-menu .evs > .searchrow .trigger:hover{border-color:var(--naotech-app-color-700)}
+  html.web.con-menu .evs > .searchrow .trigger:active{transform:scale(.98)}
+  html.web.con-menu .evs > .searchrow .trigger.on{border:1px solid var(--naotech-color-orange-700);color:var(--naotech-color-orange-700)}
+}
+@media (min-width:900px){
+  html.web .evs > .searchrow .trigger .icbox{transition:transform 180ms var(--mo-out,ease-out)}
+  html.web .evs > .searchrow .trigger[aria-expanded=true]{border-color:var(--naotech-color-orange-700);box-shadow:0 0 0 3px rgba(215,64,9,.15)}
+  html.web .evs > .searchrow .trigger[aria-expanded=true] .icbox{transform:rotate(180deg)}
+}
+@media (min-width:900px){
+  /* DC-020: en Eventos el contenido va sin relleno lateral (el ancho máximo de 1240 px ya da el margen) */
+  html.web.con-menu .content.evs{padding-left:0;padding-right:0;max-width:min(var(--web-max),calc(100% - 48px))}
+}
+@media (min-width:900px){
+  /* DC-022: sin el espacio sobrante entre «deportes por calificar» y la tarjeta (el buscador móvil que lo acompañaba está oculto) */
+  html.web .evd > .evd-gap16{display:none}
+  /* DC-021: pestañas del detalle a 40 px de alto */
+  html.web .tabs.evd-tabs{min-height:var(--naotech-sizing-40)}
+}
+@media (min-width:900px){
+  /* DC-023: el icono del ítem activo del menú también va naranja, como su texto */
+  html.web .wside .nwt-sidebar__menu__item--active .nwt-sidebar__menu__icon .icbox{color:var(--naotech-color-orange-700)!important}
+  /* DC-024: «Volver a eventos» en naranja */
+  /* DC-025 y DC-026: título de la lista a 20 px y el contador pegado al nombre */
+  html.web .evd-h2{flex:0 1 auto;font-size:var(--naotech-heading6-font-size)}
+  html.web .evd-listhead{gap:var(--naotech-sizing-12);justify-content:flex-start}
+}
+
+/* ── Notificaciones en web: panel bajo la campana ── */
+@media (min-width:900px){
+  .wtop-bellw{position:relative}
+  .wtop-avisos{position:absolute;top:calc(100% + var(--naotech-sizing-12));right:calc(-1 * var(--naotech-sizing-8));z-index:20;width:26rem;max-width:calc(100vw - 32px);background:#fff;border:1px solid var(--naotech-app-color-200);border-radius:var(--naotech-sizing-16);box-shadow:0 0 0 1px rgba(24,30,71,.04),0 6px 16px rgba(24,30,71,.12),0 28px 64px -8px rgba(24,30,71,.32);overflow:hidden;transform-origin:top right;animation:wtopMenu 160ms var(--mo-out,ease-out)}
+  .wtop-avisos[hidden]{display:none}
+  .wav-head{display:flex;align-items:center;justify-content:space-between;gap:var(--naotech-sizing-12);padding:var(--naotech-sizing-16) var(--naotech-sizing-20);border-bottom:1px solid var(--naotech-app-color-200)}
+  .wav-head h2{margin:0;font-size:var(--naotech-sizing-20);line-height:var(--naotech-sizing-24);font-weight:var(--naotech-font-weight-bold);color:var(--naotech-app-color-900)}
+  .wav-todas{padding:var(--naotech-sizing-4) var(--naotech-sizing-8);margin-right:calc(-1 * var(--naotech-sizing-8));border-radius:var(--naotech-sizing-8);font-size:var(--naotech-sizing-14);font-weight:var(--naotech-font-weight-bold);color:var(--naotech-color-orange-700);transition:background-color 140ms ease}
+  .wav-todas:hover:not(:disabled){background:var(--naotech-color-amber-100)}
+  .wav-todas:disabled{color:var(--naotech-app-color-500);cursor:default}
+  .wav-lista{max-height:min(26rem,calc(100vh - 12rem));overflow-y:auto}
+  .wav-tabs{display:flex;gap:var(--naotech-sizing-20);padding:0 var(--naotech-sizing-20);border-bottom:1px solid var(--naotech-app-color-200)}
+  .wav-tab{display:inline-flex;align-items:center;gap:var(--naotech-sizing-8);padding:var(--naotech-sizing-12) 0;margin-bottom:-1px;border-bottom:2px solid transparent;font-size:var(--naotech-sizing-14);font-weight:var(--naotech-font-weight-semibold);color:var(--naotech-app-color-700)}
+  .wav-tab.on{color:var(--naotech-color-orange-700);border-bottom-color:var(--naotech-color-orange-700)}
+  .wav-cnt{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:10px;font-size:11px;font-weight:var(--naotech-font-weight-bold)}
+  .wav-cnt.rec{background:var(--naotech-color-orange-700);color:#fff}
+  .wav-cnt.tod{background:#fff;color:var(--naotech-app-color-700);box-shadow:inset 0 0 0 1px var(--naotech-app-color-200)}
+  .wav-row{display:flex;align-items:flex-start;border-bottom:1px solid var(--naotech-app-color-200)}
+  .wav-row:last-child{border-bottom:0}
+  .wav-row .wav-item{flex:1;min-width:0;border-bottom:0}
+  .wav-del{opacity:0;flex:none;margin:var(--naotech-sizing-12) var(--naotech-sizing-12) 0 0;padding:var(--naotech-sizing-8);border-radius:var(--naotech-sizing-8);color:var(--naotech-app-color-500);transition:background-color 140ms ease,color 140ms ease}
+  .wav-row:hover .wav-del,.wav-row:focus-within .wav-del{opacity:1}
+  .wav-del:hover,.wav-del:focus-visible{background:var(--naotech-color-amber-100);color:var(--naotech-color-orange-700)}
+  .wav-item{display:flex;gap:var(--naotech-sizing-12);width:100%;padding:var(--naotech-sizing-16) var(--naotech-sizing-20);text-align:left;border-bottom:1px solid var(--naotech-app-color-200);transition:background-color 140ms ease}
+  .wav-item:last-child{border-bottom:0}
+  .wav-row{transition:background-color 140ms ease}
+  .wav-row:has(.wav-item.nueva){background:var(--orange-50)} /* sin leer = relleno cálido, como en el móvil */
+  .wav-row:hover,.wav-row:focus-within{background:var(--naotech-app-color-100)} /* el gris cubre la fila completa, papelera incluida */
+  .wav-row:has(.wav-item.nueva):hover,.wav-row:has(.wav-item.nueva):focus-within{background:var(--orange-100)}
+  .wav-punto{flex:none;width:12px;height:12px;margin-top:var(--naotech-sizing-6);border-radius:50%;background:transparent}
+  .wav-item.nueva .wav-punto{background:var(--naotech-color-orange-700)}
+  .wav-txt{display:flex;flex-direction:column;gap:var(--naotech-sizing-4);min-width:0}
+  .wav-txt b{font-size:var(--naotech-sizing-16);line-height:var(--naotech-sizing-20);font-weight:var(--naotech-font-weight-bold);color:var(--naotech-app-color-900)}
+  .wav-item:not(.nueva) .wav-txt b{font-weight:var(--naotech-font-weight-semibold)}
+  .wav-txt span{font-size:var(--naotech-sizing-14);line-height:var(--naotech-sizing-20);color:var(--naotech-app-color-700)}
+  .wav-txt small{font-size:var(--naotech-sizing-12);line-height:var(--naotech-sizing-16);color:var(--naotech-app-color-500)}
+  .wav-vacio{margin:0;padding:var(--naotech-sizing-24) var(--naotech-sizing-20);font-size:var(--naotech-sizing-14);color:var(--naotech-app-color-700)}
+  @media (prefers-reduced-motion:reduce){.wtop-avisos{animation:none}}
+}
+
+/* Perfil del deportista (web): cabecera en card, navegación lateral y pestañas Datos / Pruebas / Historial.
+   El marcado lo genera perfilWeb() en js/screens/deportista.js solo con web ≥ 900 px. */
+@media (min-width:900px){
+  html.web .pfw{max-width:var(--web-max);margin:0 auto}
+  html.web .web-volver{display:inline-flex;align-items:center;gap:8px;margin:4px 0 20px -4px;color:var(--orange-700);font-weight:var(--fw-bold);text-decoration:none}
+  html.web .web-volver:hover{text-decoration:underline}
+  /* Unificado: todos los «Volver a…» web llevan flecha + texto 16 px en negrita naranja (perfil, evento, notificaciones) */
+  html.web.con-menu .backlink.evd-hero-back{top:calc(-1 * var(--naotech-sizing-40));left:0;width:auto;height:auto;gap:8px;padding:0;margin:0 0 0 -4px;border-radius:0;background:transparent;color:var(--orange-700);font-weight:var(--fw-bold);font-size:var(--fs-body)}
+  html.web.con-menu .backlink.evd-hero-back:hover{text-decoration:underline}
+  html.web .pfw-head{display:flex;align-items:center;gap:20px;padding:24px 32px;background:var(--white-alpha-100);border:1px solid var(--gray-200);border-radius:var(--r-xlarge)}
+  html.web .pfw-head .pf-avatar{margin:0}
+  html.web .pfw-id{min-width:0}
+  html.web .pfw-eyebrow{margin:0 0 4px;font-size:var(--fs-caption);font-weight:var(--fw-bold);letter-spacing:.06em;text-transform:uppercase;color:var(--gray-700)}
+  html.web .pfw-meta{display:inline-flex;align-items:center;padding:4px 12px;border-radius:999px;background:var(--informative-quiet);color:var(--negro);font-size:var(--fs-caption);font-weight:var(--fw-bold)}
+  /* Perfil del deporte: avatar cuadrado redondeado con el pictograma, para no confundirlo con el del estudiante (círculo con inicial) */
+  html.web .pf-avatar.pfw-av-deporte{border-radius:24px;background:var(--orange-100)}
+  html.web .pfw-name{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+  html.web .pfw-name h1{margin:0;color:var(--negro);font-size:var(--fs-sujeto)}
+  html.web .pfw-sub{margin:8px 0 0;color:var(--gray-700)}
+  html.web .pfw-cols{display:grid;grid-template-columns:260px minmax(0,1fr);gap:24px;margin-top:24px;align-items:start}
+  html.web .pfw-side{display:flex;flex-direction:column;gap:20px}
+  html.web .pfw-nav{position:relative;display:flex;align-items:center;gap:12px;padding:16px 20px;border:1px solid var(--gray-200);border-radius:var(--r-xlarge);color:var(--negro);font-weight:var(--fw-bold)}
+  html.web .pfw-nav::before{content:"";position:absolute;left:-1px;top:50%;width:4px;height:32px;transform:translateY(-50%);border-radius:0 4px 4px 0;background:var(--orange-700)}
+  html.web .pfw-main{min-width:0;padding:24px 32px 32px;background:var(--white-alpha-100);border:1px solid var(--gray-200);border-radius:var(--r-xlarge)}
+  html.web .pfw-main .tab{flex:0 0 auto;padding:0 var(--naotech-sizing-24) 0 0}
+  html.web .pfw-main .tab+.tab{padding-left:var(--naotech-sizing-24)}
+  /* Las filas de pruebas van planas dentro de la card principal: sin segundo borde ni fondo */
+  html.web .pfw-main .pf-prueba,html.web .pfw-main .pf-ccard{background:none;border:0;border-top:1px solid var(--gray-200);border-radius:0;padding-left:0;padding-right:0;box-shadow:none}
+  /* El divisor va antes del evento y su prueba, no entre ellos; sin el recuadro del plazo vencido; acciones centradas en el alto de la fila */
+  html.web .pfw-main .pf-ccard{border-top:0;box-shadow:none;align-items:center}
+  html.web .pfw-main .pf-ccard .pf-acts{align-self:center;align-items:center}
+  html.web .pfw-main .pf-evgrupo{margin:var(--naotech-sizing-8) 0 0;padding-top:var(--naotech-sizing-16);border-top:1px solid var(--gray-200)}
+  /* Aviso «no se puede calificar» del equipo: card informativa rellena, sin borde */
+  html.web .pfw-main [data-testid=perfil-equipo-bloqueado]{background:var(--gray-100);border:0;box-shadow:none}
+  html.web .pfw-main [data-testid=perfil-equipo-bloqueado] .pf-block b{color:var(--negro)}
+  html.web .pfw-main [data-testid=perfil-equipo-bloqueado] .pf-block span{color:var(--gray-800)}
+  /* Historial como tabla: mismo tratamiento que la tabla de deportistas del evento */
+  html.web .pfw-tabla .nwt-datatable__table{overflow:visible}
+  html.web .pfw-tabla .nwt-datatable__header{border-radius:var(--naotech-sizing-12)}
+  html.web .pfw-tabla .nwt-datatable__record{align-items:center}
+  html.web .pfw-tabla .nwt-datatable__record:hover{background:color-mix(in srgb,var(--naotech-app-color-100) 50%,#fff)}
+  html.web .pfw-tabla .nwt-datatable__cell{min-height:var(--naotech-sizing-56);padding:var(--naotech-sizing-12) 0;min-width:0;padding-right:var(--naotech-sizing-12);overflow:visible;white-space:normal}
+  html.web .pfw-tabla .pf-acts{justify-content:flex-end}
+  html.web .pfw-evc{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+  html.web .pfw-evc b{white-space:normal}
+  html.web .pfw-evc b,html.web .pfw-pn{font-weight:var(--fw-bold);color:var(--negro)}
+  html.web .pfw-plazo{display:inline-block;max-width:100%;white-space:normal;text-align:left;padding:4px 12px;border-radius:14px;font-size:var(--fs-caption);font-weight:var(--fw-bold);line-height:1.3}
+  html.web .pfw-plazo.info{background:var(--informative-quiet);color:var(--negro)}
+  html.web .pfw-plazo.neg{background:var(--finalizado-bg);color:var(--finalizado-text)}
+  html.web .pfw-nd{color:var(--gray-500)}
+  html.web .pfw-histhead{display:flex;align-items:flex-start;justify-content:space-between;gap:24px}
+  html.web .pfw-histhead .btn{flex:none}
+  html.web .pfw-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 48px}
+  html.web .pfw-campo{display:flex;flex-direction:column;gap:6px;min-width:0}
+  html.web .pfw-label{font-size:var(--fs-caption);color:var(--gray-700)}
+  html.web .pfw-valor{font-weight:var(--fw-medium,500);color:var(--negro);overflow-wrap:anywhere}
+}
+@media (min-width:900px) and (max-width:1100px){
+  html.web .pfw-cols{grid-template-columns:1fr}
+}
+
+/* Formulario de evaluación por pasos (web): stepper arriba, tarjetas numeradas por sección y pie fijo con Continuar.
+   Mismo patrón que el wizard de Incentivos. El marcado lo genera pintarWeb() en js/screens/evaluacion.js. */
+@media (min-width:900px){
+  html.web .ef-scroll:has(.efw){padding:0}
+  html.web.con-menu .page-body > .ef-scroll:has(.efw){max-width:none} /* stepper y pie a sangre de lado a lado */
+  html.web .efw{display:flex;flex-direction:column;min-height:100%}
+  html.web .efw-steps{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:12px 32px;background:color-mix(in srgb,var(--blue-jic-50) 35%,#fff);border-bottom:1px solid var(--gray-200)}
+  html.web .efw-step{display:flex;align-items:center;gap:10px;padding:0;border:0;background:none;font:inherit;text-align:left;cursor:pointer}
+  html.web .efw-n{display:grid;place-items:center;flex:none;width:32px;height:32px;border-radius:50%;background:var(--gray-400);color:var(--white-alpha-100);font-weight:var(--fw-bold);font-size:var(--fs-body-small)}
+  html.web .efw-step.on .efw-n{background:var(--orange-700)}
+  html.web .efw-step.done .efw-n{background:var(--success-700)}
+  html.web .efw-st small{display:block;font-size:var(--fs-caption-small);font-weight:var(--fw-bold);letter-spacing:.04em;text-transform:uppercase;color:var(--gray-500)}
+  html.web .efw-st b{display:block;font-size:var(--fs-label);font-weight:var(--fw-bold);color:var(--gray-500)}
+  html.web .efw-step.on .efw-st small{color:var(--orange-700)}
+  html.web .efw-step.done .efw-st small{color:var(--success-700)}
+  html.web .efw-step.on .efw-st b,html.web .efw-step.done .efw-st b{color:var(--negro)}
+  html.web .efw-step:focus-visible{outline:2px solid var(--orange-700);outline-offset:4px;border-radius:12px}
+  html.web .efw-line{flex:1 1 0;max-width:180px;min-width:40px;height:3px;margin:0 20px;border-radius:2px;background:var(--gray-300)}
+  html.web .efw-line.done{background:var(--success-700)} /* el tramo que sigue a un paso completado se pinta de verde */
+  html.web .efw-body{flex:1 1 auto;width:100%;max-width:800px;margin:0 auto;padding:40px 32px 48px}
+  html.web .efw-ev{margin:0 0 8px;font-size:var(--fs-caption);font-weight:var(--fw-bold);letter-spacing:0;text-transform:none;color:var(--gray-700)}
+  html.web .efw-h1{margin:0;font-size:32px;line-height:1.15;font-weight:var(--fw-bold);color:var(--negro)}
+  html.web .efw-sub{margin:12px 0 0;font-size:var(--fs-body);color:var(--gray-700)}
+  html.web .efw-card{margin-top:28px;background:var(--white-alpha-100);border:1px solid var(--gray-200);border-radius:24px}
+  html.web .efw-card-h{display:flex;align-items:center;gap:12px;padding:20px 28px;border-bottom:1px solid var(--gray-200)}
+  html.web .efw-card-h h2{margin:0;font-size:var(--fs-h2);font-weight:var(--fw-bold);color:var(--negro)}
+  html.web .efw-badge{display:grid;place-items:center;flex:none;width:32px;height:32px;border-radius:50%;background:var(--orange-100);color:var(--orange-700);font-weight:var(--fw-bold)}
+  html.web .efw-card-b{padding:24px 28px 28px}
+  html.web .efw .ef-banner-wrap{margin-top:24px}
+  html.web .efw-foot{position:sticky;bottom:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 32px;background:var(--white-alpha-100);border-top:1px solid var(--gray-200)}
+  html.web .efw-foot-r{display:flex;align-items:center;gap:12px}
+  html.web .efw-foot .btn{width:auto;flex:none}
+  html.web:has(.efw) .wpie{display:none} /* el pie flotante taparía «Continuar» */
+  html.web .efw .ef-box.area{height:120px}
+}
+
+/* Modal de confirmación del formulario (NwtModal), diagramado como el de Incentivos: ícono grande, título y texto centrados,
+   divisor y dos botones del mismo ancho al pie. Sin cabecera (el título ya va en el cuerpo). */
+@media (min-width:900px){
+  html.web .nwt-modal{--naotech-theme-backdrop:#28283499} /* overlay de todos los modales web: #282834 al 60 % */
+  html.web .nwt-modal:has(.efm){--naotech-modal-max-width:36rem}
+  html.web .nwt-modal:has(.efm) .nwt-modal__content{width:calc(100% - 48px);padding:0}
+  html.web .nwt-modal:has(.efm) .nwt-modal__header{display:none}
+  html.web .nwt-modal:has(.efm) .nwt-modal__component{padding:0}
+  html.web .nwt-modal:has(.efm) .sheet-pad{padding:0}
+  html.web .efm-top{display:flex;flex-direction:column;align-items:center;gap:20px;padding:40px 40px 32px;text-align:center}
+  html.web .efm-ico{display:grid;place-items:center;width:72px;height:72px;border-radius:50%;background:var(--orange-700)}
+  html.web .efm-h{margin:0;font-size:var(--fs-h1);font-weight:var(--fw-bold);color:var(--negro)}
+  html.web .efm-txt{margin:0;font-size:var(--fs-body);line-height:1.5;color:var(--gray-700)}
+  html.web .efm-acts{display:flex;gap:16px;margin:0 20px;padding:24px 12px;border-top:1px solid var(--gray-300)}
+  html.web .efm-acts .btn{flex:1 1 0;width:auto}
+  html.web .efm-pantalla{position:fixed;inset:0;z-index:60;background:var(--white-alpha-100)}
+  html.web .efm-carga{display:flex;align-items:center;justify-content:center;min-height:240px}
+}
+
+/* Avisos (toast) en web: esquina inferior derecha, sobre el pie flotante de Naowee; entran deslizando desde abajo */
+@media (min-width:900px){
+  html.web .nwt-toast{--pvt-content-transform:translateY(100%);position:fixed;left:auto;right:24px;bottom:72px!important;width:min(30rem,calc(100% - 48px))} /* fijo a la ventana; !important porque Ui.toast() fija bottom en línea según la barra móvil */
+  html.web .nwt-toast--visible{--pvt-content-transform:translateY(0)}
+  html.web .nwt-toast__content{left:0;padding:0}
+}
+
+/* Modal «Deportes a calificar»: NwtModal (título + descripción en la cabecera) con los deportes en cuadrícula de fichas */
+@media (min-width:900px){
+  html.web .nwt-modal:has([data-testid=deportes-sheet-lista]){--naotech-modal-max-width:34rem}
+  html.web .nwt-modal:has([data-testid=deportes-sheet-lista]) .nwt-modal__content{width:calc(100% - 48px);padding:var(--naotech-sizing-24) var(--naotech-sizing-8);row-gap:var(--naotech-sizing-20)}
+  html.web .nwt-modal:has([data-testid=deportes-sheet-lista]) .sheet-pad{padding:0}
+  .dm-desc{font-size:var(--naotech-sizing-14);line-height:var(--naotech-sizing-20);font-weight:var(--naotech-font-weight-regular);color:var(--naotech-app-color-600);max-width:26rem}
+  html.web .nwt-modal .dlista{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--naotech-sizing-12)}
+  html.web .nwt-modal .dlista .dfila{gap:var(--naotech-sizing-12);padding:var(--naotech-sizing-12);border:1px solid var(--naotech-app-color-300);border-radius:var(--naotech-sizing-16);font-size:var(--naotech-sizing-14);font-weight:var(--naotech-font-weight-semibold);color:var(--naotech-app-color-900)}
+  html.web .nwt-modal .dlista .dfila:last-child{border-bottom:1px solid var(--naotech-app-color-300)}
+  html.web .nwt-modal .dlista .dfila > :first-child{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--orange-50)}
+}
+
+/* Aviso «El evento aún no inicia»: icono informativo a la izquierda, texto en dos líneas */
+@media (min-width:900px){
+  html.web .pfw-main [data-testid=perfil-equipo-bloqueado] .pf-block{display:grid;grid-template-columns:auto 1fr;column-gap:var(--naotech-sizing-12);align-items:center;text-align:start}
+  html.web .pfw-main [data-testid=perfil-equipo-bloqueado] .pf-block-ico{display:flex;grid-row:1 / span 2;color:var(--naotech-color-informative-700,#0b6b8f)}
+  html.web .pfw-main [data-testid=perfil-equipo-bloqueado] .pf-block span{margin-top:0}
+}
+
+/* Botón para volver a la demo móvil (a la izquierda de la campana): mismo estilo que las pastillas del marco */
+.wtop-movil{display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 14px;border:1px solid #D0D4E6;border-radius:999px;background:#fff;color:var(--naotech-app-color-900);font-size:14px;font-weight:600;letter-spacing:-.01em;text-decoration:none;white-space:nowrap;box-shadow:0 2px 10px rgba(0,0,0,.08);transition:background-color 140ms ease,border-color 140ms ease,transform 140ms var(--mo-out,ease-out)}
+.wtop-movil:hover{background:#F8F8FC;border-color:#9A9BB8}.wtop-movil:active{transform:scale(.97)}
+.wtop-movil:focus-visible{outline:2px solid var(--naotech-color-orange-700);outline-offset:2px}
+.wtop-movil svg{flex:none;color:var(--naotech-app-color-700)}
+
+/* Modal de deportes: grupos «individuales» y «de conjunto» */
+@media (min-width:900px){
+  .dm-grupo + .dm-grupo{margin-top:var(--naotech-sizing-20)}
+  .dm-grupo-t{display:flex;align-items:center;gap:var(--naotech-sizing-8);margin:0 0 var(--naotech-sizing-12);font-size:var(--naotech-sizing-14);line-height:var(--naotech-sizing-20);font-weight:var(--naotech-font-weight-semibold);color:var(--naotech-app-color-700)}
+  .dm-grupo-n{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--naotech-app-color-100);font-size:12px;color:var(--naotech-app-color-700)}
+  html.web .nwt-modal:has([data-testid=deportes-sheet-lista]) .nwt-modal__content{max-height:calc(100% - 48px)}
+}
+
+/* Menú del usuario: opción «Perfil» (icono + etiqueta) */
+.wtop-perfil{display:flex;align-items:center;gap:var(--naotech-sizing-12);text-decoration:none}
+.wtop-perfil svg{flex:none;color:var(--naotech-app-color-700)}
+
+/* Mi perfil (web): misma estructura que el perfil del deportista */
+@media (min-width:900px){
+  html.web .pfw-tit{margin:0 0 var(--naotech-sizing-20);font-size:var(--naotech-heading6-font-size);line-height:1.25;color:var(--naotech-app-color-900)}
+  html.web .pfw-acc{display:flex;margin-top:var(--naotech-sizing-32);padding-top:var(--naotech-sizing-24);border-top:1px solid var(--gray-200)}
+  html.web .pfw-acc .btn{width:auto;min-width:14rem}
+}
+
+/* ── Movimiento suave de la capa web (todo < 300 ms, ease-out fuerte; solo color, sombra y transform) ── */
+@media (min-width:900px){
+  html.web{--wm-out:cubic-bezier(.23,1,.32,1);--wm-fast:140ms;--wm-base:200ms}
+
+  /* Menú lateral (NwtSidebar): fondo y color suaves, el icono se desplaza un poco y el indicador activo crece desde el centro */
+  html.web .nwt-sidebar__menu__link,html.web .nwt-sidebar__footer__logout{transition:background-color var(--wm-fast) ease,color var(--wm-fast) ease,transform var(--wm-fast) var(--wm-out)}
+  html.web .nwt-sidebar__menu__link:hover,html.web .nwt-sidebar__footer__logout:hover{background:var(--naotech-app-color-100)}
+  html.web .nwt-sidebar__menu__link:active,html.web .nwt-sidebar__footer__logout:active{transform:scale(.98)}
+  html.web .nwt-sidebar__menu__icon{transition:transform var(--wm-base) var(--wm-out)}
+  html.web .nwt-sidebar__menu__link:hover .nwt-sidebar__menu__icon,html.web .nwt-sidebar__footer__logout:hover .nwt-sidebar__menu__icon{transform:translateX(2px)}
+  @keyframes wmInd{from{opacity:0;transform:scaleY(.2)}to{opacity:1;transform:none}}
+  html.web .nwt-sidebar__menu__item--active .nwt-sidebar__menu__indicator{animation:wmInd 260ms var(--wm-out) both}
+
+  /* Botones: respuesta al toque en todos (SDK y propios) */
+  html.web .btn,html.web .nwt-button,html.web .nwt-icon-button,html.web .wtop-bell,html.web .wtop-chip,html.web .evw-dd,html.web .wav-todas,html.web .web-volver,html.web .nwt-pagination__button{transition:transform var(--wm-fast) var(--wm-out),background-color var(--wm-fast) ease,border-color var(--wm-fast) ease,color var(--wm-fast) ease,box-shadow var(--wm-base) ease}
+  html.web .btn:active,html.web .nwt-button:active,html.web .nwt-icon-button:active,html.web .wtop-chip:active,html.web .evw-dd:active,html.web .wav-todas:active,html.web .nwt-pagination__button:active{transform:scale(.97)}
+  html.web .btn:disabled:active,html.web .nwt-button:disabled:active,html.web .nwt-icon-button:disabled:active{transform:none}
+  html.web .btn:hover:not(:disabled){box-shadow:0 2px 10px rgba(24,30,71,.10)}
+  html.web .wtop-bell:hover,html.web .wtop-chip:hover{border-color:var(--naotech-app-color-500)}
+
+  /* «Volver»: la flecha se adelanta al pasar el cursor */
+  html.web .web-volver svg{transition:transform var(--wm-base) var(--wm-out)}
+  html.web .web-volver:hover svg{transform:translateX(-3px)}
+
+  /* Menús y opciones: fondo suave */
+  html.web .nwt-dropdown__option,html.web .evw-op,html.web .wtop-perfil{transition:background-color var(--wm-fast) ease,color var(--wm-fast) ease}
+  html.web .evw-op:active,html.web .nwt-dropdown__option:active{transform:scale(.98)}
+
+  /* Tarjetas de evento: se elevan un poco; la flecha avanza */
+  html.web .evcard{transition:transform var(--wm-base) var(--wm-out),box-shadow var(--wm-base) ease,border-color var(--wm-fast) ease}
+  html.web .evcard:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(24,30,71,.12)}
+  html.web .evcard:has(.evcard-link:active){transform:scale(.985)}
+  html.web .evcard .icbox{transition:transform var(--wm-base) var(--wm-out)}
+  html.web .evcard:hover .evcard-link > .icbox,html.web .evcard:hover .evcard-body > .icbox{transform:translateX(3px)}
+
+  /* Resumen de deportes, fila de tabla y fichas */
+  html.web .dsum{transition:transform var(--wm-fast) var(--wm-out),background-color var(--wm-fast) ease,box-shadow var(--wm-base) ease}
+  html.web .dsum:hover{box-shadow:0 4px 14px rgba(24,30,71,.10)}
+  html.web .evw-row{transition:background-color var(--wm-fast) ease}
+  html.web .evw-row:hover{background:color-mix(in srgb,var(--naotech-app-color-100) 60%,#fff)}
+  html.web .evw-row .icbox{transition:transform var(--wm-base) var(--wm-out)}
+  html.web .evw-row:hover .icbox{transform:translateX(3px)}
+  html.web .nwt-modal .dlista .dfila{transition:border-color var(--wm-fast) ease,background-color var(--wm-fast) ease,transform var(--wm-fast) var(--wm-out)}
+  html.web .nwt-modal .dlista .dfila:hover{border-color:var(--naotech-color-orange-700);background:var(--orange-50)}
+
+  /* Pestañas y navegación del perfil */
+  html.web .tab{transition:color var(--wm-fast) ease}
+  html.web .tab:hover{color:var(--naotech-color-orange-700)}
+  html.web .pfw-nav{transition:background-color var(--wm-fast) ease}
+  html.web .pfw-nav:hover{background:var(--naotech-app-color-100)}
+
+  /* Entrada del modal del SDK y cierre del backdrop ya los anima el SDK; las notificaciones del panel suben al aparecer */
+  @keyframes wmFila{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  html.web .wav-row{animation:wmFila 220ms var(--wm-out) both}
+  html.web .wav-row:nth-child(2){animation-delay:40ms}html.web .wav-row:nth-child(3){animation-delay:80ms}html.web .wav-row:nth-child(n+4){animation-delay:120ms}
+
+  @media (prefers-reduced-motion:reduce){
+    html.web .btn:active,html.web .nwt-button:active,html.web .nwt-icon-button:active,html.web .wtop-chip:active,html.web .evw-dd:active,html.web .nwt-sidebar__menu__link:active,html.web .evcard:hover,html.web .evcard:has(.evcard-link:active),html.web .nwt-pagination__button:active{transform:none}
+    html.web .nwt-sidebar__menu__item--active .nwt-sidebar__menu__indicator,html.web .wav-row{animation:none}
+    html.web .nwt-sidebar__menu__link:hover .nwt-sidebar__menu__icon,html.web .evcard:hover .icbox,html.web .evw-row:hover .icbox,html.web .web-volver:hover svg{transform:none}
+  }
+}
+
+/* Prueba bloqueada (evento programado): chip «Programado» y debajo «El evento inicia el …» */
+@media (min-width:900px){
+  html.web .pfw-main .pf-block > b,html.web .pfw-main .pf-block > span,html.web .pfw-main .pf-block > .pf-block-ico{display:none}
+  html.web .pfw-main .pf-block{display:flex;flex-direction:column;align-items:flex-end;text-align:end}
+  html.web .pfw-main .pf-block.start{align-items:flex-start;text-align:start}
+  html.web .pfw-main .pf-block > .pf-prog{display:flex;flex-direction:column;align-items:inherit;gap:var(--naotech-sizing-8);font-style:normal}
+  html.web .pfw-main .pf-block > .pf-prog > span{font-size:var(--fs-body-small);color:var(--gray-800)}
+}
+
+/* Divisor entre el menú y «Cerrar sesión» */
+@media (min-width:900px){
+  html.web .nwt-sidebar__footer{border-top:1px solid var(--gray-200);padding-top:var(--naotech-sizing-12)}
+}
+
+/* Divisor entre una prueba y la siguiente */
+@media (min-width:900px){
+  html.web .pfw-main :is(.pf-prueba,.pf-ccard) + :is(.pf-prueba,.pf-ccard){border-top:1px solid var(--gray-200);margin-top:var(--naotech-sizing-16);padding-top:var(--naotech-sizing-16)}
+}
+
+/* Prueba por calificar: tarjeta con sombreado gris (sin divisor propio) */
+@media (min-width:900px){
+  html.web .pfw-main .pf-card.pf-prueba,html.web .pfw-main :is(.pf-prueba,.pf-ccard) + .pf-card.pf-prueba{background:var(--gray-100);border:0;border-radius:var(--naotech-sizing-12,12px);padding:var(--naotech-sizing-16,16px) var(--naotech-sizing-20,20px);margin-top:var(--naotech-sizing-8,8px)}
+  html.web .pfw-main .pf-card.pf-prueba + .pf-ccard{border-top:0;margin-top:var(--naotech-sizing-8,8px)}
+}
+
+/* Mismo ancho de contenido entre vistas (lista de eventos, detalle, perfiles): sin relleno lateral y 24 px de margen a cada lado, como la lista */
+@media (min-width:900px){
+  html.web.con-menu .evd,html.web.con-menu .pf{padding-left:0;padding-right:0;width:min(var(--web-max),calc(100% - 48px));max-width:none;margin-left:auto;margin-right:auto}
+}
+
+/* Pie del menú y pie de la evaluación: misma altura, así sus líneas quedan a la misma altura */
+@media (min-width:900px){
+  html.web .nwt-sidebar__footer{box-sizing:border-box;height:77px;padding-top:0;display:flex;align-items:center}
+  html.web .nwt-sidebar__footer .nwt-sidebar__footer__logout{width:100%}
+  html.web .efw-foot{box-sizing:border-box;height:77px;padding-top:0;padding-bottom:0}
+}
+@media (min-width:900px){
+  html.web .nwt-sidebar__content{padding-bottom:0}
+}
+@media (min-width:900px){
+  /* El divisor del pie llega de borde a borde del menú; el botón conserva su sangría */
+  html.web .nwt-sidebar__footer{margin-left:0;margin-right:0;width:100%;padding-left:12px;padding-right:12px}
+}
+
+/* «Conoce más»: al pie del menú, sobre «Cerrar sesión»; abre la web en otra pestaña */
+@media (min-width:900px){
+  html.web .wside-conoce{margin-top:auto;padding:0 12px 8px;flex:none}
+  html.web .wside-conoce + .nwt-sidebar__footer{margin-top:0}
+  html.web .wside-conoce .nwt-sidebar__footer__logout{display:flex;align-items:center;width:100%;text-decoration:none;box-sizing:border-box}
+  html.web .wside-ext{margin-left:auto;display:inline-flex;color:var(--naotech-app-color-600)}
+  html.web .menu-colapsado .wside-conoce{padding:0 8px 8px}
+}
+
+/* Estado vacío de la tabla del evento: centrado en todo el ancho de la tabla */
+@media (min-width:900px){
+  html.web .evw-body tr:has(> .evw-vacio){display:flex;width:100%}
+  html.web .evw-body .evw-vacio{display:flex;flex:1 1 100%;width:100%;justify-content:center}
+  html.web .evw-body .evw-vacio .empty{width:100%;min-height:0;padding-top:var(--naotech-sizing-40,40px);padding-bottom:var(--naotech-sizing-40,40px)}
+}

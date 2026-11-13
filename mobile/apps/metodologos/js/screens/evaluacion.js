@@ -17,6 +17,13 @@
     { k: "conclusions", t: "Conclusiones", ph: "Síntesis del desempeño general del deportista en la prueba." },
     { k: "recommendations", t: "Recomendaciones", ph: "Orientaciones de cara a la preparación o próximas competencias." },
   ];
+  /* Web (≥900 px): el formulario va por pasos, con stepper y tarjetas numeradas por sección (patrón del wizard de Incentivos). */
+  const esWeb = () => document.documentElement.classList.contains("web") && window.matchMedia("(min-width:900px)").matches;
+  const PASOS = [
+    { t: "Datos generales", h: "Datos generales de la prueba", s: "Identificación precargada desde la inscripción y contexto de la prueba.", campos: ["athletesCount"] },
+    { t: "Evaluación", h: "Evaluación técnico-metodológica", s: "Concepto sobre el desempeño técnico, táctico y la preparación física.", campos: ["technicalAspect", "tacticalAspect", "physicalPreparation"] },
+    { t: "Cierre", h: "Cierre de la evaluación", s: "Síntesis del desempeño general y orientaciones para el deportista.", campos: ["conclusions", "recommendations"] },
+  ];
   const GRIP = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M12 3.6 3.6 12M12 8.16 8.16 12" stroke="var(--gray-500)" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>';
 
   /* OcTextField (campo de referencia bloqueado) */
@@ -61,7 +68,8 @@
     let editando = !!(op0 && editIntent && op0.editable);
     const esEquipo = !!d.esEquipo;
     const volver = () => Router.back("/deportista/" + encodeURIComponent(d.id) + "?evento=" + encodeURIComponent(p.eventoId || "e1"));
-    let validated = false, opinion = op0, confirm = null;
+    let validated = false, opinion = op0, confirm = null, paso = 0;
+    const intentos = new Set(); /* pasos donde ya se pulsó «Continuar» sin completar: solo ahí los campos vacíos salen en rojo */
     const readOnly = () => !!op0 && !editando && (modoVer || editIntent);
 
     const val = {}; /* valores de los campos (los controla el DOM; se leen al guardar) */
@@ -77,7 +85,43 @@
       return u ? '<div class="ef-ro-info">' + Ui.alertaMute("negative", "El plazo de edición terminó el " + esc(Data.fechaLarga(u)) + ".", "evaluacion-aviso-plazo") + "</div>" : "";
     };
 
+    /* Versión web por pasos: reutiliza campos, validación y guardado de la versión móvil */
+    function pintarWeb() {
+      const ro = readOnly(), dis = ro, last = paso === PASOS.length - 1, ps = PASOS[paso];
+      const evNombre = ((Data.evento(p.eventoId || "e1") || {}).nombre || "");
+      const nombreEquipo = d.colegio ? d.colegio : d.nombre;
+      const card = (n, titulo, cuerpo) => '<section class="efw-card" data-testid="evaluacion-seccion-' + n + '"><header class="efw-card-h"><span class="efw-badge">' + n + "</span><h2>" + titulo + '</h2></header><div class="efw-card-b">' + cuerpo + "</div></section>";
+      const gapf = '<div class="ef-gap"></div>';
+      const paises = '<div class="ef-field" data-field="countries" data-testid="evaluacion-campo-countries"><div class="ef-title"><label for="ef-countries">Países en la prueba</label></div>' +
+        '<div class="ef-box' + (dis ? " disabled" : "") + '"><input id="ef-countries" data-k="countries" type="text" placeholder="Ej: Colombia, Brasil, México" value="' + esc(inicial.countries) + '"' + (dis ? " disabled" : "") + ' autocomplete="off" data-testid="evaluacion-input-countries"></div></div>' +
+        '<p class="ef-caption ef-hint">Opcional. Nombres de países separados por coma.</p>';
+      const area = (c) => campo({ k: c.k, t: c.t, ph: c.ph, v: inicial[c.k], area: true, disabled: dis });
+      const cuerpo = [
+        card(1, esEquipo ? "Identificación del equipo" : "Identificación del deportista", '<p class="ef-caption ef-pre">Datos precargados desde la inscripción.</p>' +
+          (esEquipo ? refField("Deporte", d.deporte, "deporte") + gapf + refField("Delegación / institución", nombreEquipo, "delegacion")
+            : refField("Nombre del deportista", d.nombre, "nombre") + gapf + refField("Deporte", d.deporte, "deporte")) +
+          (d.modalidad ? gapf + refField("Modalidad", d.modalidad, "modalidad") : "") + gapf + refField("Prueba", p.nombre, "prueba")) +
+        card(2, "Contexto de la prueba", paises + gapf + campo({ k: "athletesCount", t: "No. de atletas en la prueba", ph: "Ej: 12", v: inicial.athletesCount, disabled: dis })),
+        card(3, "Evaluación técnico-metodológica", CAMPOS.slice(0, 3).map(area).join(gapf)),
+        card(4, "Conclusiones y recomendaciones", CAMPOS.slice(3).map(area).join(gapf)),
+      ];
+      const tarjetas = cuerpo[paso]; /* paso 1 = tarjetas 1 y 2 · paso 2 = tarjeta 3 · paso 3 = tarjeta 4 */
+      const stepper = PASOS.map((x, i) => '<button type="button" class="efw-step' + (i === paso ? " on" : i < paso ? " done" : "") + '" data-act="paso" data-paso="' + i + '" data-testid="evaluacion-paso-' + (i + 1) + '"' + (i === paso ? ' aria-current="step"' : "") + ">" +
+        '<span class="efw-n">' + (i < paso ? Ui.icon("check", { size: 20, color: "currentColor" }) : i + 1) + '</span><span class="efw-st"><small>Paso ' + (i + 1) + "</small><b>" + esc(x.t) + "</b></span></button>" +
+        (i < PASOS.length - 1 ? '<span class="efw-line' + (i < paso ? " done" : "") + '" aria-hidden="true"></span>' : "")).join("");
+      const pie = '<div class="efw-foot"><div>' + (ro ? "" : Ui.button({ title: "Cancelar", variant: "tertiary", size: "medium", testid: "evaluacion-cancelar", act: "cancelar" })) + '</div><div class="efw-foot-r">' +
+        (paso ? Ui.button({ title: "Atrás", variant: "cream-outlined", size: "medium", leftIcon: "flecha-izquierda", testid: "evaluacion-atras", act: "atras" }) : "") +
+        (!last ? Ui.button({ title: "Continuar", variant: "primary", size: "medium", rightIcon: "flecha-derecha", testid: "evaluacion-continuar", act: "siguiente" })
+          : ro ? Ui.button({ title: "Volver al perfil", variant: "primary", size: "medium", testid: "evaluacion-volver-perfil", act: "volver" })
+          : Ui.button({ title: "Guardar evaluación", variant: "primary", size: "medium", testid: "evaluacion-guardar", act: "guardar" })) + "</div></div>";
+      scroll.innerHTML = '<div class="efw"><nav class="efw-steps" aria-label="Pasos del formulario">' + stepper + "</nav>" +
+        '<div class="efw-body"><p class="efw-ev">' + esc(evNombre || "Formulario de evaluación") + " · " + esc(p.nombre) + "</p><h1 class=\"efw-h1\">" + esc(ps.h) + '</h1><p class="efw-sub">' + esc(ps.s) + "</p>" +
+        (ro ? '<div class="ef-banner-wrap"><div class="oc-banner" data-testid="evaluacion-banner-solo-lectura">' + Ui.icon("check", { size: 20, color: "var(--success-text)" }) + "<span>Evaluación registrada · solo lectura</span></div>" + infoEdicion() + "</div>" : "") +
+        tarjetas + "</div>" + pie + "</div>";
+    }
+
     function pintar() {
+      if (esWeb()) return pintarWeb();
       const ro = readOnly(), dis = ro;
       const evNombre = ((Data.evento(p.eventoId || "e1") || {}).nombre || "");
       const nombreEquipo = d.colegio ? d.colegio : d.nombre;
@@ -134,14 +178,32 @@
     const hayErrores = (m) => Object.keys(m).some((k) => m[k]);
 
     pintar();
-    Ui.seguirTitulo(scroll, scroll.querySelector(".ef-h1"));
+    if (!esWeb()) Ui.seguirTitulo(scroll, scroll.querySelector(".ef-h1"));
 
     /* ── Eventos ── */
     const onClick = (e) => {
       const a = e.target.closest("[data-act]"); if (!a || !scroll.contains(a)) return;
       if (a.dataset.act === "volver" || a.dataset.act === "cancelar") { e.preventDefault(); volver(); }
       else if (a.dataset.act === "guardar") guardar();
+      else if (a.dataset.act === "paso") irPaso(+a.dataset.paso);
+      else if (a.dataset.act === "atras") irPaso(paso - 1);
+      else if (a.dataset.act === "siguiente") {
+        intentos.add(paso);
+        const m = marcar();
+        if (!readOnly() && PASOS[paso].campos.some((k) => m[k])) { Ui.toast("Revisa los campos obligatorios.", "warning", 6000, "Faltan campos"); return; }
+        irPaso(paso + 1);
+      }
     };
+    /* Cambia de paso, repinta y vuelve arriba; si ya se intentó avanzar, muestra los errores del paso nuevo */
+    function irPaso(n) {
+      paso = Math.max(0, Math.min(PASOS.length - 1, n)); pintar();
+      if (!readOnly()) {
+        if (intentos.has(paso)) marcar();
+        /* El primer campo editable del paso queda activo (borde naranja), sin rojo hasta intentar avanzar */
+        const f = scroll.querySelector("[data-k]:not([disabled])"); if (f) f.focus({ preventScroll: true });
+      }
+      scroll.scrollTo({ top: 0 });
+    }
     scroll.addEventListener("click", onClick);
 
     /* Contador, solo dígitos y revalidación en vivo (después del primer intento de guardar) */
@@ -150,7 +212,7 @@
       if (el.dataset.k === "athletesCount") { const s = el.value.replace(/\D/g, ""); if (s !== el.value) el.value = s; }
       inicial[el.dataset.k] = el.value;
       const f = el.closest(".ef-field"), c = f && f.querySelector("[data-counter]"); if (c) c.textContent = el.value.length + "/1000";
-      if (validated) marcar();
+      if (validated || intentos.has(paso)) marcar();
     });
 
     /* Tocar fuera de un campo quita el foco y cierra el teclado; arrastrar el scroll también (onDrag) */
@@ -178,8 +240,13 @@
       quitarFoco();
       validated = true;
       const m = marcar();
-      if (hayErrores(m)) { Ui.toast("Revisa los campos obligatorios.", "warning", 6000, "Faltan campos"); return; }
+      if (hayErrores(m)) {
+        const i = esWeb() ? PASOS.findIndex((x) => x.campos.some((k) => m[k])) : -1;
+        if (i >= 0 && i !== paso) { intentos.add(i); irPaso(i); }
+        Ui.toast("Revisa los campos obligatorios.", "warning", 6000, "Faltan campos"); return;
+      }
       const esEdicion = editando && !!op0;
+      if (esWeb()) { confirmarWeb(esEdicion); return; }
       const host = document.getElementById("app");
       confirm = Ui.html('<div class="ef-confirm" data-testid="evaluacion-confirmar" role="dialog" aria-modal="true" aria-label="' + (esEdicion ? "Confirmar cambios" : "Confirmar envío") + '"></div>');
       host.appendChild(confirm);
@@ -200,25 +267,61 @@
       });
     }
 
+    /* Guarda y vuelve al perfil (lo comparten la confirmación móvil y el modal web) */
+    function registrar(esEdicion) {
+      const valores = {
+        countries: leer("countries").trim(), athletesCount: parseInt(leer("athletesCount").trim(), 10),
+        technicalAspect: leer("technicalAspect").trim(), tacticalAspect: leer("tacticalAspect").trim(), physicalPreparation: leer("physicalPreparation").trim(),
+        conclusions: leer("conclusions").trim(), recommendations: leer("recommendations").trim(),
+      };
+      const op = Evaluaciones.save(d, idx, valores);
+      if (!esEdicion && window.PerfilRecientes && PerfilRecientes.marcar) PerfilRecientes.marcar(d.id, idx, { fecha: d.pruebas[idx].fecha, evaluador: d.pruebas[idx].evaluador, editableUntil: op.editableUntil });
+      const msg = esEdicion ? "Evaluación actualizada" : "Evaluación registrada";
+      /* El snackbar se muestra sobre la pantalla a la que se vuelve (ScaffoldMessenger de la app) */
+      const mostrar = () => { window.removeEventListener("hashchange", mostrar); setTimeout(() => Ui.toast("Quedó guardada en el historial del deportista.", "success", 0, msg), 30); };
+      window.addEventListener("hashchange", mostrar);
+      volver();
+    }
+
     function enviar(esEdicion) {
       /* Loader a pantalla completa (bloquea toda acción); al terminar cierra la confirmación y vuelve */
       confirm.innerHTML = loader();
       setTimeout(() => {
         if (!confirm) return;
-        const valores = {
-          countries: leer("countries").trim(), athletesCount: parseInt(leer("athletesCount").trim(), 10),
-          technicalAspect: leer("technicalAspect").trim(), tacticalAspect: leer("tacticalAspect").trim(), physicalPreparation: leer("physicalPreparation").trim(),
-          conclusions: leer("conclusions").trim(), recommendations: leer("recommendations").trim(),
-        };
-        const op = Evaluaciones.save(d, idx, valores);
-        if (!esEdicion && window.PerfilRecientes && PerfilRecientes.marcar) PerfilRecientes.marcar(d.id, idx, { fecha: d.pruebas[idx].fecha, evaluador: d.pruebas[idx].evaluador, editableUntil: op.editableUntil });
         confirm.remove(); confirm = null;
-        const msg = esEdicion ? "Evaluación actualizada" : "Evaluación registrada";
-        /* El snackbar se muestra sobre la pantalla a la que se vuelve (ScaffoldMessenger de la app) */
-        const mostrar = () => { window.removeEventListener("hashchange", mostrar); setTimeout(() => Ui.toast("Quedó guardada en el historial del deportista.", "success", 0, msg), 30); };
-        window.addEventListener("hashchange", mostrar);
-        volver();
+        registrar(esEdicion);
       }, CARGA_MS);
+    }
+
+    /* Web: la confirmación es un modal (NwtModal vía Ui.openSheet); «Sí, enviar» muestra el logo animado dentro del mismo modal */
+    function confirmarWeb(esEdicion) {
+      let enviando = false, terminado = false;
+      const titulo = esEdicion ? "Confirmar cambios" : "Confirmar envío";
+      const texto = esEdicion
+        ? "Vas a guardar los cambios de esta evaluación. Asegúrate de que toda la información sea correcta."
+        : "Estás a punto de enviar el formulario. Después del envío podrás editar esta calificación dentro del plazo habilitado. Asegúrate de que toda la información sea correcta.";
+      const hoja = Ui.openSheet({
+        title: titulo,
+        body: '<div class="efm" data-testid="evaluacion-confirmar"><div class="efm-top"><span class="efm-ico" aria-hidden="true">' + Ui.icon("m-priority_high", { size: 36, color: "var(--white-alpha-100)" }) + "</span>" +
+          '<h2 class="efm-h">' + titulo + '</h2><p class="efm-txt">' + texto + "</p></div>" +
+          '<div class="efm-acts">' + Ui.button({ title: "No, seguir editando", variant: "cream-outlined", size: "medium", testid: "evaluacion-confirmar-no", act: "no" }) +
+          Ui.button({ title: "Sí, enviar", variant: "primary", size: "medium", testid: "evaluacion-confirmar-si", act: "si" }) + "</div></div>",
+        onMount(el, close) {
+          el.addEventListener("click", (e) => {
+            const a = e.target.closest("[data-act]"); if (!a || enviando) return;
+            if (a.dataset.act === "no") close();
+            else if (a.dataset.act === "si") {
+              enviando = true; terminado = true; close();
+              /* Carga a pantalla completa (cubre menú y encabezado, bloquea toda acción); al terminar guarda y vuelve */
+              const pantalla = Ui.html('<div class="efm-pantalla" data-testid="evaluacion-cargando-pantalla">' + loader() + "</div>");
+              document.body.appendChild(pantalla);
+              setTimeout(() => { pantalla.remove(); registrar(esEdicion); }, CARGA_MS);
+            }
+          });
+        },
+        onClose() { if (!terminado) enviando = false; },
+      });
+      return hoja;
     }
 
     return () => { if (confirm) { confirm.remove(); confirm = null; } };

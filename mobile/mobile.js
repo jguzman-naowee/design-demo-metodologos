@@ -226,6 +226,7 @@
     $("appSub").textContent = S.app.subtitulo || "Demo móvil";
     document.title = (S.app.nombre || S.app.id) + " · Demo móvil · Naowee";
     setEstatus(S.app.estatus);
+    const w = $("webLink"); w.hidden = !S.app.web; if (S.app.web) w.href = "apps/" + S.app.id + "/" + S.app.web; /* capa web de la misma app, si la tiene (app.json → "web") */
     const s = document.createElement("script");
     s.src = base() + "casos.js?t=" + Date.now();
     s.onload = () => {

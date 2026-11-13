@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es" class="web">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>Metodólogos · Web</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="css/sdk-naowee.css">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/screens/deportista.css">
+<link rel="stylesheet" href="css/screens/evento-detalle.css">
+<link rel="stylesheet" href="css/screens/evaluacion.css">
+<link rel="stylesheet" href="css/screens/perfil.css">
+<link rel="stylesheet" href="css/screens/actualizar.css">
+<link rel="stylesheet" href="css/screens/login.css">
+<link rel="stylesheet" href="css/screens/celular.css">
+<link rel="stylesheet" href="css/sdk-adaptador.css">
+<link rel="stylesheet" href="css/motion.css">
+<link rel="stylesheet" href="css/web.css">
+<link rel="stylesheet" href="css/web-casos.css">
+</head>
+<body>
+<div id="app"></div>
+<noscript>Esta demo necesita JavaScript.</noscript>
+<!-- Orden: datos e iconos → helpers → router → pantallas (una línea por archivo de js/screens/) → arranque -->
+<script src="js/icons.js"></script>
+<script src="js/data.js"></script>
+<script src="js/data-deportistas.js"></script>
+<script src="js/data-evaluacion.js"></script>
+<script src="js/data-alertas.js"></script>
+<script src="js/session.js"></script>
+<script src="js/xlsx.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/router.js"></script>
+<!-- pantallas -->
+<script src="js/screens/login.js"></script>
+<script src="js/screens/eventos.js"></script>
+<script src="js/screens/evento-detalle.js"></script>
+<script src="js/screens/deportista.js"></script>
+<script src="js/screens/evaluacion.js"></script>
+<script src="js/screens/perfil.js"></script>
+<script src="js/screens/actualizar.js"></script>
+<script src="js/screens/celular.js"></script>
+<script src="js/screens/notificaciones.js"></script>
+<!-- /pantallas -->
+<script src="js/main.js"></script>
+<script src="js/web.js"></script>
+<!-- Recorrido de la demo: casos del marco móvil (+ ajustes de la versión web) y su reproductor -->
+<script src="casos.js"></script>
+<script src="casos-detalle.js"></script>
+<script src="casos-web.js"></script>
+<script src="js/web-casos.js"></script>
+</body>
+</html>
