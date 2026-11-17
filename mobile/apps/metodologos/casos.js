@@ -1,5 +1,5 @@
 /* Pasos: goto (sin url va a «inicio»), click (sel), note (sel opcional). Con ?dev=1 el botón «Elegir elemento» te da el selector.
-   Un caso por flujo del inventario (docs/inventario.md). Ninguno puede teclear: el marco solo pulsa y resalta. */
+   Un caso por flujo del inventario (docs/app-inventario-pantallas.md). Ninguno puede teclear: el marco solo pulsa y resalta. */
 window.CASOS = [
   { id: "1.1", titulo: "Iniciar sesión", falta: "El inicio de sesión real pasa por Keycloak y valida correo y contraseña; aquí «Iniciar sesión» entra con un usuario fijo sin pedir datos. «Recuperar» y los textos legales solo avisan.",
     steps: [

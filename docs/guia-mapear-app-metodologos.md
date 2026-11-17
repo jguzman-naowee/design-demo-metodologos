@@ -1,10 +1,10 @@
 # Mapear la app de Metodólogos
 
-Objetivo: dejar la app montada en el teléfono con sus flujos principales como casos. Sigue `MONTAR-DEMO-MOBILE.md` para la mecánica; esto es el orden de trabajo.
+Objetivo: dejar la app montada en el teléfono con sus flujos principales como casos. Sigue `guia-montar-demo-movil.md` para la mecánica; esto es el orden de trabajo.
 
 ## 1. Inventario (antes de tocar código)
 
-Haz una lista en `docs/inventario.md` con:
+Haz una lista en `docs/app-inventario-pantallas.md` con:
 
 - **Pantallas:** nombre, ruta o cómo se llega, y si cambia según el rol.
 - **Flujos:** qué quiere lograr el usuario, de principio a fin (cada uno será un caso).
@@ -21,4 +21,4 @@ Un caso por flujo del inventario, con `falta` para lo que el diseño aún no res
 
 ## 4. Cierre
 
-Lista de revisión de la sección 5 de la guía. Marca en `inventario.md` qué pantallas quedaron sin cubrir.
+Lista de revisión de la sección 5 de la guía. Marca en `app-inventario-pantallas.md` qué pantallas quedaron sin cubrir.

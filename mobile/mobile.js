@@ -302,7 +302,7 @@
   if (!window.APPS.length) {
     document.querySelector(".panel").classList.add("vacio");
     $("appSel").hidden = true;
-    say.innerHTML = "Aún no hay demos. Crea una con <code>npm run nueva-app -- &lt;id&gt; --desde &lt;build&gt;</code>; la guía está en <code>docs/MONTAR-DEMO-MOBILE.md</code>.";
+    say.innerHTML = "Aún no hay demos. Crea una con <code>npm run nueva-app -- &lt;id&gt; --desde &lt;build&gt;</code>; la guía está en <code>docs/guia-montar-demo-movil.md</code>.";
   }
   else openApp(qs.get("app"));
 })();

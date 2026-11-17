@@ -1,7 +1,7 @@
 /* Componentes de la app (equivalen a lib/shared/design_system y lib/shared/widgets).
    Cada bloque cita su widget Flutter de origen. Solo usan variables de tokens.css. */
 
-/* Tokens de jerarquía (docs/JERARQUIA.md). Van aquí porque tokens.css lo edita otra tarea; moverlos allá al consolidar. */
+/* Tokens de jerarquía (docs/app-jerarquia-visual.md). Van aquí porque tokens.css lo edita otra tarea; moverlos allá al consolidar. */
 :root{
   --fs-sujeto:24px;                                                  /* nombre del deportista/equipo/usuario: manda sobre el rótulo */
   --sombra-reposo:0 1px 2px rgba(24,30,71,.06),0 6px 18px rgba(24,30,71,.06);

@@ -185,10 +185,10 @@ window.CASOS_DETALLE = {
       ] },
       { titulo: "Pendiente", items: [
         "De casos.js: la búsqueda por nombre no se puede escribir desde un caso, y el filtro por deporte (lista desplegable) tampoco se recorre aquí.",
-        "Decisión de diseño: el detalle tiene dos capas fijas (barra de nombre + pestañas), lo que rompe la regla «como mucho una barra fija por pantalla» de `docs/JERARQUIA.md`. Decidir si se mantiene así.",
+        "Decisión de diseño: el detalle tiene dos capas fijas (barra de nombre + pestañas), lo que rompe la regla «como mucho una barra fija por pantalla» de `docs/app-jerarquia-visual.md`. Decidir si se mantiene así.",
         "Las imágenes de hero solo existen para e2, e4 y e5. Hay que confirmar de qué campo del evento saldría la imagen del hero en el servicio.",
         "Confirmar en el repo Flutter cómo se llaman los parámetros de búsqueda, deporte y género de `candidates` y `teams`.",
-        "`JERARQUIA.md` todavía describe el hero con velo navy y texto blanco. Manda el código (fundido en blanco con texto navy, DC-027): hay que actualizar la doc."
+        "`app-jerarquia-visual.md` todavía describe el hero con velo navy y texto blanco. Manda el código (fundido en blanco con texto navy, DC-027): hay que actualizar la doc."
       ] }
     ]
   },
@@ -197,7 +197,7 @@ window.CASOS_DETALLE = {
     resumen: "Se filtra la lista por género «Hombre», se vuelve a abrir el filtro (conserva lo elegido) y «Limpiar» + «Aplicar» devuelven la lista completa.",
     secciones: [
       { titulo: "Qué cambió", items: [
-        "El pie del sheet sigue los niveles de `docs/JERARQUIA.md`: «Limpiar» es terciario (`gray-100`, sin borde, texto negro) y «Aplicar» es la única acción primaria (`orange-700`).",
+        "El pie del sheet sigue los niveles de `docs/app-jerarquia-visual.md`: «Limpiar» es terciario (`gray-100`, sin borde, texto negro) y «Aplicar» es la única acción primaria (`orange-700`).",
         "Los chips de género y estado ahora van en `gray-100` sin borde. El seleccionado pasa a `orange-100` con borde `orange-700` y texto `orange-800`; antes era `orange-700` sobre `orange-100`, que daba 3.9:1."
       ] },
       { titulo: "Qué se agregó", items: [

@@ -8,12 +8,12 @@ Demo de la app **Metodólogos** (COC) montada en `mobile/apps/metodologos/`, con
 
 - **Correr:** `npm run dev` → http://localhost:8770/mobile/?app=metodologos (agrega `&dev=1` para el modo dev).
 - **Versión web:** la misma app en escritorio, http://localhost:8770/mobile/apps/metodologos/web.html (o el botón «Versión web» del marco; `web/` redirige ahí). Ver «Capa web» abajo.
-- **Qué cubre y qué no:** `docs/inventario.md`. Lo principal que queda fuera: escribir en los campos (el marco no teclea), así que el formulario llega hasta los errores de validación, y la pantalla de actualización obligatoria.
+- **Qué cubre y qué no:** `docs/app-inventario-pantallas.md`. Lo principal que queda fuera: escribir en los campos (el marco no teclea), así que el formulario llega hasta los errores de validación, y la pantalla de actualización obligatoria.
 
 ## Cómo está armado
 
 - `mobile/apps/<id>/`: una carpeta por demo (`app.json`, `casos.js` y la app).
-- `docs/MONTAR-DEMO-MOBILE.md`: cómo montar cualquier proyecto en el teléfono.
+- `docs/guia-montar-demo-movil.md`: cómo montar cualquier proyecto en el teléfono.
 - `RULES.md`: reglas del marco.
 - `npm run dev` → http://localhost:8770 (móvil con `?dev=1` para el modo dev).
 
