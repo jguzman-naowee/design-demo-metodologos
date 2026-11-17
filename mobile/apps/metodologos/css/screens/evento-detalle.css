@@ -1,6 +1,7 @@
 /* Detalle de evento (evento_detalle_page.dart + widgets). Solo variables de tokens.css. */
 /* DC-012: un solo scroll de página (bloque, nada se encoge); solo las pestañas quedan fijas */
 .evd{flex:1 1 auto;min-height:0;display:block;padding:var(--sp-m-M) var(--sp-m-M) var(--sp-m-XL)}
+.evd-card{display:contents} /* solo agrupa las pestañas y la lista: en la web es la tarjeta con borde (css/web.css) */
 .evd-gap16{flex:none;height:var(--sp-m-M)}.evd-gap2{flex:none;height:var(--sp-s-S)}
 
 /* Hero del evento (patrón de la plataforma COC): a sangre, imagen de fondo y velo navy; el nombre es el nivel primario.
@@ -33,6 +34,7 @@
 .dsum-t small{display:flex;font-size:var(--fs-caption);line-height:1.3;color:var(--gray-700)}
 .dsum-n{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dsum-m{flex:none;white-space:nowrap}
+.dsum-all{display:none} /* lista completa de deportes: solo la muestra la vista web */
 .dpill{flex:none;display:inline-flex;align-items:center;padding:var(--sp-s-L) var(--sp-s-XL);background:var(--white-alpha-100);border:2px solid var(--orange-600);border-radius:var(--r-small);
   box-shadow:0 0 0 2px var(--orange-100);font-size:var(--fs-tag);font-weight:var(--fw-tag);color:var(--black-alpha-100);white-space:nowrap}
 .dpill .icbox{margin-right:var(--sp-s-M)}

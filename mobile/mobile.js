@@ -224,6 +224,7 @@
     $("appSel").value = S.app.id;
     $("appNombre").textContent = S.app.nombre || S.app.id;
     $("appSub").textContent = S.app.subtitulo || "Demo móvil";
+    $("volver").href = "../?app=" + encodeURIComponent(S.app.id); /* URL nueva: la raíz vieja redirigía al móvil y el navegador la guarda en caché */
     document.title = (S.app.nombre || S.app.id) + " · Demo móvil · Naowee";
     setEstatus(S.app.estatus);
     const s = document.createElement("script");
@@ -253,6 +254,7 @@
     document.head.appendChild(s);
   }
 
+  $("appSel").hidden = window.APPS.length < 2; /* con una sola app el selector no elige nada */
   $("appSel").innerHTML = window.APPS.map((a) => '<option value="' + esc(a.id) + '">' + esc(a.nombre || a.id) + "</option>").join("");
   $("appSel").addEventListener("change", () => { history.replaceState(null, "", "?app=" + $("appSel").value + (DEV ? "&dev=1" : "")); openApp($("appSel").value); });
   $("cases").addEventListener("click", (e) => {

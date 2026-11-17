@@ -10,21 +10,33 @@
     const sub = e.lugar ? e.fecha + " " + e.lugar : e.fecha;
     const aviso = e.estado === "finalizado" && e.editableUntil; /* avisoEdicionVigente (fecha fija en la demo) */
     const fecha = aviso ? Data.fechaLarga(e.editableUntil) : "", fechaC = aviso ? Data.fechaCorta(e.editableUntil) : "";
+    const avisoHtml = aviso ? '<div class="evcard-aviso"><div class="nwt-alert nwt-alert--visible" nwt-theme="caution" nwt-variant="quiet" role="button" tabindex="0" data-act="aviso" data-testid="evento-aviso-' + Ui.esc(e.id) + '" aria-expanded="false" aria-label="Plazo de edición hasta el ' + Ui.esc(fecha) + '">' +
+        '<div class="nwt-alert__content"><div class="nwt-alert__icon">' + Ui.icon("nwt-exclamacion", { size: 16, color: "currentColor" }) + "</div>" +
+        '<span class="nwt-alert__label"><span>Editable hasta el ' + Ui.esc(fechaC) + "</span>" +
+        '<span class="aviso-wrap"><span class="aviso-more"><span>Puedes editar las evaluaciones que registraste hasta 10 días después de que termine el evento.</span></span></span></span>' +
+        '<span class="av-chev">' + Ui.icon("m-keyboard_arrow_down", { size: 20, color: "currentColor" }) + "</span>" +
+        "</div></div></div>" : "";
+    /* Web: card de la demo de Eventos con la imagen del evento y solo los datos que ya tiene. */
+    if (document.documentElement.classList.contains("web") && matchMedia("(min-width:900px)").matches) return '<article class="evcard evwc">' +
+      '<a class="evcard-link" href="#/evento/' + Ui.esc(e.id) + '" data-testid="evento-card-' + Ui.esc(e.id) + '" aria-label="' + Ui.esc(e.nombre + ", " + e.estadoLabel + ", " + sub) + '">' +
+        '<div class="evwc-media">' + '<img class="evcard-img evwc-img" src="' + Ui.esc(Data.heroWeb[e.id] || e.imagen || Data.eventoGenerico) + '" alt="" loading="lazy" onload="this.classList.add(\'ld\')" onerror="this.onerror=null;this.src=\'' + Data.eventoGenerico + '\'">' +
+          (aviso ? '<span class="evwc-edit" data-testid="evento-aviso-' + Ui.esc(e.id) + '" title="Puedes editar las evaluaciones que registraste hasta 10 días después de que termine el evento.">' + Ui.icon("nwt-exclamacion", { size: 14, color: "currentColor" }) + "<span>Editable hasta el " + Ui.esc(fechaC) + "</span></span>" : "") + "</div>" +
+        '<div class="evwc-head"><h2 class="evcard-title">' + Ui.esc(e.nombre) + "</h2>" + Ui.chip(e.estado, e.estadoLabel) + "</div>" +
+        '<ul class="evwc-datos"><li>' + Ui.icon("calendario", { size: 18, color: "var(--gray-500)" }) + "<span>" + Ui.esc(e.fecha) + "</span></li>" +
+          (e.lugar ? "<li>" + Ui.icon("ubicacion", { size: 18, color: "var(--gray-500)" }) + "<span>" + Ui.esc(e.lugar) + "</span></li>" : "") +
+          "</ul>" +
+        '<span class="evwc-ir" aria-hidden="true">' + Ui.icon("m-chevron_right", { size: 20, color: "currentColor" }) + "</span>" +
+      "</a></article>";
     return '<article class="evcard">' +
       '<a class="evcard-link" href="#/evento/' + Ui.esc(e.id) + '" data-testid="evento-card-' + Ui.esc(e.id) + '" aria-label="' + Ui.esc(e.nombre + ", " + e.estadoLabel + ", " + sub) + '">' +
-        '<img class="evcard-img" src="' + Ui.esc(e.imagen || Data.eventoGenerico) + '" alt="" loading="lazy" onload="this.classList.add(\'ld\')" onerror="this.onerror=null;this.src=\'' + Data.eventoGenerico + '\'">' +
+        '<img class="evcard-img" src="' + Ui.esc((document.documentElement.classList.contains("web") && matchMedia("(min-width:900px)").matches && Data.heroWeb[e.id]) || e.imagen || Data.eventoGenerico) + '" alt="" loading="lazy" onload="this.classList.add(\'ld\')" onerror="this.onerror=null;this.src=\'' + Data.eventoGenerico + '\'">' +
         '<div class="evcard-body' + (aviso ? " has-aviso" : "") + '">' +
           '<div class="evcard-meta">' + Ui.chip(e.estado, e.estadoLabel) + Ui.icon("arrow-right-select", { size: 20, color: "var(--orange-700)" }) + "</div>" +
           '<h2 class="evcard-title">' + Ui.esc(e.nombre) + "</h2>" +
           '<p class="evcard-sub">' + Ui.esc(sub) + "</p>" +
         "</div>" +
       "</a>" +
-      (aviso ? '<div class="evcard-aviso"><div class="nwt-alert nwt-alert--visible" nwt-theme="caution" nwt-variant="quiet" role="button" tabindex="0" data-act="aviso" data-testid="evento-aviso-' + Ui.esc(e.id) + '" aria-expanded="false" aria-label="Plazo de edición hasta el ' + Ui.esc(fecha) + '">' +
-        '<div class="nwt-alert__content"><div class="nwt-alert__icon">' + Ui.icon("nwt-exclamacion", { size: 16, color: "currentColor" }) + "</div>" +
-        '<span class="nwt-alert__label"><span>Editable hasta el ' + Ui.esc(fechaC) + "</span>" +
-        '<span class="aviso-wrap"><span class="aviso-more"><span>Puedes editar las evaluaciones que registraste hasta 10 días después de que termine el evento.</span></span></span></span>' +
-        '<span class="av-chev">' + Ui.icon("m-keyboard_arrow_down", { size: 20, color: "currentColor" }) + "</span>" +
-        "</div></div></div>" : "") +
+      avisoHtml +
     "</article>";
   }
 
@@ -32,7 +44,7 @@
     render() {
       return Ui.page({
         nav: "eventos", testid: "pantalla-eventos", bodyClass: "tonal",
-        body: '<div class="content scroll evs" data-testid="eventos-scroll"><h1 class="t-h1">Eventos</h1>' +
+        body: '<div class="content scroll evs" data-testid="eventos-scroll"><h1 class="t-h1">' + (document.documentElement.classList.contains("web") && matchMedia("(min-width:900px)").matches ? "Mis eventos" : "Eventos") + '</h1>' +
           '<p class="lead">¡Estos son tus eventos asignados para diligenciar!</p>' +
           '<div class="searchrow fija a-sangre" data-testid="eventos-barra">' + Ui.search("", { placeholder: "Buscar por evento", testid: "eventos-buscar" }) +
             '<button type="button" class="trigger" data-testid="eventos-filtro-estado" data-act="filtro-estado" aria-haspopup="dialog"><span>Estado</span>' + Ui.icon("m-keyboard_arrow_down", { size: 24, color: "currentColor" }) + "</button></div>" +
@@ -42,6 +54,8 @@
     mount(root) {
       const input = root.querySelector("input[type=search]"), trigger = root.querySelector(".trigger"), list = root.querySelector(".list");
       const estados = new Set();
+      /* Versión web (web.html, ≥900 px): el filtro es un desplegable bajo el botón, no una hoja; en móvil sigue la hoja */
+      const enWeb = () => document.documentElement.classList.contains("web") && matchMedia("(min-width: 900px)").matches;
       const sombra = Ui.fijar(root.querySelector(".evs"), root.querySelector(".evs > .searchrow"));
 
       const filtrados = () => {
@@ -55,7 +69,7 @@
           : Ui.empty(hayFiltro ? "No encontramos eventos con esos filtros" : "Aún no tienes eventos asignados.", { icon: hayFiltro ? "m-search_off" : "m-event_busy" });
         const activo = estados.size > 0, acento = activo ? "var(--orange-700)" : "var(--black-alpha-100)";
         trigger.classList.toggle("on", activo);
-        trigger.querySelector("span").textContent = !activo ? "Estado" : (estados.size === 1 ? [...estados][0] : estados.size + " estados");
+        trigger.querySelector("span").textContent = !activo ? (enWeb() ? "Estado: Todos" : "Estado") : (estados.size === 1 ? (enWeb() ? "Estado: " : "") + [...estados][0] : estados.size + " estados");
         trigger.querySelector(".icbox").style.color = acento;
       };
 
@@ -65,7 +79,22 @@
       Ui.on(list, "keydown", "[data-act=aviso]", (e, btn) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); btn.click(); } });
       Ui.on(list, "click", "[data-act=aviso]", (e, btn) => btn.setAttribute("aria-expanded", String(btn.getAttribute("aria-expanded") !== "true")));
 
+      const fila = trigger.parentElement;
+      const menu = Ui.html('<div class="evw-menu evs-menu" role="listbox" hidden data-testid="estado-menu"></div>');
+      fila.appendChild(menu);
+      const cerrarMenu = () => { menu.hidden = true; trigger.setAttribute("aria-expanded", "false"); };
+      const opcion = (v, label, sel) => '<button type="button" role="option" class="nwt-dropdown__option evw-op" data-v="' + Ui.esc(v) + '" aria-selected="' + sel + '" data-testid="estado-opcion-' + (v ? slug(v) : "todos") + '"><span>' + Ui.esc(label) + "</span>" + (sel ? Ui.icon("m-check", { size: 18, color: "var(--orange-700)" }) : "") + "</button>";
+      const abrirMenu = () => {
+        const uno = estados.size === 1 ? [...estados][0] : "";
+        menu.innerHTML = opcion("", "Todos", !estados.size) + ESTADOS.map((o) => opcion(o, o, uno === o && estados.size === 1)).join("");
+        menu.style.left = trigger.offsetLeft + "px"; menu.style.top = trigger.offsetTop + trigger.offsetHeight + 6 + "px"; menu.style.minWidth = trigger.offsetWidth + "px";
+        menu.hidden = false; trigger.setAttribute("aria-expanded", "true");
+      };
+      Ui.on(menu, "click", ".evw-op", (e, o) => { estados.clear(); if (o.dataset.v) estados.add(o.dataset.v); cerrarMenu(); paint(); });
+      root.addEventListener("click", (e) => { if (!e.target.closest(".trigger") && !e.target.closest(".evs-menu")) cerrarMenu(); });
+      root.addEventListener("keydown", (e) => { if (e.key === "Escape") cerrarMenu(); });
       trigger.addEventListener("click", () => {
+        if (enWeb()) { menu.hidden ? abrirMenu() : cerrarMenu(); return; }
         const sel = new Set(estados);
         const rows = () => ESTADOS.map((o) => Ui.checkRow({ label: o, checked: sel.has(o), testid: "estado-opcion-" + slug(o) })).join("");
         Ui.openSheet({

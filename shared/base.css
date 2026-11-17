@@ -8,3 +8,6 @@ button{font:inherit}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 [hidden]{display:none!important}
+/* Volver al panel de experiencias: lo comparten los marcos móvil y web. */
+.volver{flex:none;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid #D0D4E6;border-radius:50%;background:#fff;color:var(--ink);transition:background-color .15s,border-color .15s}
+.volver:hover{background:#F8F8FC;border-color:#9A9BB8}

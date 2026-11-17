@@ -152,6 +152,7 @@
 
   window.Data = {
     STATUS_LABEL, eventos, deportistas, individuales, conjunto, usuario, fechaLarga, fechaCorta, norm,
+    heroWeb: { e2: "assets/images/hero/hero-intercolegiados.webp", e4: "assets/images/hero/hero-jsj2026.webp", e5: "assets/images/hero/hero-joj2026.webp" }, /* misma portada que el detalle; solo la usa la tarjeta web */
     evento: (id) => eventos.find((e) => e.id === id) || null,
     deportista: (id) => { const all = deportistas.concat(deportistas.flatMap((d) => d.miembros)); return all.find((d) => d.id === id) || null; },
     /* Portada por defecto cuando un evento no trae imagen (DesignSystem.images.eventoGenerico) */

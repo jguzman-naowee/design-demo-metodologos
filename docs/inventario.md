@@ -89,6 +89,10 @@ La bandeja (`#/notificaciones`) reúne solo los avisos dirigidos al metodólogo 
 
 Qué **no** hace la demo: no manda notificaciones push reales, no tiene reloj del evento (el celular marca siempre la misma hora) y no decide el momento exacto de cada aviso; solo muestra cómo llegan.
 
+## 3c. Versión web (extra de la demo)
+
+La app original es solo móvil. `web.html` muestra las mismas pantallas en escritorio con componentes del SDK de Naowee: `NwtSidebar` + `NwtBadge` (menú lateral) y `NwtModal` (diálogos en vez de hojas inferiores); contenido centrado y listas en dos columnas. No agrega pantallas, datos ni casos; ver «Capa web» en el README.
+
 ## 4. Inicio propio (se quita en la demo)
 
 - **Splash / BootGate** (`oc_splash_page.dart`, `boot_gate.dart`): valida sesión y precarga eventos. Se quita: la app arranca en `#/login`.

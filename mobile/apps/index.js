@@ -3,6 +3,7 @@ window.APPS = [
   {
     "id": "metodologos",
     "nombre": "Metodólogos Ciclo Olímpico",
-    "inicio": "index.html"
+    "inicio": "index.html",
+    "web": "web.html"
   }
 ];
