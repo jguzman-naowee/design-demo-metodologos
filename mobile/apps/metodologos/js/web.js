@@ -9,6 +9,7 @@
   const ESCRITORIO = "(min-width: 900px)";
   const NAV = [
     { id: "eventos", route: "#/eventos", label: "Eventos", icon: "calendario", section: "Evaluación" },
+    { id: "perfil", route: "#/perfil", label: "Perfil", icon: "usuario", section: "Mi cuenta" },
   ];
   const esc = Ui.esc, root = document.documentElement;
   let colapsado = false;
@@ -16,9 +17,19 @@
   const host = document.createElement("div");
   host.className = "wside"; host.setAttribute("data-testid", "web-menu");
   document.body.appendChild(host);
-  /* Encabezado (campana + usuario) y pie flotante de Naowee, como en los portales Naowee */
+  /* Encabezado (campana + usuario), como en los portales Naowee */
   const top = document.createElement("header"); top.className = "wtop"; top.setAttribute("data-testid", "web-encabezado"); document.body.appendChild(top);
-  const pie = document.createElement("div"); pie.className = "wpie"; document.body.appendChild(pie);
+
+  /* Barras fijas del formulario: sombra solo cuando el contenido de verdad pasa por detrás (DC-069) */
+  const sombras = () => {
+    const sc = document.querySelector("[data-testid=evaluacion-scroll]"); if (!sc) return;
+    const hayArriba = sc.scrollTop > 0, hayAbajo = sc.scrollTop + sc.clientHeight < sc.scrollHeight - 1;
+    sc.querySelectorAll(".efw-steps").forEach((n) => n.classList.toggle("con-sombra", hayArriba));
+    sc.querySelectorAll(".efw-foot").forEach((n) => n.classList.toggle("con-sombra", hayAbajo));
+  };
+  document.addEventListener("scroll", (e) => { if (e.target.matches && e.target.matches("[data-testid=evaluacion-scroll]")) sombras(); }, true);
+  addEventListener("resize", sombras);
+  if (document.getElementById("app")) new MutationObserver(() => requestAnimationFrame(sombras)).observe(document.getElementById("app"), { childList: true, subtree: true });
 
   const rutaActual = () => (location.hash.replace(/^#/, "").split("?")[0] || "/");
   /* Sección del menú que corresponde a la ruta: el detalle de un evento, el deportista y la evaluación cuelgan de «Eventos» */
@@ -37,13 +48,11 @@
     return sec + '<li class="nwt-sidebar__menu__item' + (activo ? " nwt-sidebar__menu__item--active" : "") + '">' + (activo ? '<span aria-hidden="true" class="nwt-sidebar__menu__indicator"></span>' : "") + enlace + (colapsado ? tip : "") + "</li>";
   };
 
-  /* «Conoce más» lleva a la web del Comité Olímpico Colombiano (en la app real, la landing del ciclo olímpico) */
-  const LANDING = "https://coc.org.co";
   const pintar = () => {
     const p = rutaActual(), visible = Session.isLoggedIn && !SIN_MENU.includes(p);
     root.classList.toggle("con-menu", visible);
     root.classList.toggle("menu-colapsado", visible && colapsado);
-    if (!visible) { host.innerHTML = ""; top.innerHTML = ""; pie.innerHTML = ""; return; }
+    if (!visible) { host.innerHTML = ""; top.innerHTML = ""; return; }
     const n = Alertas.sinLeer(), act = seccion(p), u = Data.usuario || {}, nombre = u.name || "Metodólogo";
     const iniciales = nombre.split(/\s+/).filter(Boolean).slice(0, 2).map((x) => x[0].toUpperCase()).join("");
     host.innerHTML =
@@ -55,9 +64,6 @@
         "</div>" +
         '<div class="nwt-sidebar__content">' +
           '<nav class="nwt-sidebar__menu" aria-label="Menú principal"><ul class="nwt-sidebar__menu__list">' + NAV.map((m) => item(m, m.id === act, n)).join("") + "</ul></nav>" +
-          '<div class="wside-conoce"><a class="nwt-sidebar__footer__logout" href="' + LANDING + '" target="_blank" rel="noopener" data-testid="web-conoce-mas"' + (colapsado ? ' aria-label="Conoce más"' : "") + ">" +
-            '<span class="nwt-sidebar__menu__icon">' + Ui.icon("nwt-info-o", { size: 22, color: "currentColor" }) + '</span><span class="nwt-sidebar__footer__logout__label">Conoce más</span>' +
-            (colapsado ? '<span aria-hidden="true" class="nwt-sidebar__tooltip">Conoce más</span>' : '<span class="wside-ext">' + Ui.icon("arrow-up-right", { size: 18, color: "currentColor" }) + "</span>") + "</a></div>" +
           '<div class="nwt-sidebar__footer"><button type="button" class="nwt-sidebar__footer__logout" data-act="web-salir" data-testid="web-cerrar-sesion"' + (colapsado ? ' aria-label="Cerrar sesión"' : "") + ">" +
             '<span class="nwt-sidebar__menu__icon">' + Ui.icon("cerrar-sesion", { size: 22, color: "currentColor" }) + '</span><span class="nwt-sidebar__footer__logout__label">Cerrar sesión</span>' +
             (colapsado ? '<span aria-hidden="true" class="nwt-sidebar__tooltip">Cerrar sesión</span>' : "") + "</button></div>" +
@@ -66,17 +72,18 @@
     Ui.registerIcon("nwt-celular", '<svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="10.5" y="18" width="3" height="1.6" rx=".8" fill="currentColor"/></svg>');
     top.innerHTML =
       '<button type="button" class="wtop-movil wtop-casos" data-act="casos" aria-expanded="false" aria-controls="wc-panel" data-testid="web-casos">' + Ui.icon("nwt-casos", { size: 20, color: "currentColor" }) + "<span>Casos</span></button>" +
-      '<a class="wtop-movil" href="../../index.html?app=metodologos" data-testid="web-ver-movil">' + Ui.icon("nwt-celular", { size: 20, color: "currentColor" }) + "<span>Ver demo móvil</span></a>" +
+      (window.self === window.top ? '<a class="wtop-movil" href="../../index.html?app=metodologos" data-testid="web-ver-movil">' + Ui.icon("nwt-celular", { size: 20, color: "currentColor" }) + "<span>Ver demo móvil</span></a>" : "") + /* dentro del marco web se cambia de experiencia desde el panel de inicio */
       '<div class="wtop-bellw"><button type="button" class="wtop-bell" data-act="web-avisos" data-testid="web-campana" aria-haspopup="dialog" aria-expanded="false" aria-label="Notificaciones' + (n ? ", " + n + " sin leer" : "") + '">' + Ui.icon("nwt-campana", { size: 26, color: "currentColor" }) + insignia(n) + "</button>" +
         '<div class="wtop-avisos" role="dialog" aria-label="Notificaciones" data-testid="web-avisos" hidden></div></div>' +
-      '<div class="wtop-user"><button type="button" class="wtop-chip" data-act="web-usuario" data-testid="web-usuario" aria-haspopup="menu" aria-expanded="false">' +
+      '<div class="wtop-user"><button type="button" class="wtop-chip" data-act="web-usuario" data-testid="web-usuario" aria-haspopup="menu" aria-expanded="false" aria-label="Cuenta de ' + esc(nombre) + '">' +
         '<div class="nwt-avatar wtop-av" nwt-size="tiny" nwt-color="blue"><div class="nwt-avatar__content"><span>' + esc(iniciales) + '</span></div></div><span class="wtop-en" aria-hidden="true"></span>' +
-        '<span class="wtop-id"><b>' + esc(nombre) + "</b><small>" + esc(u.rol || "Metodólogo") + "</small></span>" + '<span class="wtop-flecha">' + Ui.icon("m-keyboard_arrow_down", { size: 22, color: "currentColor" }) + "</span>" + "</button>" +
+        '<span class="wtop-flecha">' + Ui.icon("m-keyboard_arrow_down", { size: 22, color: "currentColor" }) + "</span>" + "</button>" +
         '<div class="wtop-menu" role="menu" hidden><div class="nwt-popover__surface"><div class="nwt-popover__content">' +
+          '<div class="wtop-quien"><div class="nwt-avatar" nwt-size="small" nwt-color="blue"><div class="nwt-avatar__content"><span>' + esc(iniciales) + '</span></div></div>' +
+            '<span class="wtop-id"><b>' + esc(nombre) + "</b><small>" + esc(u.rol || "Metodólogo") + "</small></span></div>" +
           '<span class="wtop-seccion">Mi cuenta</span>' +
           '<a class="nwt-dropdown__option wtop-perfil" role="menuitem" href="#/perfil" data-testid="web-menu-perfil">' + Ui.icon("usuario", { size: 22, color: "currentColor" }) + "<span>Perfil</span></a>" +
         "</div></div></div></div>";
-    pie.innerHTML = '<img src="../../../shared/logos/naowee.svg" alt="Naowee" height="24"><span class="wpie-sep" aria-hidden="true"></span><span>Todos los derechos reservados © 2026</span>';
   };
 
   /* Notificaciones en web: panel bajo la campana (mismo origen de datos que la bandeja móvil, Alertas) */

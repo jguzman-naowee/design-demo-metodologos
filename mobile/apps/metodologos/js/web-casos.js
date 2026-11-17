@@ -44,7 +44,14 @@
   const lanzador = document.createElement("button"); /* solo si la pantalla no tiene cabecera (inicio de sesión) */
   lanzador.type = "button"; lanzador.className = "wc-lanza"; lanzador.hidden = true; lanzador.setAttribute("data-testid", "casos-lanzador");
   lanzador.innerHTML = '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Casos</span>';
-  document.body.append(velo, panel, flota, spot, cur, lanzador);
+  /* Dentro del marco web, panel y tarjeta salen del iframe al marco (#casosHost): son de la demo, no de la pantalla.
+     Cada recarga del iframe los vuelve a crear, así que se quitan los anteriores. */
+  const host = (() => { try { return window.self !== window.top && window.parent.document.getElementById("casosHost"); } catch (e) { return null; } })();
+  if (host) {
+    const pd = window.parent.document, css = new URL("css/web-casos.css", location.href).href;
+    if (!pd.querySelector('link[href="' + css + '"]')) { const l = pd.createElement("link"); l.rel = "stylesheet"; l.href = css; pd.head.appendChild(l); }
+    host.replaceChildren(panel, flota); document.body.append(velo, spot, cur, lanzador);
+  } else document.body.append(velo, panel, flota, spot, cur, lanzador);
   const lista = panel.querySelector(".wc-lista"), det = panel.querySelector(".wc-det"), say = flota.querySelector(".wc-say"), cnt = flota.querySelector(".wc-cnt");
   const btnNext = flota.querySelector("[data-act=siguiente]"), btnStop = flota.querySelector("[data-act=detener]");
 
@@ -187,7 +194,7 @@
 
   /* ── Abrir / cerrar ── */
   function setOpen(v) {
-    S.open = v; panel.hidden = !v; velo.hidden = !v; document.documentElement.classList.toggle("wc-abierto", v);
+    S.open = v; panel.hidden = !v; velo.hidden = !v || !!host; document.documentElement.classList.toggle("wc-abierto", v);
     document.querySelectorAll("[data-act=casos]").forEach((b) => b.setAttribute("aria-expanded", String(v)));
     if (v) { hideFx(); flota.hidden = true; } else if (S.caso) { paint(); hint(); }
     guardar();

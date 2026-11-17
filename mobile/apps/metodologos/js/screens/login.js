@@ -22,7 +22,8 @@
   Router.add("/login", {
     render() {
       const reducido = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const fase = splashVisto || reducido ? "login" : "idle";
+      const web = document.documentElement.classList.contains("web") && matchMedia("(min-width:900px)").matches; /* en web se entra directo al formulario, sin splash */
+      const fase = splashVisto || reducido || web ? "login" : "idle";
       return '<div class="page lg" data-fase="' + fase + '" data-testid="pantalla-login">' +
         '<div class="lg-bg"></div>' +
         '<svg class="lg-orbit" aria-hidden="true" viewBox="0 0 390 844" preserveAspectRatio="xMidYMin slice" fill="none" stroke="#DFB550" stroke-width="1.2">' +

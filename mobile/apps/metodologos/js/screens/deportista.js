@@ -282,9 +282,8 @@
         (esDeporte ? '<span class="pfw-meta">' + d.miembros.length + (d.miembros.length === 1 ? " integrante" : " integrantes") + "</span>" : miembro ? '<span class="pfw-meta">Integrante del equipo</span>' : "") +
         "</div>" +
         (d.colegio ? '<p class="pfw-sub">' + esc(d.colegio) + "</p>" : "") + "</div></section>" +
-      '<div class="pfw-cols"><aside class="pfw-side"><div class="pfw-nav" aria-current="page">' + ico("m-person_outline", 24, "currentColor") + "<span>Perfil</span></div>" +
-        "</aside>" +
-        '<section class="pfw-main">' + tabsHtml(tabsWeb(d, miembro)) + gap("m") + '<div data-panel>' + panelDatos(d, miembro) + "</div></section></div></div>";
+      '<h2 class="t-h2 pfw-seccion" data-testid="perfil-seccion">Perfil</h2>' +
+        '<section class="pfw-main">' + tabsHtml(tabsWeb(d, miembro)) + gap("m") + '<div data-panel>' + panelDatos(d, miembro) + "</div></section></div>";
   }
 
   /* Evento por el que se llegó (?evento=); sin él, el primero que contiene al deportista. */

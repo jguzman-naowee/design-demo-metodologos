@@ -96,3 +96,5 @@ button.wtop-movil{font-family:inherit;cursor:pointer}
 .wc-case.wc-off b{background:#B9BCD3!important}
 .wc-case.wc-off span{display:flex;flex-direction:column;gap:2px}
 .wc-case.wc-off small{font-size:12px;color:#646587}
+/* Dentro del marco web, «Casos» lo pone el marco junto a «Vista plana». */
+html.enmarco .wc-lanza,html.enmarco .wtop-casos{display:none!important}

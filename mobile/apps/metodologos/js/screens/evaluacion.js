@@ -315,7 +315,12 @@
               /* Carga a pantalla completa (cubre menú y encabezado, bloquea toda acción); al terminar guarda y vuelve */
               const pantalla = Ui.html('<div class="efm-pantalla" data-testid="evaluacion-cargando-pantalla">' + loader() + "</div>");
               document.body.appendChild(pantalla);
-              setTimeout(() => { pantalla.remove(); registrar(esEdicion); }, CARGA_MS);
+              setTimeout(() => {
+                pantalla.remove();
+                const f = window.Estados && window.Estados.falla(); /* modo de error forzado desde el marco */
+                if (f) { Ui.toast(f === "sinconexion" ? "No hay conexión a internet. Tu evaluación sigue aquí: vuelve a enviarla cuando tengas conexión." : "No pudimos enviar la evaluación. Tus datos siguen aquí; inténtalo de nuevo.", "error", 0, f === "sinconexion" ? "Sin conexión" : "Error al enviar"); enviando = false; terminado = false; return; }
+                registrar(esEdicion);
+              }, CARGA_MS);
             }
           });
         },

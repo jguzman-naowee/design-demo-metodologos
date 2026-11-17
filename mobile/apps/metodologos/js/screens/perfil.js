@@ -13,10 +13,10 @@ Router.add("/perfil", {
         body: '<div class="pf" data-testid="perfil-contenido"><div class="pfw" data-testid="perfil-web">' +
           '<section class="pfw-head" data-testid="perfil-header"><div class="pf-avatar" data-testid="perfil-avatar" aria-hidden="true"><span>' + esc(nombre[0].toUpperCase()) + "</span></div>" +
             '<div class="pfw-id"><p class="pfw-eyebrow">Perfil del metodólogo</p><div class="pfw-name"><h1 class="t-h2" data-testid="perfil-nombre">' + esc(nombre) + '</h1><span class="pfw-meta" data-testid="perfil-rol">' + esc(rol) + "</span></div></div></section>" +
-          '<div class="pfw-cols"><aside class="pfw-side"><div class="pfw-nav" aria-current="page">' + Ui.icon("m-person_outline", { size: 24, color: "currentColor" }) + "<span>Perfil</span></div></aside>" +
+          '<h2 class="t-h2 pfw-seccion" data-testid="perfil-seccion">Perfil</h2>' +
             '<section class="pfw-main" data-testid="perfil-info-personal"><h2 class="t-h2 pfw-tit">Info. Personal</h2>' +
               '<div class="pfw-grid"><div class="pfw-campo"><span class="pfw-label">Email</span><div class="pfw-valor" data-testid="perfil-email">' + esc(email || "—") + "</div></div></div>" +
-              "</section></div></div></div>",
+              "</section></div></div>",
       });
     }
     return Ui.page({

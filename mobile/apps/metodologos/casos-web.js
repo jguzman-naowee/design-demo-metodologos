@@ -101,12 +101,8 @@
     { t: "note", sel: '[data-testid="perfil-prueba-0"]', body: "Ahí está su prueba, lista para calificar." },
     { t: "note", sel: '[data-testid="web-campana-insignia"]', body: "Y el aviso quedó leído: la campana cuenta uno menos." },
   ] }) };
-  /* 1.3: en web «Conoce más» es un enlace fijo al pie del menú lateral que abre la web en otra pestaña */
-  web["1.3"] = { falta: "El enlace abre la web en otra pestaña; el recorrido solo lo señala, no lo pulsa.", steps: traducir({ steps: [
-    { t: "goto", url: "index.html?sesion=1#/eventos", body: "Empezamos en el inicio, con la sesión ya iniciada." },
-    { t: "note", sel: '[data-testid="web-conoce-mas"]', body: "Al pie del menú lateral, sobre «Cerrar sesión», está «Conoce más»." },
-    { t: "note", sel: '[data-testid="web-conoce-mas"]', body: "Al hacer clic abre la web del ciclo olímpico en otra pestaña, sin sacarte de la demo." },
-  ] }) };
+  web["1.1"].steps = web["1.1"].steps.map((p) => /splash/.test(p.body || "") ? Object.assign({}, p, { body: "La plataforma abre directo en el inicio de sesión (en web no hay splash)." }) : p);
+  web["1.3"] = { noAplica: "No está en la versión web" }; /* se quitó «Conoce más» del menú lateral (DC-068) */
   web["6.3"].noAplica = "No aplica para este rol"; /* es un aviso del gestor del comité: el metodólogo no lo recibe */
   /* los avisos llegan a la campana, no a un celular: se quita lo que hablaba de la hora del teléfono */
   web["6.1"].falta = "Los avisos son simulados: no hay notificaciones push reales ni reloj del evento.";

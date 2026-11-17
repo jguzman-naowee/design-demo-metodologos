@@ -1,10 +1,10 @@
 /* Capa web (web.html): reacomoda la app móvil para escritorio SIN tocar sus pantallas. Solo aplica desde 900 px; por debajo se ve como la app móvil.
    Look de los portales Naowee: encabezado con campana y usuario, menú lateral (NwtSidebar) con secciones, fondo blanco, tarjetas con borde
-   y pie flotante de Naowee. Listas en grilla y hojas como diálogos (NwtModal). */
+   sin pie flotante. Listas en grilla y hojas como diálogos (NwtModal). */
 :root{--wside-w:17.125rem;--wtop-h:4.25rem;--web-max:1240px}
 
-/* Encabezado, menú lateral y pie no existen en móvil */
-.wside,.wtop,.wpie{display:none}
+/* Encabezado y menú lateral no existen en móvil */
+.wside,.wtop{display:none}
 
 @media (min-width:900px){
   html.web body{overflow:auto;background:var(--white-alpha-100)}
@@ -18,7 +18,7 @@
   .wside .nwt-sidebar__toolbar{padding:0 var(--naotech-sizing-16)}
   .wside-marca{display:flex;align-items:center;gap:var(--naotech-sizing-12,12px);color:var(--naotech-app-color-900,#181e47)}
   .wside-marca img{width:44px;height:44px;object-fit:contain}
-  .wside-sep,.wpie-sep{align-self:stretch;width:1px;margin:10px 0;background:var(--gray-300)}
+  .wside-sep{align-self:stretch;width:1px;margin:10px 0;background:var(--gray-300)}
   .wside .nwt-sidebar__menu__icon .icbox{display:flex}
   .wside .nwt-sidebar__menu__section span{text-transform:uppercase;letter-spacing:.06em}
   .wside-nombre,.wside-titulo{font-size:var(--naotech-subtitle-font-size);font-weight:var(--naotech-subtitle-font-weight);line-height:var(--naotech-subtitle-line-height)} /* tokens de subtítulo del SDK */
@@ -51,14 +51,15 @@
   .wtop-fila{display:flex;align-items:center;gap:var(--naotech-sizing-12);padding:var(--naotech-sizing-12);border-radius:var(--naotech-sizing-12);background:var(--naotech-color-amber-100);color:var(--naotech-color-orange-700)}
   .wtop-fila .wtop-id{flex:1}.wtop-fila .wtop-id b{color:var(--naotech-color-orange-700)}
   .wtop-menu .nwt-popover__content{gap:0;padding:var(--naotech-sizing-8) var(--naotech-sizing-4)}
+  /* El chip queda solo con avatar y chevron; quién es y su rol se leen al abrir el menú. */
+  .wtop-chip{padding:0 var(--naotech-sizing-8) 0 var(--naotech-sizing-6);gap:var(--naotech-sizing-4)}
+  .wtop-quien{display:flex;align-items:center;gap:var(--naotech-sizing-12);padding:var(--naotech-sizing-8) var(--naotech-sizing-12) var(--naotech-sizing-12);margin-bottom:var(--naotech-sizing-4);border-bottom:1px solid var(--naotech-app-color-200)}
   .wtop-menu .nwt-dropdown__option{margin-top:var(--naotech-sizing-4);width:100%;height:var(--naotech-sizing-40);color:var(--naotech-app-color-900);text-align:left}
   .wtop-menu .nwt-dropdown__option .nwt-icon,.wtop-menu .nwt-dropdown__option svg{flex:0 0 auto}
   @keyframes wtopMenu{from{opacity:0;transform:scale(.96) translateY(-4px)}to{opacity:1;transform:none}}
   @media (prefers-reduced-motion:reduce){.wtop-menu{animation:none}.wtop-chip .wtop-flecha{transition:none}}
 
   /* Pie flotante de Naowee, abajo a la derecha */
-  html.web.con-menu .wpie{position:fixed;z-index:8;right:20px;bottom:16px;display:flex;align-items:center;gap:12px;height:44px;padding:0 18px;border:1px solid var(--gray-200);border-radius:999px;background:var(--white-alpha-100);box-shadow:0 2px 10px rgba(24,30,71,.06);font-size:var(--fs-caption);color:var(--gray-700)}
-  .wpie img{height:24px;width:auto}.wpie-sep{margin:8px 0}
 
   /* Con menú lateral, la barra superior y la inferior de la app móvil sobran */
   html.web.con-menu .appbar,html.web.con-menu .bnav{display:none}
@@ -91,6 +92,22 @@
      al hover/foco: la tarjeta no cambia de alto, así que no mueve la fila. */
   html.web .evs .list .evcard{position:relative}
   html.web .evs .list .evcard-aviso{position:absolute;top:150px;left:12px;right:12px;padding:0;transform:translateY(calc(-100% - 12px));z-index:2}
+  /* Card web igual a la de la demo de Eventos: sin imagen, datos con icono y flecha en círculo. */
+  html.web .evs .list:has(.evwc){grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--naotech-sizing-16)}
+  html.web .evs .list .evwc{overflow:hidden;border-radius:var(--naotech-sizing-16)}
+  html.web .evwc .evcard-link{position:relative;gap:var(--naotech-sizing-16);padding:var(--naotech-sizing-20)}
+  html.web .evwc-media{position:relative;flex:none;margin:-20px -20px 0}
+  html.web .evwc .evwc-media .evwc-img{display:block;margin:0;width:100%}
+  html.web .evwc-media .evwc-edit{position:absolute;right:12px;bottom:12px;display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.94);box-shadow:0 2px 8px rgba(20,22,38,.18);font-size:13px;font-weight:var(--fw-bold);color:var(--orange-700);cursor:help}
+  html.web .evwc .evwc-img{flex:none;width:calc(100% + 40px);height:140px;margin:-20px -20px 0;border-radius:var(--naotech-sizing-16) var(--naotech-sizing-16) 0 0}
+  html.web .evwc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--naotech-sizing-12)}
+  html.web .evs .list .evwc .evcard-title{margin:0;font-size:20px;line-height:1.3}
+  html.web .evwc-head .chip{flex:none;margin-top:3px}
+  html.web .evwc-datos{display:flex;flex-direction:column;gap:6px;margin:auto 0 0;padding:var(--naotech-sizing-12) 48px 0 0;border-top:1px solid var(--gray-200);list-style:none;font-size:14px;color:var(--gray-700)}
+  html.web .evwc-datos li{display:flex;align-items:center;gap:var(--naotech-sizing-8)}
+  html.web .evwc-datos li:first-child{font-weight:var(--fw-bold);color:var(--negro)}
+  html.web .evwc-ir{position:absolute;right:var(--naotech-sizing-20);bottom:var(--naotech-sizing-20);display:grid;place-items:center;width:32px;height:32px;border:1.5px solid var(--orange-700);border-radius:50%;color:var(--orange-700);transition:transform var(--wm-base) var(--wm-out)}
+  html.web .evwc:hover .evwc-ir{transform:translateX(3px)}
   html.web .evs .list .nwt-alert[data-act=aviso]{position:relative;cursor:help;box-shadow:0 2px 8px rgba(0,0,0,.25)}
   html.web .evs .list .nwt-alert[data-act=aviso] .av-chev{display:none}
   html.web .evs .list .nwt-alert[data-act=aviso] .nwt-alert__content{align-items:center}
@@ -196,17 +213,19 @@
 .evd-web{display:none}
 @media (min-width:900px){
   html.web .evd-search,html.web .evd-list{display:none}
-  html.web .evd-card{display:flex;flex-direction:column;margin-top:var(--naotech-sizing-24);padding:var(--naotech-sizing-8) var(--naotech-sizing-20) var(--naotech-sizing-20);background:#fff;border:1px solid var(--naotech-app-color-200);border-radius:var(--naotech-sizing-16)}
+  html.web .evd-card{display:flex;flex-direction:column;margin-top:var(--naotech-sizing-24);padding:var(--naotech-sizing-8) 0 0;background:none;border:0;border-radius:0} /* DC-071: sin formato card */
   html.web .evd-card > .evd-gap16:first-child{display:none}
   html.web .tabs.evd-tabs{position:relative;top:auto;padding-top:var(--naotech-sizing-8);box-shadow:none;background:transparent;justify-content:flex-start}
   html.web .evd-tabs .tab{flex:0 0 auto;padding:0 var(--naotech-sizing-24) 0 0}
+  html.web .evd-tabs .tab-txt{font-size:var(--naotech-heading6-font-size)} /* mismo tamaño que «Deportistas inscritos» (DC-076) */
   html.web .evd-tabs .tab+.tab{padding-left:var(--naotech-sizing-24)}
   html.web .evd-tabs.fija::after{display:none}
-  html.web .evd-listhead{padding:var(--naotech-sizing-4) 0 var(--naotech-sizing-8)}
+  html.web .evd-listhead{padding:var(--naotech-sizing-24) 0 var(--naotech-sizing-16)}
   html.web .evd-web{display:flex;flex-direction:column;gap:var(--naotech-sizing-16)}
   .evw-bar{display:flex;align-items:center;justify-content:space-between;gap:var(--naotech-sizing-12);flex-wrap:wrap}
-  .evw-bar-l{display:flex;align-items:center;gap:var(--naotech-sizing-12);flex-wrap:wrap}
-  .evd-web .nwt-searchbox{width:21rem;max-width:100%}
+  .evw-bar-l{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:var(--naotech-sizing-12)}
+  .evd-web .nwt-searchbox{flex:1 1 auto;width:auto;min-width:0} /* llena el ancho; los desplegables quedan a la derecha (DC-077) */
+  .evd-web .evw-q{flex:1 1 auto;width:100%;min-width:0}
   .evd-web .nwt-input-box__control{display:flex;align-items:center;height:var(--naotech-sizing-48);padding:0 var(--naotech-sizing-16);border:1px solid var(--naotech-app-color-300);border-radius:var(--naotech-sizing-32);background:#fff;transition:border-color 140ms ease,box-shadow 140ms ease}
   .evd-web .nwt-input-box__control:focus-within{border-color:var(--naotech-color-orange-700);box-shadow:0 0 0 3px rgba(215,64,9,.15)}
   .evd-web .nwt-input-box__control input:focus,.evd-web .nwt-input-box__control input:focus-visible,html.web.con-menu .evs .search input:focus,html.web.con-menu .evs .search input:focus-visible{outline:0;box-shadow:none}
@@ -223,8 +242,10 @@
   .evw-menu .nwt-dropdown__option>span:first-of-type{flex:1;text-align:left}
   .evw-menu .nwt-dropdown__option[aria-selected=true]{--pvt-signal-background:var(--naotech-color-orange-700);background:var(--naotech-color-amber-100);color:var(--naotech-color-orange-700);font-weight:var(--naotech-font-weight-semibold)}
   .evd-web .nwt-datatable__table{overflow:visible}
-  .evd-web .nwt-datatable__header{border-radius:var(--naotech-sizing-12)}
+  .evd-web .nwt-datatable{border:1px solid var(--gray-200);border-radius:var(--naotech-sizing-16);overflow:hidden} /* DC-073: la tabla lleva su borde */
+  .evd-web .nwt-datatable__header{border-radius:0}
   .evd-web .nwt-datatable__record{align-items:center;cursor:pointer}
+  .evd-web .nwt-datatable__record:nth-child(even){background:color-mix(in srgb,var(--naotech-app-color-100) 35%,#fff)} /* cebra, más suave que el hover */
   .evd-web .nwt-datatable__record:hover{background:color-mix(in srgb,var(--naotech-app-color-100) 50%,#fff)} /* gris más claro que el tono base */
   .evd-web .nwt-datatable__cell{min-height:var(--naotech-sizing-56);padding:var(--naotech-sizing-12) 0}
   .evw-nombre{font-weight:var(--naotech-font-weight-semibold);color:var(--naotech-app-color-900);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -241,7 +262,7 @@
 @media (min-width:900px){
   html.web.con-menu .evs > .searchrow{position:relative;justify-content:flex-start;gap:var(--naotech-sizing-12);margin:0 0 var(--naotech-sizing-24);padding:0}
   html.web.con-menu .evs > .searchrow::after{display:none}
-  html.web.con-menu .evs .search{flex:0 1 21rem;width:21rem;height:var(--naotech-sizing-48);padding:0 var(--naotech-sizing-16);gap:var(--naotech-sizing-8);border:1px solid var(--naotech-app-color-300);border-radius:var(--naotech-sizing-32);background:#fff;box-shadow:none;transition:border-color 140ms ease,box-shadow 140ms ease}
+  html.web.con-menu .evs .search{flex:1 1 auto;width:auto;min-width:0;height:var(--naotech-sizing-48);padding:0 var(--naotech-sizing-16);gap:var(--naotech-sizing-8);border:1px solid var(--naotech-app-color-300);border-radius:var(--naotech-sizing-32);background:#fff;box-shadow:none;transition:border-color 140ms ease,box-shadow 140ms ease}
   html.web.con-menu .evs .search:focus-within{outline:0;border-color:var(--naotech-color-orange-700);box-shadow:0 0 0 3px rgba(215,64,9,.15)}
   html.web.con-menu .evs .search input{font-size:var(--naotech-sizing-14);color:var(--naotech-app-color-900)}
   html.web.con-menu .evs > .searchrow .trigger,html.web.con-menu .evs > .searchrow.pegada .trigger{flex:none;width:auto;min-width:9.5rem;height:var(--naotech-sizing-48);margin:0;padding:0 var(--naotech-sizing-12) 0 var(--naotech-sizing-16);gap:var(--naotech-sizing-8);border:1px solid var(--naotech-app-color-500);border-radius:var(--naotech-sizing-8);background:#fff;color:var(--naotech-app-color-900);opacity:1;visibility:visible;overflow:visible;transition:border-color 140ms ease,transform 140ms var(--mo-out,ease-out)}
@@ -334,6 +355,7 @@
   html.web .pfw-name h1{margin:0;color:var(--negro);font-size:var(--fs-sujeto)}
   html.web .pfw-sub{margin:8px 0 0;color:var(--gray-700)}
   html.web .pfw-cols{display:grid;grid-template-columns:260px minmax(0,1fr);gap:24px;margin-top:24px;align-items:start}
+  html.web .pfw-seccion{margin:32px 0 16px;color:var(--negro)}
   html.web .pfw-side{display:flex;flex-direction:column;gap:20px}
   html.web .pfw-nav{position:relative;display:flex;align-items:center;gap:12px;padding:16px 20px;border:1px solid var(--gray-200);border-radius:var(--r-xlarge);color:var(--negro);font-weight:var(--fw-bold)}
   html.web .pfw-nav::before{content:"";position:absolute;left:-1px;top:50%;width:4px;height:32px;transform:translateY(-50%);border-radius:0 4px 4px 0;background:var(--orange-700)}
@@ -354,6 +376,7 @@
   html.web .pfw-tabla .nwt-datatable__table{overflow:visible}
   html.web .pfw-tabla .nwt-datatable__header{border-radius:var(--naotech-sizing-12)}
   html.web .pfw-tabla .nwt-datatable__record{align-items:center}
+  html.web .pfw-tabla .nwt-datatable__record:nth-child(even){background:color-mix(in srgb,var(--naotech-app-color-100) 35%,#fff)}
   html.web .pfw-tabla .nwt-datatable__record:hover{background:color-mix(in srgb,var(--naotech-app-color-100) 50%,#fff)}
   html.web .pfw-tabla .nwt-datatable__cell{min-height:var(--naotech-sizing-56);padding:var(--naotech-sizing-12) 0;min-width:0;padding-right:var(--naotech-sizing-12);overflow:visible;white-space:normal}
   html.web .pfw-tabla .pf-acts{justify-content:flex-end}
@@ -381,7 +404,9 @@
   html.web .ef-scroll:has(.efw){padding:0}
   html.web.con-menu .page-body > .ef-scroll:has(.efw){max-width:none} /* stepper y pie a sangre de lado a lado */
   html.web .efw{display:flex;flex-direction:column;min-height:100%}
-  html.web .efw-steps{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:12px 32px;background:color-mix(in srgb,var(--blue-jic-50) 35%,#fff);border-bottom:1px solid var(--gray-200)}
+  html.web .efw-steps{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:12px 32px;background:color-mix(in srgb,color-mix(in srgb,var(--blue-jic-50) 35%,#fff) 86%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--gray-200);transition:box-shadow .2s ease} /* translúcida: se ve el formulario pasar por detrás */
+  html.web .efw-steps.con-sombra{box-shadow:0 6px 16px -6px rgba(20,22,38,.16)}
+  html.web .efw-foot.con-sombra{box-shadow:0 -6px 16px -6px rgba(20,22,38,.16)} /* solo con contenido detrás (web.js) */
   html.web .efw-step{display:flex;align-items:center;gap:10px;padding:0;border:0;background:none;font:inherit;text-align:left;cursor:pointer}
   html.web .efw-n{display:grid;place-items:center;flex:none;width:32px;height:32px;border-radius:50%;background:var(--gray-400);color:var(--white-alpha-100);font-weight:var(--fw-bold);font-size:var(--fs-body-small)}
   html.web .efw-step.on .efw-n{background:var(--orange-700)}
@@ -395,7 +420,7 @@
   html.web .efw-line{flex:1 1 0;max-width:180px;min-width:40px;height:3px;margin:0 20px;border-radius:2px;background:var(--gray-300)}
   html.web .efw-line.done{background:var(--success-700)} /* el tramo que sigue a un paso completado se pinta de verde */
   html.web .efw-body{flex:1 1 auto;width:100%;max-width:800px;margin:0 auto;padding:40px 32px 48px}
-  html.web .efw-ev{margin:0 0 8px;font-size:var(--fs-caption);font-weight:var(--fw-bold);letter-spacing:0;text-transform:none;color:var(--gray-700)}
+  html.web .efw-ev{margin:0 0 8px;font-size:var(--fs-body);font-weight:var(--fw-bold);letter-spacing:0;text-transform:none;color:var(--gray-700)}
   html.web .efw-h1{margin:0;font-size:32px;line-height:1.15;font-weight:var(--fw-bold);color:var(--negro)}
   html.web .efw-sub{margin:12px 0 0;font-size:var(--fs-body);color:var(--gray-700)}
   html.web .efw-card{margin-top:28px;background:var(--white-alpha-100);border:1px solid var(--gray-200);border-radius:24px}
@@ -404,10 +429,9 @@
   html.web .efw-badge{display:grid;place-items:center;flex:none;width:32px;height:32px;border-radius:50%;background:var(--orange-100);color:var(--orange-700);font-weight:var(--fw-bold)}
   html.web .efw-card-b{padding:24px 28px 28px}
   html.web .efw .ef-banner-wrap{margin-top:24px}
-  html.web .efw-foot{position:sticky;bottom:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 32px;background:var(--white-alpha-100);border-top:1px solid var(--gray-200)}
+  html.web .efw-foot{position:sticky;bottom:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 32px;background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid var(--gray-200);transition:box-shadow .2s ease}
   html.web .efw-foot-r{display:flex;align-items:center;gap:12px}
   html.web .efw-foot .btn{width:auto;flex:none}
-  html.web:has(.efw) .wpie{display:none} /* el pie flotante taparía «Continuar» */
   html.web .efw .ef-box.area{height:120px}
 }
 
@@ -443,10 +467,6 @@
   html.web .nwt-modal:has([data-testid=deportes-sheet-lista]) .nwt-modal__content{width:calc(100% - 48px);padding:var(--naotech-sizing-24) var(--naotech-sizing-8);row-gap:var(--naotech-sizing-20)}
   html.web .nwt-modal:has([data-testid=deportes-sheet-lista]) .sheet-pad{padding:0}
   .dm-desc{font-size:var(--naotech-sizing-14);line-height:var(--naotech-sizing-20);font-weight:var(--naotech-font-weight-regular);color:var(--naotech-app-color-600);max-width:26rem}
-  html.web .nwt-modal .dlista{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--naotech-sizing-12)}
-  html.web .nwt-modal .dlista .dfila{gap:var(--naotech-sizing-12);padding:var(--naotech-sizing-12);border:1px solid var(--naotech-app-color-300);border-radius:var(--naotech-sizing-16);font-size:var(--naotech-sizing-14);font-weight:var(--naotech-font-weight-semibold);color:var(--naotech-app-color-900)}
-  html.web .nwt-modal .dlista .dfila:last-child{border-bottom:1px solid var(--naotech-app-color-300)}
-  html.web .nwt-modal .dlista .dfila > :first-child{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--orange-50)}
 }
 
 /* Aviso «El evento aún no inicia»: icono informativo a la izquierda, texto en dos líneas */
@@ -523,8 +543,6 @@
   html.web .evw-row:hover{background:color-mix(in srgb,var(--naotech-app-color-100) 60%,#fff)}
   html.web .evw-row .icbox{transition:transform var(--wm-base) var(--wm-out)}
   html.web .evw-row:hover .icbox{transform:translateX(3px)}
-  html.web .nwt-modal .dlista .dfila{transition:border-color var(--wm-fast) ease,background-color var(--wm-fast) ease,transform var(--wm-fast) var(--wm-out)}
-  html.web .nwt-modal .dlista .dfila:hover{border-color:var(--naotech-color-orange-700);background:var(--orange-50)}
 
   /* Pestañas y navegación del perfil */
   html.web .tab{transition:color var(--wm-fast) ease}
@@ -586,15 +604,6 @@
 @media (min-width:900px){
   /* El divisor del pie llega de borde a borde del menú; el botón conserva su sangría */
   html.web .nwt-sidebar__footer{margin-left:0;margin-right:0;width:100%;padding-left:12px;padding-right:12px}
-}
-
-/* «Conoce más»: al pie del menú, sobre «Cerrar sesión»; abre la web en otra pestaña */
-@media (min-width:900px){
-  html.web .wside-conoce{margin-top:auto;padding:0 12px 8px;flex:none}
-  html.web .wside-conoce + .nwt-sidebar__footer{margin-top:0}
-  html.web .wside-conoce .nwt-sidebar__footer__logout{display:flex;align-items:center;width:100%;text-decoration:none;box-sizing:border-box}
-  html.web .wside-ext{margin-left:auto;display:inline-flex;color:var(--naotech-app-color-600)}
-  html.web .menu-colapsado .wside-conoce{padding:0 8px 8px}
 }
 
 /* Estado vacío de la tabla del evento: centrado en todo el ancho de la tabla */

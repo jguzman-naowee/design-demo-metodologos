@@ -10,6 +10,23 @@
     const sub = e.lugar ? e.fecha + " " + e.lugar : e.fecha;
     const aviso = e.estado === "finalizado" && e.editableUntil; /* avisoEdicionVigente (fecha fija en la demo) */
     const fecha = aviso ? Data.fechaLarga(e.editableUntil) : "", fechaC = aviso ? Data.fechaCorta(e.editableUntil) : "";
+    const avisoHtml = aviso ? '<div class="evcard-aviso"><div class="nwt-alert nwt-alert--visible" nwt-theme="caution" nwt-variant="quiet" role="button" tabindex="0" data-act="aviso" data-testid="evento-aviso-' + Ui.esc(e.id) + '" aria-expanded="false" aria-label="Plazo de edición hasta el ' + Ui.esc(fecha) + '">' +
+        '<div class="nwt-alert__content"><div class="nwt-alert__icon">' + Ui.icon("nwt-exclamacion", { size: 16, color: "currentColor" }) + "</div>" +
+        '<span class="nwt-alert__label"><span>Editable hasta el ' + Ui.esc(fechaC) + "</span>" +
+        '<span class="aviso-wrap"><span class="aviso-more"><span>Puedes editar las evaluaciones que registraste hasta 10 días después de que termine el evento.</span></span></span></span>' +
+        '<span class="av-chev">' + Ui.icon("m-keyboard_arrow_down", { size: 20, color: "currentColor" }) + "</span>" +
+        "</div></div></div>" : "";
+    /* Web: card de la demo de Eventos con la imagen del evento y solo los datos que ya tiene. */
+    if (document.documentElement.classList.contains("web") && matchMedia("(min-width:900px)").matches) return '<article class="evcard evwc">' +
+      '<a class="evcard-link" href="#/evento/' + Ui.esc(e.id) + '" data-testid="evento-card-' + Ui.esc(e.id) + '" aria-label="' + Ui.esc(e.nombre + ", " + e.estadoLabel + ", " + sub) + '">' +
+        '<div class="evwc-media">' + '<img class="evcard-img evwc-img" src="' + Ui.esc(Data.heroWeb[e.id] || e.imagen || Data.eventoGenerico) + '" alt="" loading="lazy" onload="this.classList.add(\'ld\')" onerror="this.onerror=null;this.src=\'' + Data.eventoGenerico + '\'">' +
+          (aviso ? '<span class="evwc-edit" data-testid="evento-aviso-' + Ui.esc(e.id) + '" title="Puedes editar las evaluaciones que registraste hasta 10 días después de que termine el evento.">' + Ui.icon("nwt-exclamacion", { size: 14, color: "currentColor" }) + "<span>Editable hasta el " + Ui.esc(fechaC) + "</span></span>" : "") + "</div>" +
+        '<div class="evwc-head"><h2 class="evcard-title">' + Ui.esc(e.nombre) + "</h2>" + Ui.chip(e.estado, e.estadoLabel) + "</div>" +
+        '<ul class="evwc-datos"><li>' + Ui.icon("calendario", { size: 18, color: "var(--gray-500)" }) + "<span>" + Ui.esc(e.fecha) + "</span></li>" +
+          (e.lugar ? "<li>" + Ui.icon("ubicacion", { size: 18, color: "var(--gray-500)" }) + "<span>" + Ui.esc(e.lugar) + "</span></li>" : "") +
+          "</ul>" +
+        '<span class="evwc-ir" aria-hidden="true">' + Ui.icon("m-chevron_right", { size: 20, color: "currentColor" }) + "</span>" +
+      "</a></article>";
     return '<article class="evcard">' +
       '<a class="evcard-link" href="#/evento/' + Ui.esc(e.id) + '" data-testid="evento-card-' + Ui.esc(e.id) + '" aria-label="' + Ui.esc(e.nombre + ", " + e.estadoLabel + ", " + sub) + '">' +
         '<img class="evcard-img" src="' + Ui.esc((document.documentElement.classList.contains("web") && matchMedia("(min-width:900px)").matches && Data.heroWeb[e.id]) || e.imagen || Data.eventoGenerico) + '" alt="" loading="lazy" onload="this.classList.add(\'ld\')" onerror="this.onerror=null;this.src=\'' + Data.eventoGenerico + '\'">' +
@@ -19,12 +36,7 @@
           '<p class="evcard-sub">' + Ui.esc(sub) + "</p>" +
         "</div>" +
       "</a>" +
-      (aviso ? '<div class="evcard-aviso"><div class="nwt-alert nwt-alert--visible" nwt-theme="caution" nwt-variant="quiet" role="button" tabindex="0" data-act="aviso" data-testid="evento-aviso-' + Ui.esc(e.id) + '" aria-expanded="false" aria-label="Plazo de edición hasta el ' + Ui.esc(fecha) + '">' +
-        '<div class="nwt-alert__content"><div class="nwt-alert__icon">' + Ui.icon("nwt-exclamacion", { size: 16, color: "currentColor" }) + "</div>" +
-        '<span class="nwt-alert__label"><span>Editable hasta el ' + Ui.esc(fechaC) + "</span>" +
-        '<span class="aviso-wrap"><span class="aviso-more"><span>Puedes editar las evaluaciones que registraste hasta 10 días después de que termine el evento.</span></span></span></span>' +
-        '<span class="av-chev">' + Ui.icon("m-keyboard_arrow_down", { size: 20, color: "currentColor" }) + "</span>" +
-        "</div></div></div>" : "") +
+      avisoHtml +
     "</article>";
   }
 

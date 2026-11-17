@@ -46,13 +46,14 @@
     '<a class="btn dark fit" href="#/eventos" data-testid="pendiente-volver">Volver a Eventos</a></div></div>';
 
   const TABS = ["/eventos", "/perfil"];
+  let quieto = false;
   function render() {
     const { path, query } = parse();
     const redirect = guardFn && guardFn(path);
     if (redirect && redirect !== path) { location.replace("#" + redirect); return; }
     /* Dirección de la transición: volver (la ruta anterior de la pila), cambiar de pestaña, primera pantalla o avanzar */
     const volver = stack.length > 1 && stack[stack.length - 2] === path, prev = current.path;
-    const dir = !prev ? "fade" : (TABS.includes(prev) && TABS.includes(path)) ? "tab" : volver ? "back" : "push";
+    const dir = quieto ? "fade" : !prev ? "fade" : (TABS.includes(prev) && TABS.includes(path)) ? "tab" : volver ? "back" : "push";
     /* Pila propia para Router.back(): volver a la ruta anterior desapila; cualquier otra se apila */
     if (stack.length > 1 && stack[stack.length - 2] === path) stack.pop(); else if (stack[stack.length - 1] !== path) stack.push(path);
     if (typeof cleanup === "function") { try { cleanup(); } catch (e) { console.error(e); } }
@@ -60,8 +61,11 @@
     const hit = match(path), el = root();
     const ctx = { path, query };
     current = { path, params: hit ? hit.params : {}, query };
-    let out = hit ? hit.r.h.render(current.params, ctx) : pendiente(path);
+    quieto = false;
+    const estado = hit && window.Estados ? window.Estados.antes(path) : null; /* capa web de carga/error (web-estados.js) */
+    let out = estado || (hit ? hit.r.h.render(current.params, ctx) : pendiente(path));
     el.innerHTML = ""; el.dataset.nav = dir;
+    if (estado) { el.insertAdjacentHTML("beforeend", estado); return; }
     if (typeof out === "string") el.insertAdjacentHTML("beforeend", out); else if (out) el.appendChild(out);
     if (hit && hit.r.h.mount) cleanup = hit.r.h.mount(el, current.params, ctx) || null;
   }
@@ -74,6 +78,7 @@
     replace(path) { location.replace("#" + path); },
     back(fallback) { if (stack.length > 1) history.back(); else if (fallback) Router.replace(fallback); },
     start(initial) { if (!location.hash || location.hash === "#") location.replace("#" + (initial || "/")); else render(); }, /* sin hash: el replace dispara hashchange */
+    refresh() { quieto = true; render(); }, /* repinta la ruta actual sin apilar ni animar como navegación */
     get current() { return current; },
   };
 })();
