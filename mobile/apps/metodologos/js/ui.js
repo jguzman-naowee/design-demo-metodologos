@@ -212,7 +212,8 @@
     el.querySelector(".nwt-toast__close").addEventListener("click", () => { clearTimeout(toastTimer); cerrarToast(el); });
     root.appendChild(el); toastEl = el;
     requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("nwt-toast--visible")));
-    toastTimer = setTimeout(() => cerrarToast(el), ms || 5000);
+    const enCaso = document.documentElement.classList.contains("wc-play") || (() => { try { return window.parent !== window && window.parent.document.documentElement.classList.contains("caso-activo"); } catch (e) { return false; } })();
+    if (!enCaso) toastTimer = setTimeout(() => cerrarToast(el), ms || 5000); /* en un caso guiado se queda hasta el siguiente aviso */
   }
 
   /* Logo animado del COC (el del inicio de sesión): la ola se dibuja, COLOMBIA sube letra a letra y los aros hacen «pop» de a uno.

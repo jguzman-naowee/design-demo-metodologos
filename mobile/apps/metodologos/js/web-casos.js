@@ -38,6 +38,10 @@
       '<button type="button" class="wc-b ghost ic" data-act="reiniciar" aria-label="Reiniciar el caso" title="Reiniciar el caso"><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M4.5 10a5.5 5.5 0 1 0 1.8-4.07M4 3.5v3.2h3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
       '<button type="button" class="wc-b ghost ic" data-act="detener" aria-label="Detener la ejecución" title="Detener la ejecución" disabled><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="4.5" y="4.5" width="11" height="11" rx="2" fill="currentColor"/></svg></button>' +
       '<button type="button" class="wc-b" data-act="siguiente" data-testid="casos-siguiente">Siguiente ▸</button></div>';
+  /* Ocultar (ojo) y mover (agarre) la tarjeta cuando tapa lo que se está señalando */
+  flota.insertAdjacentHTML("afterbegin",
+    '<span class="wc-grip" data-testid="casos-flota-mover" title="Arrastra para mover · doble clic para volver a su sitio" aria-hidden="true"><svg viewBox="0 0 20 20" width="16" height="16"><circle cx="7" cy="5" r="1.4"/><circle cx="13" cy="5" r="1.4"/><circle cx="7" cy="10" r="1.4"/><circle cx="13" cy="10" r="1.4"/><circle cx="7" cy="15" r="1.4"/><circle cx="13" cy="15" r="1.4"/></svg></span>' +
+    '<button type="button" class="wc-x wc-ojo" data-act="flota-ojo" data-testid="casos-flota-ojo" aria-pressed="false" aria-label="Ocultar el texto del paso" title="Ocultar el texto del paso"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M2 10s3-5.5 8-5.5S18 10 18 10s-3 5.5-8 5.5S2 10 2 10z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="10" r="2.4" fill="none" stroke="currentColor" stroke-width="1.6"/><path class="wc-ojo-tacha" d="M3.5 3.5l13 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>');
   const velo = document.createElement("div"); velo.className = "wc-velo"; velo.hidden = true;
   const spot = document.createElement("div"); spot.className = "wc-spot"; spot.hidden = true;
   const cur = document.createElement("div"); cur.className = "wc-cursor"; cur.hidden = true;
@@ -84,13 +88,23 @@
     if (!el) throw new Error("No se encontró «" + sel + "» en la pantalla.");
     return el;
   };
+  /* Si la tarjeta tapa lo señalado, sube arriba (salvo que el usuario la haya movido a mano) */
+  const esquivar = (r) => {
+    if (flota.hidden || flota.classList.contains("movida")) return;
+    let x = 0, y = 0, k = 1;
+    try { if (host) { const f = window.frameElement.getBoundingClientRect(); k = f.width / innerWidth; x = f.left; y = f.top; } } catch (e) {}
+    const a = { l: x + r.left * k, t: y + r.top * k, r: x + r.right * k, b: y + r.bottom * k };
+    flota.classList.remove("arriba");
+    const fr = flota.getBoundingClientRect();
+    flota.classList.toggle("arriba", a.l < fr.right && a.r > fr.left && a.t < fr.bottom + 12 && a.b > fr.top - 12);
+  };
   const colocar = (r) => { const p = 6; Object.assign(spot.style, { left: r.left - p + "px", top: r.top - p + "px", width: r.width + 2 * p + "px", height: r.height + 2 * p + "px" }); };
   const focus = async (el) => {
     el.scrollIntoView({ block: "center", behavior: RM ? "auto" : "smooth" });
     await sleep(RM ? 0 : 350);
     let r = rectOf(el);
     for (let n = 0; !RM && n < 10; n++) { await sleep(60); const r2 = rectOf(el); const quieto = Math.abs(r2.left - r.left) < 1 && Math.abs(r2.top - r.top) < 1 && Math.abs(r2.width - r.width) < 1 && Math.abs(r2.height - r.height) < 1; r = r2; if (quieto) break; }
-    colocar(r); spot.hidden = false; velo.classList.add("off"); S.fxEl = el; S.fxClick = false;
+    colocar(r); spot.hidden = false; velo.classList.add("off"); S.fxEl = el; S.fxClick = false; esquivar(r);
     return r;
   };
   const hideFx = () => { S.fxEl = null; velo.classList.remove("off"); spot.hidden = true; cur.hidden = true; spot.classList.remove("hint"); };
@@ -169,6 +183,7 @@
   function pick(id) {
     S.token++; S.stopped = false; S.busy = false; S.i = 0; hideFx();
     S.caso = CASOS.find((c) => c.id === id) || CASOS[0];
+    document.documentElement.classList.add("wc-play");
     const g = S.caso.steps[0];
     S.fresh = true; S.open = false; panel.hidden = true; velo.hidden = true; document.documentElement.classList.remove("wc-abierto");
     document.querySelectorAll("[data-act=casos]").forEach((b) => b.setAttribute("aria-expanded", "false")); guardar();
@@ -202,10 +217,12 @@
   window.WebCasos = { toggle: () => setOpen(!S.open), open: () => setOpen(true), close: () => setOpen(false) };
 
   document.addEventListener("click", (e) => { if (e.target.closest("[data-act=casos]")) { e.preventDefault(); setOpen(!S.open); } });
-  const terminar = () => { S.token++; S.busy = false; S.caso = null; S.i = 0; S.mode = "paso"; hideFx(); flota.hidden = true; panel.querySelectorAll(".wc-case").forEach((b) => b.classList.remove("on")); guardar(); };
+  /* Mientras corre un caso los avisos (snackbar) no se cierran solos: el paso siguiente los señala (caso 3.3) */
+  const terminar = () => { document.documentElement.classList.remove("wc-play"); document.querySelectorAll('[data-testid="snackbar"]').forEach((n) => n.remove()); S.token++; S.busy = false; S.caso = null; S.i = 0; S.mode = "paso"; hideFx(); flota.hidden = true; panel.querySelectorAll(".wc-case").forEach((b) => b.classList.remove("on")); guardar(); };
   const alClic = (e) => {
     const t = e.target;
     if (t.closest("[data-act=flota-cerrar]")) return terminar();
+    if (t.closest("[data-act=flota-ojo]")) { const mini = flota.classList.toggle("mini"); const b = flota.querySelector(".wc-ojo"); b.setAttribute("aria-pressed", mini); b.setAttribute("aria-label", mini ? "Mostrar el texto del paso" : "Ocultar el texto del paso"); b.title = b.getAttribute("aria-label"); return; }
     if (t.closest(".wc-x[data-testid=casos-cerrar]")) return setOpen(false);
     if (t.closest("[data-act=det-volver]")) return cerrarDetalle();
     if (t.closest("[data-act=det-play]")) { S.mode = "auto"; return pick(det.dataset.id); }
@@ -218,6 +235,15 @@
     if (m) { S.mode = m.dataset.mode; paint(); if (S.mode === "auto") next(); else hint(); }
   };
   panel.addEventListener("click", alClic); flota.addEventListener("click", alClic);
+  const grip = flota.querySelector(".wc-grip"), vista = host ? window.parent : window;
+  grip.addEventListener("pointerdown", (e) => {
+    e.preventDefault(); const r = flota.getBoundingClientRect(), dx = e.clientX - r.left, dy = e.clientY - r.top;
+    flota.classList.add("movida"); flota.classList.remove("arriba"); grip.setPointerCapture(e.pointerId);
+    const mover = (ev) => { const w = vista.innerWidth, h = vista.innerHeight; flota.style.left = Math.max(8, Math.min(w - r.width - 8, ev.clientX - dx)) + "px"; flota.style.top = Math.max(8, Math.min(h - r.height - 8, ev.clientY - dy)) + "px"; };
+    const soltar = () => { grip.removeEventListener("pointermove", mover); grip.removeEventListener("pointerup", soltar); };
+    grip.addEventListener("pointermove", mover); grip.addEventListener("pointerup", soltar);
+  });
+  grip.addEventListener("dblclick", () => { flota.classList.remove("movida"); flota.style.left = flota.style.top = ""; });
   panel.addEventListener("keydown", (e) => { if (e.key === "Escape") setOpen(false); });
   flota.addEventListener("keydown", (e) => { if (e.key === "Escape") terminar(); });
   lista.addEventListener("scroll", () => { clearTimeout(lista._t); lista._t = setTimeout(guardar, 150); });
@@ -233,6 +259,7 @@
   const ant = leer();
   if (ant && ant.id) {
     S.caso = CASOS.find((c) => c.id === ant.id) || null;
+    document.documentElement.classList.toggle("wc-play", !!S.caso);
     if (S.caso) {
       S.i = ant.i || 0; S.mode = ant.mode || "paso"; S.fresh = !!ant.fresh && S.i === 0;
       if (ant.open) { setOpen(true); lista.scrollTop = ant.y || 0; }

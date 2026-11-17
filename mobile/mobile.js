@@ -97,7 +97,7 @@
     try { await runStep(S.caso.steps[S.i]); S.i++; }
     catch (e) { say.innerHTML = '<b style="color:#B3261E">' + esc(e.message) + "</b>"; hideFx(); }
     S.busy = false; paint();
-    if (S.i >= S.caso.steps.length) setTimeout(hideFx, RM ? 0 : 1200);
+    if (S.i >= S.caso.steps.length) { setTimeout(hideFx, RM ? 0 : 1200); document.documentElement.classList.remove("caso-activo"); }
     if (S.i >= S.caso.steps.length && S.caso.falta) say.innerHTML += '<span class="falta"><b>Pendiente:</b> ' + esc(S.caso.falta) + "</span>";
     if (S.mode === "paso" && (my === S.token || S.stopped)) { S.stopped = false; hint(); }
     if (S.mode === "auto" && my === S.token && S.i < S.caso.steps.length) { await sleep(RM ? 0 : 1400); if (my === S.token) next(); }
@@ -113,6 +113,7 @@
   function pick(id) {
     S.token++; S.stopped = false; S.busy = false; S.i = 0; hideFx();
     S.caso = window.CASOS.find((c) => c.id === id) || window.CASOS[0];
+    document.documentElement.classList.add("caso-activo"); /* la app no cierra sola sus avisos mientras corre un caso (ui.js) */
     const g = S.caso.steps[0]; /* el caso puede arrancar en otra pantalla (goto con url): se ve ya ahí, no en el login */
     load((g && g.t === "goto" && g.url) || S.app.inicio || "index.html"); say.textContent = "";
     paint();
