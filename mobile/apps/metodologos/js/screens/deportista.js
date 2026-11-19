@@ -99,7 +99,9 @@
     /* Solo lectura (integrante de equipo): si aún se puede editar, el aviso va en la propia card y manda a editar desde el perfil del deporte; si no, no dice nada */
     const plazoEquipo = soloVer && puedeEditar(d, i) ? plazoTexto(d, i) : "";
     const fila = (icon, txt) => '<span class="pf-cmrow">' + ico(icon, 16, "var(--gray-700)") + '<span class="tx">' + esc(txt) + "</span></span>";
-    return '<article class="pf-ccard" data-testid="perfil-prueba-' + i + '"><div class="pf-cmain"><div class="pf-ctitle"><b>' + esc(p.nombre) + "</b>" + (conChip ? Ui.chip("calificado") : "") + "</div>" +
+    /* Solo lectura con plazo vencido: no lleva la alerta negativa, así que el reposo se marca aquí */
+    const reposo = soloVer && !puedeEditar(d, i) ? " pf-reposo" : "";
+    return '<article class="pf-ccard' + reposo + '" data-testid="perfil-prueba-' + i + '"><div class="pf-cmain"><div class="pf-ctitle"><b>' + esc(p.nombre) + "</b>" + (conChip ? Ui.chip("calificado") : "") + "</div>" +
       '<div class="pf-cmeta">' + (p.fecha ? fila("reloj", p.fecha) : "") + (p.evaluador ? fila("usuario", p.evaluador) : "") +
       (plazo ? Ui.alertaMute(puedeEditar(d, i) ? "informative" : "negative", esc(plazo), "perfil-plazo-" + i) : "") +
       (plazoEquipo ? Ui.alertaMute("informative", esc(plazoEquipo) + '. Hazlo desde el <a href="#/deportista/' + esc(encodeURIComponent(d.id)) + '" data-testid="perfil-ir-equipo-' + i + '">perfil del deporte</a>.', "perfil-plazo-" + i) : "") + "</div></div>" +
@@ -227,8 +229,9 @@
     const accion = !p ? "" : cal ? acciones(m, 0, "-" + m.id)
       : evaluable(p) ? Ui.button({ title: "Iniciar calificación", variant: "primary", size: "small", fit: true, href: url(m, 0), testid: "perfil-integrante-calificar-" + m.id })
       : '<span class="t-caption c-gray-700" data-testid="perfil-integrante-bloqueado-' + esc(m.id) + '">No se puede calificar</span>';
-    return '<div class="pf-card row pf-fila-int" data-testid="perfil-fila-' + esc(m.id) + '"><a class="pf-flex1 pf-fila-nombre" href="#/deportista/' + esc(encodeURIComponent(m.id)) + '" data-testid="perfil-integrante-' + esc(m.id) + '"><b>' + esc(m.nombre) + "</b></a>" +
-      '<div class="pf-fila-acc">' + Ui.chip(estadoEfectivo(m)) + accion + "</div></div>";
+    const reposo = !esWeb() && p && !cal && !evaluable(p) ? " pf-reposo" : "";
+    return '<div class="pf-card row pf-fila-int' + reposo + '" data-testid="perfil-fila-' + esc(m.id) + '"><a class="pf-flex1 pf-fila-nombre" href="#/deportista/' + esc(encodeURIComponent(m.id)) + '" data-testid="perfil-integrante-' + esc(m.id) + '"><b>' + esc(m.nombre) + "</b>" + (esWeb() ? "" : '<span class="pf-fila-estado">' + Ui.chip(estadoEfectivo(m)) + "</span>") + "</a>" +
+      '<div class="pf-fila-acc">' + (esWeb() ? Ui.chip(estadoEfectivo(m)) : "") + accion + "</div></div>";
   }
 
   function panelEquipo(d) {
