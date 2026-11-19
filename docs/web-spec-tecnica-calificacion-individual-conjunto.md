@@ -8,7 +8,7 @@
 
 ## 1. Estado actual (verificado en el código)
 - Una evaluación se guarda por **sujeto + índice de prueba**: la clave es `depId + "|" + idx` (`data-evaluacion.js`).
-- Un equipo es un `DeportistaVm` con `tipo: "Conjunto"` y `miembros[]`. Cada integrante es otro `DeportistaVm` (`esMiembroEquipo: true`, `pruebas: []`) y hoy **no tiene pruebas propias**: su estado está fijo en los datos.
+- Un equipo es un `DeportistaVm` con `tipo: "Conjunto"` y `miembros[]`. Cada integrante es otro `DeportistaVm` con **una sola prueba que lleva el nombre del deporte** (p. ej. «Baloncesto»), distinta de las del equipo («Fase de grupos»), y su estado está fijo en los datos.
 - El estado de un sujeto es «Calificado» solo si todas sus pruebas lo están (`Evaluaciones.save`).
 - Ruta del formulario: `#/evaluacion/:deportistaId/:pruebaId`; el sujeto decide equipo o individual por `esEquipo`.
 - Plazo de edición fijo en la demo: `PLAZO_EDICION = "2026-09-02"`.
@@ -25,7 +25,7 @@ Ambas llevan `targetType` (el campo ya existe: hoy `"ATHLETE"`): `"TEAM"` o `"AT
 ### 2.2 Cambios de datos en la demo
 | Dónde | Cambio |
 |---|---|
-| `data.js` (`miembro(...)`) | Cada integrante recibe **sus propias pruebas**, copia de las del equipo (mismo nombre y `eventoId`), con estado propio. Hoy `pruebas: []`. |
+| `data.js` (`miembro(...)`) | Cada integrante recibe **las mismas pruebas que su equipo** (mismo nombre y `eventoId`), con estado propio. Hoy tiene una sola con el nombre del deporte. *Hecho en el paso 1.* |
 | `data-evaluacion.js` | La clave pasa a `sujetoId + "\|" + idx`, donde el sujeto puede ser el equipo o el integrante. Ya funciona porque los integrantes tienen id propio (`c2-m1`); solo se necesita que tengan pruebas. |
 | `Evaluaciones.save` | Sin cambio de firma. Como el estado del integrante sale de sus pruebas, el del equipo **deja de mirar a los integrantes** (ya es así: solo mira `d.pruebas`). |
 | `Data.equipoDeMiembro` | Ya existe; se usa para el retorno y para mostrar el equipo en el formulario individual. |

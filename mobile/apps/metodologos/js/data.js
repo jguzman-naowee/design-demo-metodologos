@@ -116,6 +116,13 @@
     dk("d14", "Esteban Rojas", "Ajedrez", "Hombre", "Colegio San Bartolomé", "Individual", "Partida rápida", "e2"),
     dk("d15", "Valeria Mora", "Gimnasia", "Mujer", "Liceo Campestre", "Artística", "Barras asimétricas", "e2"),
   ];
+  /* Calificación individual en conjunto (PRD): cada integrante hereda las pruebas de su equipo, con estado propio.
+     Si ya venía «calificado» se conserva la fecha y el plazo del equipo; si no, queda sin calificar. */
+  conjunto.concat(equiposDakar).forEach((eq) => eq.miembros.forEach((m) => {
+    const hecho = m.estado === "calificado";
+    m.pruebas = eq.pruebas.map((p) => prueba(p.nombre, hecho ? "calificado" : "sinCalificacion", Object.assign({ eventoId: p.eventoId }, hecho ? { fecha: p.fecha, evaluador: p.evaluador, editable: p.editable, editableUntil: p.editableUntil, alreadyEvaluated: p.alreadyEvaluated } : {})));
+  }));
+
   /* esEquipo e inicial son getters de DeportistaVm: equipo = targetType TEAM o con integrantes */
   deportistas.concat(dakar, festival, miembrosBaloncesto3x3, miembrosRugby, miembrosBaloncesto, miembrosVoleibol, miembrosFutbolSala).forEach((d) => {
     d.esEquipo = d.targetType.toUpperCase() === "TEAM" || d.miembros.length > 0;

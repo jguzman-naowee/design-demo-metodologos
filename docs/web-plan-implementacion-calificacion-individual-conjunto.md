@@ -9,7 +9,7 @@ Un commit por capa revisable. Cada paso se verifica en **web y móvil** antes de
 ## Pasos
 | # | Capa | Qué se hace | Archivos | Verificación |
 |---|---|---|---|---|
-| 1 | Datos | Cada integrante recibe sus pruebas, generadas desde las del equipo, con estado propio | `data.js`, `data-deportistas.js` | El integrante tiene pruebas; el estado del equipo no cambia |
+| 1 | Datos | Cada integrante hereda las pruebas de su equipo (nombre y evento), con estado propio *(hecho)* | `data.js`, `data-deportistas.js` | El integrante tiene pruebas; el estado del equipo no cambia |
 | 2 | Evaluaciones | Confirmar que `Evaluaciones.save/get` funciona con el id del integrante; sin cambio de firma | `data-evaluacion.js` | Guardar para `c2-m1` no altera al equipo `c2` |
 | 3 | Formulario | Paso 1 individual de conjunto: sin países ni atletas, con equipo precargado; validación solo para equipo | `screens/evaluacion.js` | Individual de conjunto avanza sin campos; equipo sigue exigiendo atletas |
 | 4 | Perfil del deporte | Dos secciones: equipo e individuales con acción por fila | `screens/deportista.js` | Se califica un integrante sin tocar al equipo, y al revés |
@@ -31,6 +31,7 @@ Un commit por capa revisable. Cada paso se verifica en **web y móvil** antes de
 
 ## Riesgos de ejecución
 - Las pantallas se comparten entre web y móvil con ramas `esWeb()`: cada paso se prueba en las dos.
+- Los integrantes hoy no se parecen a lo que dice `coc_sample.dart`; los datos nuevos son de demostración.
 - `coc_sample.dart` no trae evaluaciones de integrantes: los datos nuevos son de demostración y deben decirlo.
 - El cambio de datos (paso 1) puede alterar conteos del evento que hoy se calculan sobre equipos; revisar el resumen «N deportes por calificar».
 
