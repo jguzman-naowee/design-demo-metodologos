@@ -115,8 +115,9 @@
 
   /* Pestañas del perfil individual: «Calificar» (pendientes y evaluaciones aún editables) e «Historial» (todas las completadas). */
   const TABS = [["calificar", "Calificar"], ["historial", "Historial"]];
-  const tabsHtml = (tabs = TABS) => '<div class="tabs" role="tablist" data-testid="perfil-tabs">' + tabs.map((t, i) =>
-    '<button type="button" role="tab" class="tab' + (i ? "" : " on") + '" aria-selected="' + (i ? "false" : "true") + '" data-tab="' + i + '" data-key="' + t[0] + '" data-testid="perfil-tab-' + t[0] + '"><span class="tab-in"><span class="tab-txt">' + t[1] + '</span><span class="tab-bar"></span></span></button>').join("") + '<span class="pf-tabind" aria-hidden="true"></span></div>';
+  /* Pestaña abierta por sujeto (web): al volver de calificar a un integrante se regresa a «Pruebas», no a «Datos» */
+  const ultimaTab = {};
+  const tabsHtml = (tabs = TABS, activa = tabs[0][0]) => '<div class="tabs" role="tablist" data-testid="perfil-tabs">' + tabs.map((t, i) => { const on = t[0] === activa; return '<button type="button" role="tab" class="tab' + (on ? " on" : "") + '" aria-selected="' + on + '" data-tab="' + i + '" data-key="' + t[0] + '" data-testid="perfil-tab-' + t[0] + '"><span class="tab-in"><span class="tab-txt">' + t[1] + '</span><span class="tab-bar"></span></span></button>'; }).join("") + '<span class="pf-tabind" aria-hidden="true"></span></div>';
 
   /* Agrupa índices de pruebas por evento (en curso primero, luego el resto en el orden de Data.eventos): [{ ev, idx }] */
   function agruparPorEvento(d, idx) {
@@ -205,7 +206,8 @@
         : '<div class="pf-empty" data-testid="perfil-historial-vacio">' + ico("m-info_outline", 40, "var(--gray-400)") + "<p>Aún no hay evaluaciones completadas.</p></div>");
   }
 
-  const conTabs = (d, miembro, evId) => tabsHtml() + gap("m") + '<div data-panel>' + panelCalificarSujeto(d, miembro, evId) + "</div>";
+  const conTabs = (d, miembro, evId) => { const k = ultimaTab[d.id] === "historial" ? "historial" : "calificar";
+    return tabsHtml(TABS, k) + gap("m") + '<div data-panel>' + (k === "historial" ? panelHistorialSujeto(d, miembro) : panelCalificarSujeto(d, miembro, evId)) + "</div>"; };
 
   function calificarEnConjunto(d) {
     if (!d.pruebas.length) return "";
@@ -296,7 +298,7 @@
   }
 
   function perfilWeb(d, miembro, evId) {
-    const ev = Data.evento(evId), esDeporte = !miembro && d.esEquipo, titulo = esDeporte ? d.deporte : d.nombre;
+    const ev = Data.evento(evId), esDeporte = !miembro && d.esEquipo, titulo = esDeporte ? d.deporte : d.nombre, tab = ultimaTab[d.id] || "datos";
     return '<div class="pfw" data-testid="perfil-web">' +
       '<a class="web-volver" href="#/eventos" data-act="volver" data-testid="perfil-volver">' + ico("m-arrow_back", 24, "currentColor") + "<span>" + (miembro ? "Volver al deporte" : ev ? "Volver al evento" : "Volver a eventos") + "</span></a>" +
       '<section class="pfw-head' + (esDeporte ? " deporte" : "") + '" data-testid="perfil-header">' +
@@ -308,7 +310,7 @@
         "</div>" +
         (d.colegio ? '<p class="pfw-sub">' + esc(d.colegio) + "</p>" : "") + "</div></section>" +
       '<h2 class="t-h2 pfw-seccion" data-testid="perfil-seccion">Perfil</h2>' +
-        '<section class="pfw-main">' + tabsHtml(tabsWeb(d, miembro)) + gap("m") + '<div data-panel>' + panelDatos(d, miembro) + "</div></section></div>";
+        '<section class="pfw-main">' + tabsHtml(tabsWeb(d, miembro), tab) + gap("m") + '<div data-panel>' + panelWeb(d, miembro, tab, evId) + "</div></section></div>";
   }
 
   /* Evento por el que se llegó (?evento=); sin él, el primero que contiene al deportista. */
@@ -354,6 +356,7 @@
         const panel = root.querySelector("[data-panel]"); if (!d || !panel) return;
         const i = +t.dataset.tab;
         if (t.classList.contains("on")) return;
+        ultimaTab[d.id] = t.dataset.key;
         root.querySelectorAll(".tab").forEach((x) => { const on = x === t; x.classList.toggle("on", on); x.setAttribute("aria-selected", String(on)); });
         moverInd(t, true);
         panel.innerHTML = root.querySelector(".pfw") ? panelWeb(d, esMiembro(d), t.dataset.key, eventoActual(d, ctx)) : i ? panelHistorialSujeto(d, esMiembro(d)) : panelCalificarSujeto(d, esMiembro(d), eventoActual(d, ctx));
