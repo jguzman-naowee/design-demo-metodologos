@@ -153,77 +153,8 @@
   /* «Conoce más» → panel lateral angosto (las hojas inferiores pasan a NwtModal, ver js/web.js) */
   html.web .sidepanel{width:440px;max-width:100%}
 
-  /* Inicio de sesión (modelo de los portales Naowee): el SPLASH queda igual (azul a pantalla completa, órbitas, logo animado). Al llegar al
-     formulario la pantalla se compone en dos: franja superior con Mindeporte, panel de imagen a la izquierda y el formulario centrado a la
-     derecha, con ayuda y pie Naowee. El logo del splash se desvanece; el panel trae el suyo. */
-  html.web .lg{--lg-pw:clamp(340px,31%,520px);--lg-top:76px}
-  html.web .lg-orbit{overflow:visible;left:50%;width:780px;height:1690px;margin-left:-390px;transform-origin:50% 600px}
-  html.web .lg-carga{left:50%;right:auto;width:280px;margin-left:-140px}
-  html.web .lg-web{display:flex!important}
-  html.web .lg[data-fase=login] .lg-bg{background:linear-gradient(90deg,var(--gray-100) 0 var(--lg-pw),var(--white-alpha-100) var(--lg-pw))}
-  html.web .lg[data-fase=login] .lg-orbit{opacity:0}
-  /* El logo del Comité del splash viaja a la esquina de la franja superior (en vez de desvanecerse): escala .35 y su centro a 61 px del borde */
-  html.web .lg-logo{z-index:2;transition:transform var(--lg-t) var(--lg-ease),opacity var(--lg-t) var(--lg-ease),top var(--lg-t) var(--lg-ease),left var(--lg-t) var(--lg-ease),visibility var(--lg-t)}
-  html.web .lg[data-fase=login] .lg-logo{top:2px;left:61px;transform:scale(.35)}
-  html.web .lg-head{display:none}
-
-  html.web .lg-top{left:0;right:0;top:0;height:var(--lg-top);align-items:center;padding:0 28px;background:var(--white-alpha-100);border-bottom:1px solid var(--gray-200);opacity:0;transform:translateY(-12px)}
-  html.web .lg-panel{left:16px;top:calc(var(--lg-top) + 16px);bottom:16px;width:calc(var(--lg-pw) - 32px);overflow:hidden;border-radius:24px;opacity:0;transform:translateX(-24px)}
-  /* Fotos de los eventos del ciclo: fundido cruzado, 5 s cada una (5 fotos = ciclo de 25 s). Solo opacity. */
-  html.web .lg-panel-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--pos,50% 50%);opacity:0;will-change:transform,opacity;
-    animation:lgFoto 25s linear infinite both;animation-delay:calc(var(--i) * 5s)}
-  html.web .lg-panel-img:first-of-type{opacity:1}
-  /* Zoom lento (efecto Ken Burns) mientras la foto está a la vista: unas se acercan y otras se alejan, cada una desde un punto distinto.
-     Solo transform y opacity. Cada foto vive 5,8 s de un ciclo de 25 s: entra 0,8 s, se sostiene y sale mientras entra la siguiente. */
-  html.web .lg-panel-img:nth-of-type(1){transform-origin:50% 38%}
-  html.web .lg-panel-img:nth-of-type(2){transform-origin:50% 30%;animation-name:lgFotoOut}
-  html.web .lg-panel-img:nth-of-type(3){transform-origin:50% 72%}
-  html.web .lg-panel-img:nth-of-type(4){transform-origin:30% 45%;animation-name:lgFotoOut}
-  html.web .lg-panel-img:nth-of-type(5){transform-origin:50% 38%}
-  @keyframes lgFoto{0%{opacity:0;transform:scale(1)}3.2%,20%{opacity:1}23.2%{opacity:0;transform:scale(1.14)}100%{opacity:0;transform:scale(1.14)}}
-  @keyframes lgFotoOut{0%{opacity:0;transform:scale(1.14)}3.2%,20%{opacity:1}23.2%{opacity:0;transform:scale(1)}100%{opacity:0;transform:scale(1)}}
-  @media (prefers-reduced-motion:reduce){html.web .lg-panel-img{animation:none}html.web .lg-panel-img:not(:first-of-type){display:none}}
-  html.web .lg[data-fase=login] .lg-top,html.web .lg[data-fase=login] .lg-panel{opacity:1;transform:none}
-  html.web .lg[data-fase=login] .lg-panel{transition-delay:120ms}
-
-  html.web .lg > .lg-main{display:flex;flex-direction:column;align-items:center;justify-content:center;left:var(--lg-pw);right:0;top:var(--lg-top);bottom:64px;padding:24px 32px;overflow-y:auto}
-  html.web .lg-main > *{position:static;width:min(440px,100%);margin:0;transition:transform var(--lg-t) var(--lg-ease),opacity var(--lg-t) var(--lg-ease),visibility var(--lg-t)}
-  html.web .lg-bienv,html.web .lg-ayuda{flex-direction:column;opacity:0;visibility:hidden;transform:translateY(40px)}
-  html.web .lg[data-fase=login] .lg-bienv,html.web .lg[data-fase=login] .lg-ayuda{opacity:1;visibility:visible;transform:none}
-  html.web .lg[data-fase=login] .lg-ayuda{transition-delay:320ms}
-  html.web .lg-bienv{align-items:center;text-align:center;margin-bottom:28px}
-  html.web .lg-bienv h2{margin:0;font-size:clamp(28px,2.6vw,36px);line-height:1.15;font-weight:var(--fw-regular);color:var(--navy)}
-  html.web .lg-bienv h2 b{font-weight:var(--fw-bold)}
-  html.web .lg-bienv p{margin:12px 0 0;font-size:var(--fs-body);color:var(--gray-700)}
-  html.web .lg-foot{margin-top:24px}
-  html.web .lg-foot .btn{background:var(--orange-700);color:var(--white-alpha-100)}
-  html.web .lg-olvido .lg-link{color:var(--orange-700);text-decoration:underline}
-  html.web .lg-legal .lg-link{text-decoration:underline}
-  html.web .lg-ayuda{align-items:center;margin-top:28px;text-align:center}
-  html.web .lg-ayuda b{font-size:var(--fs-caption);letter-spacing:.08em;text-transform:uppercase;color:var(--gray-700)}
-  html.web .lg-ayuda p{margin:10px 0 0;font-size:var(--fs-body-small);color:var(--gray-700)}
-  html.web .lg-ayuda .lg-link{text-decoration:underline}
-  html.web .lg-pie{right:24px;bottom:16px;align-items:center;gap:12px;opacity:0}
-  html.web .lg-pie img{height:28px;width:auto}
-  html.web .lg-pie span{font-size:var(--fs-caption);color:var(--gray-700)}
-  html.web .lg[data-fase=login] .lg-pie{opacity:1}
-  /* Centrado «seguro»: si el formulario no cabe en alto, empieza arriba y hace scroll en vez de cortarse por arriba */
-  html.web .lg > .lg-main{justify-content:flex-start}
-  html.web .lg > .lg-main::before,html.web .lg > .lg-main::after{content:"";flex:1 0 0}
+  /* Inicio de sesión: misma composición que en móvil (css/screens/login.css), centrada; no hay reglas propias de web. */
 }
-/* Pantallas bajas (720–900 px de alto): se compacta el login para que quepa sin scroll */
-@media (min-width:900px) and (max-height:900px){
-  html.web .lg{--lg-top:64px}
-  html.web .lg > .lg-main{bottom:52px;padding-top:16px;padding-bottom:8px}
-  html.web .lg-bienv{margin-bottom:16px}
-  html.web .lg-bienv h2{font-size:28px}
-  html.web .lg-bienv p{margin-top:8px}
-  html.web .lg-foot{margin-top:16px}
-  html.web .lg-ayuda{margin-top:16px}
-  html.web .lg-pie{bottom:10px}
-  html.web .lg-pie img{height:24px}
-}
-
 /* ── Detalle de evento en web: tabla de deportistas (NwtDatatable + NwtSearchbox + NwtPagination), como en la demo de incentivos ── */
 .evd-web{display:none}
 @media (min-width:900px){

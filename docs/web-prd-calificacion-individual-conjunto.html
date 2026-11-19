@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Calificación individual en conjunto</title>
+<style>
+:root{color-scheme:light;--v:#4A2A80;--v2:#EFE9F8;--ink:#282834;--mut:#646587;--line:#E7E9F3;--bg:#F4F4F9;--card:#fff;--ok:#1B6B3A;--ok-bg:#E4F4EA;--warn:#7A3A00;--warn-bg:#FFF6E0;--eq:#2A5FA8;--eq-bg:#E6EEFA;--err:#B3261E}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Google Sans",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+main{max-width:1040px;margin:0 auto;padding:32px 16px 72px}
+h1{font-size:30px;margin:0 0 6px;letter-spacing:-.02em}
+h2{font-size:21px;margin:48px 0 4px;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+h2 .n{flex:none;width:28px;height:28px;border-radius:50%;background:var(--v);color:#fff;display:grid;place-items:center;font-size:14px}
+.lead{color:var(--mut);margin:0 0 8px;font-size:17px}
+.sec{color:var(--mut);margin:0 0 16px;font-size:15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 10px;border-radius:999px;white-space:nowrap}
+.tag.eq{background:var(--eq-bg);color:var(--eq)}
+.tag.in{background:var(--v2);color:var(--v)}
+.tag.ok{background:var(--ok-bg);color:var(--ok)}
+.tag.no{background:var(--warn-bg);color:var(--warn)}
+.ico{width:18px;height:18px;flex:none;vertical-align:-4px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ico.lg{width:44px;height:44px}
+
+/* Marco de navegador */
+.win{background:var(--card);border:1px solid #D0D4E6;border-radius:12px;overflow:hidden;box-shadow:0 6px 24px rgba(40,40,52,.08)}
+.win>.bar{display:flex;align-items:center;gap:6px;padding:9px 12px;background:#ECEDF5;border-bottom:1px solid var(--line)}
+.win>.bar i{width:10px;height:10px;border-radius:50%;background:#C9CCDF}
+.win>.bar span{margin-left:10px;flex:1;background:#fff;border-radius:999px;padding:2px 12px;font-size:12px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.app{display:flex;min-height:300px}
+.side{flex:none;width:150px;background:#fff;border-right:1px solid var(--line);padding:14px 10px;font-size:13px}
+.side .it{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;color:var(--mut)}
+.side .it.on{background:var(--v2);color:var(--v);font-weight:600}
+.side small{display:block;margin:8px 10px 4px;font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
+.cont{flex:1;min-width:0;padding:18px;background:var(--bg)}
+@media (max-width:640px){.side{display:none}}
+.crumb{font-size:12px;color:var(--mut);margin-bottom:6px}
+.head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.av{flex:none;width:36px;height:36px;border-radius:50%;background:var(--v2);color:var(--v);display:grid;place-items:center;font-weight:600;font-size:13px}
+.av.lg{width:48px;height:48px;font-size:16px}
+.head b{font-size:17px;display:block}
+.head small{color:var(--mut)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:12px;overflow-x:auto}
+.tabs span{padding:8px 14px;font-size:14px;color:var(--mut);border-bottom:3px solid transparent;white-space:nowrap}
+.tabs span.on{color:var(--v);font-weight:600;border-color:var(--v)}
+.tabs span.new::after{content:"nuevo";margin-left:6px;font-size:10px;background:var(--ok-bg);color:var(--ok);padding:1px 6px;border-radius:999px;font-weight:600}
+.tbl{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.tbl .hd{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--eq-bg)}
+.tbl .hd b{font-size:15px}
+.row{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;padding:10px 14px;border-top:1px solid var(--line);font-size:14px}
+.row:nth-child(even){background:#FAFAFD}
+.who{display:flex;align-items:center;gap:10px;min-width:0}
+.acts{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:13px;font-weight:600;border-radius:999px;padding:6px 14px;border:1px solid var(--v);background:var(--v);color:#fff;white-space:nowrap}
+.btn.o{background:#fff;color:var(--v)}
+.btn.s{padding:4px 10px}
+.alert{display:flex;gap:10px;align-items:flex-start;background:var(--eq-bg);color:#1E3F70;border-radius:10px;padding:10px 12px;font-size:13px;margin-bottom:12px}
+.hl{outline:2px dashed var(--v);outline-offset:3px;border-radius:10px}
+.callout{position:relative;margin-top:12px;font-size:13px;background:var(--warn-bg);color:var(--warn);padding:8px 12px;border-radius:10px}
+.callout b{color:var(--v)}
+
+/* Formulario */
+.stepper{display:flex;align-items:center;gap:6px;margin-bottom:12px;font-size:12px;color:var(--mut);flex-wrap:wrap}
+.stepper .d{display:inline-flex;align-items:center;gap:6px}
+.stepper .d i{width:22px;height:22px;border-radius:50%;background:#fff;border:1px solid #C9CCDF;display:grid;place-items:center;font-style:normal;font-size:11px}
+.stepper .d.on i{background:var(--v);border-color:var(--v);color:#fff}
+.stepper .d.on{color:var(--v);font-weight:600}
+.stepper .ln{width:20px;height:1px;background:#C9CCDF}
+.fcard{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.fcard h4{margin:0 0 8px;font-size:13px;color:var(--v)}
+.fld{margin-bottom:8px}
+.fld label{display:block;font-size:12px;color:var(--mut);margin-bottom:2px}
+.fld .box{border:1px solid #D0D4E6;border-radius:8px;padding:6px 10px;font-size:13px;background:#F4F4F9;min-height:32px}
+.fld .box.edit{background:#fff}
+.fld .box.gone{background:repeating-linear-gradient(45deg,#fff,#fff 6px,#F4F4F9 6px,#F4F4F9 12px);color:var(--mut);border-style:dashed}
+.fbar{display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid var(--line);margin-top:6px}
+.vs{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.cap{font-size:13px;font-weight:600;margin:0 0 8px;display:flex;align-items:center;gap:8px}
+
+/* Flujos */
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px}
+.step{flex:1 1 140px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+.step .ico{color:var(--v);width:28px;height:28px;display:block;margin:0 auto 6px}
+.step b{display:block;font-size:13px;color:var(--v);margin-bottom:2px}
+.step span{font-size:13px;color:var(--mut)}
+.arrow{align-self:center;color:var(--mut);font-size:20px}
+@media (max-width:640px){.arrow{display:none}}
+
+/* Estados */
+.states{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.st{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;font-size:13px}
+.st .tag{margin-bottom:8px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mut);font-weight:600;font-size:13px}
+td:first-child{font-weight:600;white-space:nowrap}
+
+/* Excel */
+.xls{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.sheet{flex:1 1 280px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:12px}
+.sheet .t{display:flex;align-items:center;gap:8px;background:#E4F4EA;color:var(--ok);padding:8px 12px;font-weight:600}
+.sheet table{font-size:12px}
+.sheet th,.sheet td{padding:5px 10px;border:1px solid var(--line);white-space:nowrap}
+.sheet th{background:#F4F4F9}
+.sheet td:first-child{font-weight:400}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-team" viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M14.5 14.2c.8-.3 1.6-.4 2.5-.4 2.6 0 4.5 1.6 4.5 4.2"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m10 8.5 5 3.5-5 3.5z"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 3 3 5-6"/></symbol>
+    <symbol id="i-form" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h10"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M10 6 4 12l6 6"/><path d="M4 12h16"/></symbol>
+  </defs>
+</svg>
+<main>
+<h1>Calificación individual en pruebas de conjunto</h1>
+<p class="lead">Una prueba de conjunto ahora tiene la evaluación del equipo y la de cada integrante. Las dos se hacen en cualquier orden y no dependen una de la otra.</p>
+
+<!-- 1 -->
+<h2><span class="n">1</span>Antes y después</h2>
+<p class="sec">Qué cambia para el metodólogo en una prueba de conjunto.</p>
+<div class="grid g2">
+  <div class="card">
+    <svg class="ico lg" style="color:var(--warn)"><use href="#i-team"/></svg>
+    <p><span class="tag no">Hoy</span></p>
+    <p style="margin:0"><b>Una sola evaluación: la del equipo.</b><br><span style="color:var(--mut)">Los integrantes se ven en una lista informativa. Su perfil solo avisa que se califican como parte del equipo.</span></p>
+  </div>
+  <div class="card">
+    <svg class="ico lg" style="color:var(--ok)"><use href="#i-check"/></svg>
+    <p><span class="tag ok">Con este cambio</span></p>
+    <p style="margin:0"><b>Equipo e integrantes, cada uno con su evaluación.</b><br><span style="color:var(--mut)">Cada una tiene su propio estado. Calificar una no cambia la otra.</span></p>
+  </div>
+</div>
+
+<!-- 2 -->
+<h2><span class="n">2</span>Perfil del deporte · pestaña Pruebas</h2>
+<p class="sec">Dos secciones separadas: la del equipo y la lista de integrantes, donde eliges a quién calificar.</p>
+<div class="win">
+  <div class="bar"><i></i><i></i><i></i><span>plataforma-metodologos / eventos / deportista / selección-de-voleibol</span></div>
+  <div class="app">
+    <div class="side"><small>Evaluación</small><div class="it on"><svg class="ico"><use href="#i-book"/></svg>Eventos</div><small>Mi cuenta</small><div class="it"><svg class="ico"><use href="#i-user"/></svg>Perfil</div></div>
+    <div class="cont">
+      <div class="crumb">← Volver al evento</div>
+      <div class="head"><span class="av lg">V</span><div><b>Selección de Voleibol</b><small>Perfil del deporte · Colegio Nacional</small></div></div>
+      <div class="tabs"><span>Datos</span><span class="on">Pruebas</span><span class="new">Historial</span></div>
+      <p class="cap" style="margin:0 0 6px"><span class="tag eq">Sección 1</span>Evaluación del equipo</p>
+      <div class="tbl" style="margin-bottom:14px">
+        <div class="row"><span><b>Prueba 1 · Voleibol de sala</b></span>
+          <span class="acts"><span class="tag no">Sin calificar</span><button class="btn s" type="button"><svg class="ico"><use href="#i-play"/></svg>Calificar en conjunto</button></span></div>
+      </div>
+      <p class="cap" style="margin:0 0 6px"><span class="tag in">Sección 2</span>Evaluaciones individuales · elige a quién calificar</p>
+      <div class="tbl">
+        <div class="row"><span class="who"><span class="av">JM</span>Javier Manríquez</span><span class="acts"><span class="tag ok">Calificado</span><button class="btn o s" type="button"><svg class="ico"><use href="#i-edit"/></svg>Editar evaluación</button></span></div>
+        <div class="row"><span class="who"><span class="av">LP</span>Laura Pardo</span><span class="acts"><span class="tag no">Sin calificar</span><button class="btn s" type="button"><svg class="ico"><use href="#i-play"/></svg>Iniciar calificación</button></span></div>
+        <div class="row"><span class="who"><span class="av">AR</span>Andrés Ríos</span><span class="acts"><span class="tag ok">Calificado</span><button class="btn o s" type="button"><svg class="ico"><use href="#i-eye"/></svg>Ver evaluación</button></span></div>
+      </div>
+      <div class="callout"><b>Ojo:</b> el equipo está sin calificar y dos integrantes ya tienen evaluación. Es válido. Se califica de uno en uno: terminas una y eliges la siguiente.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 3 -->
+<h2><span class="n">3</span>Perfil del integrante · pestaña Pruebas</h2>
+<p class="sec">Hoy dice «se califica como parte del equipo». Ahora tiene su propia acción.</p>
+<div class="vs">
+  <div>
+    <p class="cap"><span class="tag no">Hoy</span></p>
+    <div class="win"><div class="bar"><i></i><i></i><i></i><span>…/deportista/laura-pardo</span></div>
+      <div class="cont">
+        <div class="head"><span class="av lg">LP</span><div><b>Laura Pardo</b><small>Integrante · Selección de Voleibol</small></div></div>
+        <div class="tabs"><span>Datos</span><span class="on">Historial</span></div>
+        <div class="alert"><svg class="ico"><use href="#i-info"/></svg><span>Este deportista se califica como parte del equipo («Calificar en conjunto»); no se califica individualmente.</span></div>
+        <div class="tbl"><div class="row"><span>Historial del equipo</span><span class="acts"><svg class="ico"><use href="#i-eye"/></svg></span></div></div>
+      </div></div>
+  </div>
+  <div>
+    <p class="cap"><span class="tag ok">Con este cambio</span></p>
+    <div class="win"><div class="bar"><i></i><i></i><i></i><span>…/deportista/laura-pardo</span></div>
+      <div class="cont">
+        <div class="head"><span class="av lg">LP</span><div><b>Laura Pardo</b><small>Integrante · Selección de Voleibol</small></div></div>
+        <div class="tabs"><span>Datos</span><span class="on">Pruebas</span><span>Historial</span></div>
+        <div class="alert"><svg class="ico"><use href="#i-info"/></svg><span>Esta prueba tiene dos evaluaciones: la tuya y la del equipo. Son independientes.</span></div>
+        <div class="tbl"><div class="row hl"><span class="who"><span class="tag in">Individual</span>Prueba 1 · Voleibol de sala</span><span class="acts"><span class="tag no">Sin calificar</span><button class="btn s" type="button"><svg class="ico"><use href="#i-play"/></svg>Iniciar calificación</button></span></div></div>
+      </div></div>
+  </div>
+</div>
+
+<!-- 4 -->
+<h2><span class="n">4</span>Dos entradas, un solo formulario</h2>
+<p class="sec">Los flujos no se atan: se puede llegar desde el equipo o desde el deportista.</p>
+<div class="flow">
+  <div class="step"><svg class="ico"><use href="#i-team"/></svg><b>Perfil del deporte</b><span>Pruebas → fila del equipo o de un integrante</span></div>
+  <div class="arrow">→</div>
+  <div class="step"><svg class="ico"><use href="#i-form"/></svg><b>Formulario de 3 pasos</b><span>Mismo asistente y reglas</span></div>
+  <div class="arrow">→</div>
+  <div class="step"><svg class="ico"><use href="#i-check"/></svg><b>Confirmar y guardar</b><span>«Quedó guardada en el historial»</span></div>
+  <div class="arrow">→</div>
+  <div class="step"><svg class="ico"><use href="#i-back"/></svg><b>Vuelve al origen</b><span>Perfil del deporte</span></div>
+</div>
+<div class="flow" style="margin-top:12px">
+  <div class="step"><svg class="ico"><use href="#i-user"/></svg><b>Perfil del integrante</b><span>Pruebas → «Iniciar calificación»</span></div>
+  <div class="arrow">→</div>
+  <div class="step"><svg class="ico"><use href="#i-form"/></svg><b>Formulario de 3 pasos</b><span>Sin países ni no. de atletas</span></div>
+  <div class="arrow">→</div>
+  <div class="step"><svg class="ico"><use href="#i-check"/></svg><b>Confirmar y guardar</b><span>Misma confirmación</span></div>
+  <div class="arrow">→</div>
+  <div class="step"><svg class="ico"><use href="#i-back"/></svg><b>Vuelve al origen</b><span>Perfil del integrante</span></div>
+</div>
+
+<!-- 5 -->
+<h2><span class="n">5</span>Formulario · paso 1, equipo frente a individual</h2>
+<p class="sec">El asistente es el mismo. Solo cambia la identificación y el contexto de la prueba.</p>
+<div class="vs">
+  <div>
+    <p class="cap"><span class="tag eq">Equipo</span>Paso 1 · Datos generales</p>
+    <div class="win"><div class="bar"><i></i><i></i><i></i><span>…/evaluacion/equipo</span></div>
+      <div class="cont">
+        <div class="stepper"><span class="d on"><i>1</i>Datos generales</span><span class="ln"></span><span class="d"><i>2</i>Evaluación</span><span class="ln"></span><span class="d"><i>3</i>Cierre</span></div>
+        <div class="fcard"><h4>Identificación del equipo</h4>
+          <div class="fld"><label>Deporte</label><div class="box">Voleibol</div></div>
+          <div class="fld"><label>Delegación / institución</label><div class="box">Colegio Nacional</div></div></div>
+        <div class="fcard"><h4>Contexto de la prueba</h4>
+          <div class="fld"><label>Países en la prueba (opcional)</label><div class="box edit">Colombia, Brasil, México</div></div>
+          <div class="fld"><label>No. de atletas en la prueba *</label><div class="box edit">12</div></div></div>
+        <div class="fbar"><button class="btn o s" type="button">Cancelar</button><button class="btn s" type="button">Continuar</button></div>
+      </div></div>
+  </div>
+  <div>
+    <p class="cap"><span class="tag in">Individual</span>Paso 1 · Datos generales</p>
+    <div class="win"><div class="bar"><i></i><i></i><i></i><span>…/evaluacion/integrante</span></div>
+      <div class="cont">
+        <div class="stepper"><span class="d on"><i>1</i>Datos generales</span><span class="ln"></span><span class="d"><i>2</i>Evaluación</span><span class="ln"></span><span class="d"><i>3</i>Cierre</span></div>
+        <div class="fcard"><h4>Identificación del deportista</h4>
+          <div class="fld"><label>Deportista</label><div class="box">Laura Pardo</div></div>
+          <div class="fld"><label>Equipo</label><div class="box">Selección de Voleibol · Colegio Nacional</div></div>
+          <div class="fld"><label>Prueba</label><div class="box">Prueba 1 · Voleibol de sala</div></div></div>
+        <div class="fcard"><h4>Contexto de la prueba</h4>
+          <div class="fld"><div class="box gone">No aplica: países y no. de atletas son del equipo</div></div></div>
+        <div class="fbar"><button class="btn o s" type="button">Cancelar</button><button class="btn s" type="button">Continuar</button></div>
+      </div></div>
+  </div>
+</div>
+<p class="sec" style="margin-top:12px">Los pasos 2 (técnico, táctico, físico) y 3 (conclusiones, recomendaciones) son idénticos en ambas.</p>
+
+<!-- 6 -->
+<h2><span class="n">6</span>Estados de cada evaluación</h2>
+<p class="sec">Cada fila tiene su propio estado y su acción según el plazo.</p>
+<div class="states">
+  <div class="st"><span class="tag no">Sin calificar</span><br><button class="btn s" type="button"><svg class="ico"><use href="#i-play"/></svg>Iniciar calificación</button><p style="margin:8px 0 0;color:var(--mut)">Aún no existe evaluación.</p></div>
+  <div class="st"><span class="tag ok">Calificado</span><br><button class="btn o s" type="button"><svg class="ico"><use href="#i-edit"/></svg>Editar evaluación</button><p style="margin:8px 0 0;color:var(--mut)">Dentro de los 10 días tras terminar el evento.</p></div>
+  <div class="st"><span class="tag ok">Calificado</span><br><button class="btn o s" type="button"><svg class="ico"><use href="#i-eye"/></svg>Ver evaluación</button><p style="margin:8px 0 0;color:var(--mut)">Fuera del plazo: solo lectura.</p></div>
+  <div class="st"><span class="tag no">Sin calificar</span><br><span style="color:var(--mut);font-weight:600">No se puede calificar</span><p style="margin:8px 0 0;color:var(--mut)">El evento aún no inicia.</p></div>
+</div>
+
+<!-- 7 -->
+<h2><span class="n">7</span>Historial</h2>
+<p class="sec">Cada perfil muestra lo suyo. El equipo gana una pestaña Historial.</p>
+<div class="vs">
+  <div>
+    <p class="cap"><span class="tag eq">Perfil del deporte</span>Historial</p>
+    <div class="win"><div class="bar"><i></i><i></i><i></i><span>…/selección-de-voleibol</span></div>
+      <div class="cont">
+        <div class="tabs"><span>Datos</span><span>Pruebas</span><span class="on new">Historial</span></div>
+        <div style="text-align:right;margin-bottom:8px"><button class="btn o s" type="button"><svg class="ico"><use href="#i-down"/></svg>Descargar historial</button></div>
+        <p class="cap" style="margin:0 0 6px">Evaluación del equipo</p>
+        <div class="tbl" style="margin-bottom:12px"><div class="row"><span>Prueba 1</span><span class="acts"><svg class="ico"><use href="#i-edit"/></svg></span></div></div>
+        <p class="cap" style="margin:0 0 6px">Evaluaciones individuales</p>
+        <div class="tbl">
+          <div class="row"><span class="who"><span class="av">JM</span>Javier Manríquez · Prueba 1</span><span class="acts"><svg class="ico"><use href="#i-edit"/></svg></span></div>
+          <div class="row"><span class="who"><span class="av">AR</span>Andrés Ríos · Prueba 1</span><span class="acts"><svg class="ico"><use href="#i-eye"/></svg></span></div>
+        </div>
+      </div></div>
+  </div>
+  <div>
+    <p class="cap"><span class="tag in">Perfil del integrante</span>Historial</p>
+    <div class="win"><div class="bar"><i></i><i></i><i></i><span>…/deportista/javier-manriquez</span></div>
+      <div class="cont">
+        <div class="tabs"><span>Datos</span><span>Pruebas</span><span class="on">Historial</span></div>
+        <div style="text-align:right;margin-bottom:8px"><button class="btn o s" type="button"><svg class="ico"><use href="#i-down"/></svg>Descargar historial</button></div>
+        <div class="tbl">
+          <div class="row"><span class="who"><span class="tag in">Individual</span>Prueba 1 · Voleibol de sala</span><span class="acts"><svg class="ico"><use href="#i-edit"/></svg></span></div>
+          <div class="row"><span class="who"><span class="tag eq">Equipo</span>Prueba 1 · solo ver</span><span class="acts"><svg class="ico"><use href="#i-eye"/></svg></span></div>
+        </div>
+        <div class="callout">La del equipo se edita desde el perfil del deporte.</div>
+      </div></div>
+  </div>
+</div>
+
+<!-- 8 -->
+<h2><span class="n">8</span>Descargas en Excel</h2>
+<p class="sec">Dos archivos separados que no se mezclan.</p>
+<div class="xls">
+  <div class="sheet"><div class="t"><svg class="ico"><use href="#i-file"/></svg>historial-equipo.xlsx</div>
+    <table><tr><th>Equipo</th><th>Prueba</th><th>Evaluación</th><th>Fecha</th></tr><tr><td>Selección de Voleibol</td><td>Prueba 1</td><td>Equipo</td><td>01 Sep 2026</td></tr></table></div>
+  <div class="sheet"><div class="t"><svg class="ico"><use href="#i-file"/></svg>historial-deportista.xlsx</div>
+    <table><tr><th>Deportista</th><th>Prueba</th><th>Evaluación</th><th>Fecha</th></tr><tr><td>Javier Manríquez</td><td>Prueba 1</td><td>Individual</td><td>01 Sep 2026</td></tr><tr><td>Javier Manríquez</td><td>Prueba 2</td><td>Individual</td><td>02 Sep 2026</td></tr></table></div>
+</div>
+
+<!-- 9 -->
+<h2><span class="n">9</span>Equipo frente a individual</h2>
+<div class="card" style="padding:0;overflow-x:auto;margin-top:12px">
+<table>
+  <tr><th></th><th>Evaluación del equipo</th><th>Evaluación individual</th></tr>
+  <tr><td>Cuántas por prueba</td><td>Una</td><td>Una por integrante</td></tr>
+  <tr><td>Sujeto</td><td>Equipo (deporte, delegación o institución)</td><td>Deportista dentro del equipo</td></tr>
+  <tr><td>Países y no. de atletas</td><td>Sí</td><td>No aplican</td></tr>
+  <tr><td>Plazo de edición</td><td colspan="2">Heredado del evento: 10 días tras terminar</td></tr>
+  <tr><td>Estado</td><td colspan="2">Sin calificar / Calificado, propio de cada una</td></tr>
+  <tr><td>Orden</td><td colspan="2">Cualquiera. Calificar a todos no es obligatorio.</td></tr>
+</table>
+</div>
+
+<!-- 10 -->
+<h2><span class="n">10</span>Por confirmar</h2>
+<div class="card" style="margin-top:12px">
+  <ul style="margin:0;padding-left:20px">
+    <li>El resumen «N deportes por calificar» del evento sigue contando solo la evaluación del equipo.</li>
+    <li>Si un integrante sale o entra después de calificar, su evaluación queda ligada al deportista.</li>
+    <li>Sin indicador «3 de 8»: solo la etiqueta de estado. La app móvil sigue el mismo cambio, con pestañas Calificar e Historial.</li>
+    <li>Cómo se ve la lista con muchos integrantes (paginación o búsqueda).</li>
+    <li>El back aún no soporta evaluaciones por integrante; el plan está aprobado y se construirá.</li>
+  </ul>
+</div>
+<p class="sec" style="margin-top:16px">Los mockups son ilustrativos: los nombres y datos son de ejemplo.</p>
+</main>
+</body>
+</html>
