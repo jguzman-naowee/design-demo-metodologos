@@ -101,7 +101,7 @@
         card(1, esEquipo ? "Identificación del equipo" : "Identificación del deportista", '<p class="ef-caption ef-pre">Datos precargados desde la inscripción.</p>' +
           (esEquipo ? refField("Deporte", d.deporte, "deporte") + gapf + refField("Delegación / institución", nombreEquipo, "delegacion")
             : refField("Nombre del deportista", d.nombre, "nombre") + gapf + refField("Deporte", d.deporte, "deporte") + (eqDe ? gapf + refField("Equipo", eqDe.nombre, "equipo") : "")) +
-          (d.modalidad ? gapf + refField("Modalidad", d.modalidad, "modalidad") : "") + gapf + refField("Prueba", p.nombre, "prueba")) +
+          (d.modalidad ? gapf + refField("Modalidad", d.modalidad, "modalidad") : "") + gapf + refField(eqDe ? "Prueba de conjunto" : "Prueba", p.nombre, "prueba")) +
         card(2, "Contexto de la prueba", paises + gapf + campo({ k: "athletesCount", t: "No. de atletas en la prueba", ph: "Ej: 12", v: inicial.athletesCount, disabled: dis })),
         card(3, "Evaluación técnico-metodológica", CAMPOS.slice(0, 3).map(area).join(gapf)),
         card(4, "Conclusiones y recomendaciones", CAMPOS.slice(3).map(area).join(gapf)),
@@ -139,7 +139,7 @@
           ? refField("Deporte", d.deporte, "deporte") + '<div class="ef-gap"></div>' + refField("Delegación / institución", nombreEquipo, "delegacion")
           : refField("Nombre del deportista", d.nombre, "nombre") + '<div class="ef-gap"></div>' + refField("Deporte", d.deporte, "deporte") + (eqDe ? '<div class="ef-gap"></div>' + refField("Equipo", eqDe.nombre, "equipo") : "")) +
         (d.modalidad ? '<div class="ef-gap"></div>' + refField("Modalidad", d.modalidad, "modalidad") : "") +
-        '<div class="ef-gap"></div>' + refField("Prueba", p.nombre, "prueba") +
+        '<div class="ef-gap"></div>' + refField(eqDe ? "Prueba de conjunto" : "Prueba", p.nombre, "prueba") +
         '<div class="ef-section" data-testid="evaluacion-seccion-2">2. Contexto de la prueba</div>' +
         '<div class="ef-field" data-field="countries" data-testid="evaluacion-campo-countries"><div class="ef-title"><label for="ef-countries">Países en la prueba</label></div>' +
           '<div class="ef-box' + (dis ? " disabled" : "") + '"><input id="ef-countries" data-k="countries" type="text" placeholder="Ej: Colombia, Brasil, México" value="' + esc(inicial.countries) + '"' + (dis ? " disabled" : "") + ' autocomplete="off" data-testid="evaluacion-input-countries"></div></div>' +
@@ -178,6 +178,34 @@
     }
     const hayErrores = (m) => Object.keys(m).some((k) => m[k]);
 
+    /* Demo: el segundo «Continuar» seguido sobre un paso inválido lo llena con datos de ejemplo,
+       para que quien prueba pueda avanzar sin escribir. Va por el evento input: mismo estado que al teclear. */
+    let fallo = -1; /* paso cuyo último intento de avanzar falló; se reinicia al cambiar de paso o al pasar */
+    const EJEMPLO = {
+      countries: "Colombia, Ecuador, Perú",
+      athletesCount: esEquipo || eqDe ? "24" : "12",
+      technicalAspect: "Buena ejecución técnica en la prueba, con gestos consistentes y pocas fallas bajo presión.",
+      tacticalAspect: "Lectura adecuada del desarrollo de la prueba y buen ajuste del plan frente a los rivales; por mejorar la toma de decisiones en el cierre.",
+      physicalPreparation: "Buen nivel de condición física, con ritmo sostenido durante la prueba y fatiga leve en el tramo final.",
+      conclusions: "Desempeño general sólido en " + d.deporte + ", acorde con el nivel de la competencia.",
+      recommendations: "Reforzar la resistencia específica y el trabajo táctico de cierre en los próximos microciclos, de cara a la siguiente competencia.",
+    };
+    function autollenar(keys) {
+      keys.forEach((k) => {
+        const el = scroll.querySelector('[data-k="' + k + '"]'); if (!el || el.disabled) return;
+        el.value = EJEMPLO[k]; el.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+      marcar(); fallo = -1;
+      /* El aviso «Faltan campos» ya no aplica: se cierra con su propio botón */
+      const x = document.querySelector('[data-testid="snackbar"] .nwt-toast__close'); if (x) x.click();
+    }
+    /* Primer fallo: valida y avisa; segundo seguido en el mismo paso: llena lo que falta (sin avanzar) */
+    function fallar(m, campos) {
+      if (fallo !== paso) { fallo = paso; Ui.toast("Revisa los campos obligatorios.", "warning", 6000, "Faltan campos"); return; }
+      const vacioPaises = campos.includes("athletesCount") && !leer("countries").trim();
+      autollenar(campos.filter((k) => m[k]).concat(vacioPaises ? ["countries"] : []));
+    }
+
     pintar();
     if (!esWeb()) Ui.seguirTitulo(scroll, scroll.querySelector(".ef-h1"));
 
@@ -191,13 +219,13 @@
       else if (a.dataset.act === "siguiente") {
         intentos.add(paso);
         const m = marcar();
-        if (!readOnly() && PASOS[paso].campos.some((k) => m[k])) { Ui.toast("Revisa los campos obligatorios.", "warning", 6000, "Faltan campos"); return; }
+        if (!readOnly() && PASOS[paso].campos.some((k) => m[k])) { fallar(m, PASOS[paso].campos); return; }
         irPaso(paso + 1);
       }
     };
     /* Cambia de paso, repinta y vuelve arriba; si ya se intentó avanzar, muestra los errores del paso nuevo */
     function irPaso(n) {
-      paso = Math.max(0, Math.min(PASOS.length - 1, n)); pintar();
+      paso = Math.max(0, Math.min(PASOS.length - 1, n)); fallo = -1; pintar();
       if (!readOnly()) {
         if (intentos.has(paso)) marcar();
         /* El primer campo editable del paso queda activo (borde naranja), sin rojo hasta intentar avanzar */
@@ -243,9 +271,10 @@
       const m = marcar();
       if (hayErrores(m)) {
         const i = esWeb() ? PASOS.findIndex((x) => x.campos.some((k) => m[k])) : -1;
-        if (i >= 0 && i !== paso) { intentos.add(i); irPaso(i); }
-        Ui.toast("Revisa los campos obligatorios.", "warning", 6000, "Faltan campos"); return;
+        if (i >= 0 && i !== paso) { intentos.add(i); irPaso(i); Ui.toast("Revisa los campos obligatorios.", "warning", 6000, "Faltan campos"); return; }
+        fallar(m, esWeb() ? PASOS[paso].campos : Object.keys(m)); return;
       }
+      fallo = -1;
       const esEdicion = editando && !!op0;
       if (esWeb()) { confirmarWeb(esEdicion); return; }
       const host = document.getElementById("app");
