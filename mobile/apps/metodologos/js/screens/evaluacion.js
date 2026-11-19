@@ -67,6 +67,7 @@
     const editIntent = ctx.query.modo === "editar";
     let editando = !!(op0 && editIntent && op0.editable);
     const esEquipo = !!d.esEquipo;
+    const eqDe = Data.equipoDeMiembro(d.id); /* integrante de conjunto: mismo formulario, con el equipo en la identificación */
     const volver = () => Router.back("/deportista/" + encodeURIComponent(d.id) + "?evento=" + encodeURIComponent(p.eventoId || "e1"));
     let validated = false, opinion = op0, confirm = null, paso = 0;
     const intentos = new Set(); /* pasos donde ya se pulsó «Continuar» sin completar: solo ahí los campos vacíos salen en rojo */
@@ -99,7 +100,7 @@
       const cuerpo = [
         card(1, esEquipo ? "Identificación del equipo" : "Identificación del deportista", '<p class="ef-caption ef-pre">Datos precargados desde la inscripción.</p>' +
           (esEquipo ? refField("Deporte", d.deporte, "deporte") + gapf + refField("Delegación / institución", nombreEquipo, "delegacion")
-            : refField("Nombre del deportista", d.nombre, "nombre") + gapf + refField("Deporte", d.deporte, "deporte")) +
+            : refField("Nombre del deportista", d.nombre, "nombre") + gapf + refField("Deporte", d.deporte, "deporte") + (eqDe ? gapf + refField("Equipo", eqDe.nombre, "equipo") : "")) +
           (d.modalidad ? gapf + refField("Modalidad", d.modalidad, "modalidad") : "") + gapf + refField("Prueba", p.nombre, "prueba")) +
         card(2, "Contexto de la prueba", paises + gapf + campo({ k: "athletesCount", t: "No. de atletas en la prueba", ph: "Ej: 12", v: inicial.athletesCount, disabled: dis })),
         card(3, "Evaluación técnico-metodológica", CAMPOS.slice(0, 3).map(area).join(gapf)),
@@ -136,7 +137,7 @@
         '<p class="ef-caption ef-pre">Datos precargados desde la inscripción.</p>' +
         (esEquipo
           ? refField("Deporte", d.deporte, "deporte") + '<div class="ef-gap"></div>' + refField("Delegación / institución", nombreEquipo, "delegacion")
-          : refField("Nombre del deportista", d.nombre, "nombre") + '<div class="ef-gap"></div>' + refField("Deporte", d.deporte, "deporte")) +
+          : refField("Nombre del deportista", d.nombre, "nombre") + '<div class="ef-gap"></div>' + refField("Deporte", d.deporte, "deporte") + (eqDe ? '<div class="ef-gap"></div>' + refField("Equipo", eqDe.nombre, "equipo") : "")) +
         (d.modalidad ? '<div class="ef-gap"></div>' + refField("Modalidad", d.modalidad, "modalidad") : "") +
         '<div class="ef-gap"></div>' + refField("Prueba", p.nombre, "prueba") +
         '<div class="ef-section" data-testid="evaluacion-seccion-2">2. Contexto de la prueba</div>' +

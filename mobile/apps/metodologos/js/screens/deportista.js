@@ -59,7 +59,7 @@
       [d.esEquipo ? "Género" : "Sexo", val(!d.sexo || !d.sexo.trim() ? "No registrado" : d.sexo), false, "perfil-info-sexo"],
     ];
     if (!miembro && tieneClasif) cells.push(["Clasificación funcional", val(d.clasificacionFuncional), false, "perfil-info-clasificacion"]);
-    if (!miembro) cells.push(["Estado", '<span data-testid="perfil-estado">' + Ui.chip(estadoEfectivo(d)) + "</span>", true, "perfil-info-estado"]);
+    cells.push(["Estado", '<span data-testid="perfil-estado">' + Ui.chip(estadoEfectivo(d)) + "</span>", true, "perfil-info-estado"]);
     return cells;
   }
 
@@ -205,7 +205,7 @@
         : '<div class="pf-empty" data-testid="perfil-historial-vacio">' + ico("m-info_outline", 40, "var(--gray-400)") + "<p>Aún no hay evaluaciones completadas.</p></div>");
   }
 
-  const individual = (d, evId) => tabsHtml() + gap("m") + '<div data-panel>' + panelCalificar(d, evId) + "</div>";
+  const conTabs = (d, miembro, evId) => tabsHtml() + gap("m") + '<div data-panel>' + panelCalificarSujeto(d, miembro, evId) + "</div>";
 
   function calificarEnConjunto(d) {
     if (!d.pruebas.length) return "";
@@ -219,41 +219,66 @@
     return '<div class="pf-card" data-testid="perfil-equipo-bloqueado">' + bloqueado(p, true, "perfil-bloqueado-equipo") + "</div>";
   }
 
-  function equipo(d) {
-    return h2("Calificar equipo") + gap("s") +
-      '<p class="t-body pf-intro">Diligencia la evaluación técnico-metodológica del equipo. Es una sola calificación para todo el equipo.</p>' + gap("m") +
-      calificarEnConjunto(d) + gap("l") + h2("Integrantes del equipo") + gap("s") +
-      (!d.miembros.length
-        ? '<div class="pf-empty" data-testid="perfil-integrantes-vacio">' + ico("m-group_off_outlined", 40, "var(--gray-400)") + "<p>El equipo se encuentra sin integrantes</p></div>"
-        : '<div class="t-caption c-gray-700" data-testid="perfil-integrantes-nota">Informativos: la calificación es del equipo, no por integrante.</div>' + gap("12") +
-          d.miembros.map((m) => '<a class="pf-miembro" href="#/deportista/' + esc(encodeURIComponent(m.id)) + '" data-testid="perfil-integrante-' + esc(m.id) + '"><b>' + esc(m.nombre) + "</b>" + ico("m-chevron_right", 24, "var(--orange-700)") + "</a>").join(""));
+  /* Fila de un integrante: se elige a quién calificar; cada uno tiene su propia evaluación y se califica de a uno */
+  function filaIntegrante(m) {
+    const p = m.pruebas[0], cal = !!p && calificada(m, 0);
+    const accion = !p ? "" : cal ? acciones(m, 0, "-" + m.id)
+      : evaluable(p) ? Ui.button({ title: "Iniciar calificación", variant: "primary", size: "small", fit: true, href: url(m, 0), testid: "perfil-integrante-calificar-" + m.id })
+      : '<span class="t-caption c-gray-700" data-testid="perfil-integrante-bloqueado-' + esc(m.id) + '">No se puede calificar</span>';
+    return '<div class="pf-card row pf-fila-int" data-testid="perfil-fila-' + esc(m.id) + '"><a class="pf-flex1 pf-fila-nombre" href="#/deportista/' + esc(encodeURIComponent(m.id)) + '" data-testid="perfil-integrante-' + esc(m.id) + '"><b>' + esc(m.nombre) + "</b></a>" +
+      '<div class="pf-fila-acc">' + Ui.chip(estadoEfectivo(m)) + accion + "</div></div>";
   }
 
-  /* Integrante de un equipo: solo ve el historial de evaluaciones del equipo (nunca las edita desde aquí). */
+  function panelEquipo(d) {
+    return h2("Evaluación del equipo") + gap("s") +
+      '<p class="t-body pf-intro">Una sola calificación para todo el equipo. Es independiente de la de cada integrante.</p>' + gap("m") +
+      calificarEnConjunto(d) + gap("l") + h2("Evaluaciones individuales") + gap("s") +
+      (!d.miembros.length
+        ? '<div class="pf-empty" data-testid="perfil-integrantes-vacio">' + ico("m-group_off_outlined", 40, "var(--gray-400)") + "<p>El equipo se encuentra sin integrantes</p></div>"
+        : '<p class="t-body pf-intro" data-testid="perfil-integrantes-nota">Elige a quién calificar. Cada integrante tiene su propia evaluación y se califica de a uno, en cualquier orden.</p>' + gap("m") +
+          d.miembros.map(filaIntegrante).join(""));
+  }
+
+  const sub = (t) => '<h3 class="t-body pf-sub"><b>' + esc(t) + "</b></h3>";
+  const vacio = (t) => '<div class="pf-empty" data-testid="perfil-historial-vacio">' + ico("m-info_outline", 40, "var(--gray-400)") + "<p>" + t + "</p></div>";
+  const listaHist = (src, idx, soloVer) => esWeb() ? tablaHistorial(src, idx, soloVer) : '<div data-testid="perfil-historial-lista">' + porEvento(src, idx, true, soloVer) + "</div>";
+
+  /* Historial del equipo: su evaluación y, aparte, las de cada integrante */
+  function historialEquipo(t) {
+    const idx = completadas(t), conInd = t.miembros.map((m) => [m, completadas(m)]).filter((x) => x[1].length);
+    const intro = '<p class="t-body pf-intro">Evaluaciones completadas a este equipo y a sus integrantes a lo largo de los eventos del ciclo.</p>';
+    const cuerpo = (!idx.length && !conInd.length) ? vacio("Aún no hay evaluaciones completadas.")
+      : sub("Evaluación del equipo") + (idx.length ? listaHist(t, idx, false) : '<p class="t-body pf-intro">El equipo aún no tiene evaluación completada.</p>') + gap("l") +
+        sub("Evaluaciones individuales") + (conInd.length ? conInd.map(([m, ix]) => '<div class="pf-int-hist" data-testid="perfil-hist-' + esc(m.id) + '"><div class="t-caption pf-int-nm">' + esc(m.nombre) + "</div>" + listaHist(m, ix, false) + "</div>").join("") : '<p class="t-body pf-intro">Ningún integrante tiene evaluación completada.</p>');
+    if (esWeb()) return histCabeceraWeb(h2("Historial de evaluaciones") + gap("s") + intro, idx.length) + gap("m") + cuerpo;
+    return h2("Historial de evaluaciones") + gap("s") + intro + gap("m") + (idx.length ? Ui.button({ title: "Descargar historial", variant: "cream-outlined", leftIcon: "m-download", act: "descargar-historial", testid: "perfil-descargar-historial" }) + gap("m") : "") + cuerpo;
+  }
+
+  /* Integrante: sus evaluaciones individuales (editables) y, aparte, la del equipo (solo lectura: se edita desde el perfil del deporte) */
   function historialMiembro(m) {
-    const t = Data.equipoDeMiembro(m.id);
-    if (!t) return "";
-    const idx = completadas(t);
-    const intro = '<p class="t-body pf-intro">Evaluaciones completadas al equipo a lo largo de los eventos del ciclo.</p>';
-    if (esWeb()) return histCabeceraWeb(h2("Historial de evaluaciones") + gap("s") + intro, idx.length) + gap("m") +
-      (idx.length ? tablaHistorial(t, idx, true)
-        : '<div class="pf-empty" data-testid="perfil-historial-vacio">' + ico("m-info_outline", 40, "var(--gray-400)") + "<p>El equipo aún no tiene evaluaciones completadas.</p></div>");
-    return gap("l") + h2("Historial de evaluaciones") + gap("s") + intro + gap("m") +
-      (idx.length
-        ? Ui.button({ title: "Descargar historial", variant: "cream-outlined", leftIcon: "m-download", act: "descargar-historial", testid: "perfil-descargar-historial" }) + gap("m") + '<div data-testid="perfil-historial-lista">' + porEvento(t, idx, true, true) + "</div>"
-        : '<div class="pf-empty" data-testid="perfil-historial-vacio">' + ico("m-info_outline", 40, "var(--gray-400)") + "<p>El equipo aún no tiene evaluaciones completadas.</p></div>");
+    const t = Data.equipoDeMiembro(m.id), idx = completadas(m), idxT = t ? completadas(t) : [];
+    const intro = '<p class="t-body pf-intro">Tus evaluaciones individuales y la del equipo, a lo largo de los eventos del ciclo.</p>';
+    const cuerpo = (!idx.length && !idxT.length) ? vacio("Aún no hay evaluaciones completadas.")
+      : sub("Evaluaciones individuales") + (idx.length ? listaHist(m, idx, false) : '<p class="t-body pf-intro">Aún no tiene evaluación individual completada.</p>') + gap("l") +
+        sub("Evaluación del equipo") + (idxT.length ? listaHist(t, idxT, true) : '<p class="t-body pf-intro">El equipo aún no tiene evaluación completada.</p>');
+    if (esWeb()) return histCabeceraWeb(h2("Historial de evaluaciones") + gap("s") + intro, idx.length) + gap("m") + cuerpo;
+    return h2("Historial de evaluaciones") + gap("s") + intro + gap("m") + (idx.length ? Ui.button({ title: "Descargar historial", variant: "cream-outlined", leftIcon: "m-download", act: "descargar-historial", testid: "perfil-descargar-historial" }) + gap("m") : "") + cuerpo;
   }
 
   function miembroAviso() {
     return '<div class="pf-card pf-aviso" data-testid="perfil-aviso-miembro">' + ico("m-info_outline", 24, "var(--orange-700)") +
-      '<p class="t-body">Este deportista se califica como parte del equipo ("Calificar en conjunto"); no se califica individualmente.</p></div>';
+      '<p class="t-body">Este deportista tiene dos evaluaciones en la prueba: la suya y la del equipo ("Calificar en conjunto"). Son independientes y se hacen en cualquier orden.</p></div>';
   }
+
+  /* Panel «Calificar» según el sujeto: individual, equipo (su evaluación + la de cada integrante) o integrante (sus pruebas + aviso) */
+  const panelCalificarSujeto = (d, miembro, evId) => miembro ? miembroAviso() + gap("m") + panelCalificar(d, evId) : d.esEquipo ? panelEquipo(d) : panelCalificar(d, evId);
+  const panelHistorialSujeto = (d, miembro) => miembro ? historialMiembro(d) : d.esEquipo ? historialEquipo(d) : panelHistorial(d);
 
   /* ── Perfil web (≥900 px): cabecera en card, navegación lateral y pestañas Datos / Pruebas / Historial ── */
   Ui.registerIcon("m-arrow_back", '<svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="currentColor"/></svg>');
   Ui.registerIcon("m-person_outline", '<svg viewBox="0 0 24 24"><path d="M12 6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 9c2.7 0 5.8 1.29 6 2v1H6v-.99c.2-.72 3.3-2.01 6-2.01m0-11C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 9c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z" fill="currentColor"/></svg>');
   const esWeb = () => document.documentElement.classList.contains("web") && window.matchMedia("(min-width:900px)").matches;
-  const tabsWeb = (d, miembro) => miembro ? [["datos", "Datos"], ["historial", "Historial"]] : d.esEquipo ? [["datos", "Datos"], ["pruebas", "Pruebas"]] : [["datos", "Datos"], ["pruebas", "Pruebas"], ["historial", "Historial"]];
+  const tabsWeb = () => [["datos", "Datos"], ["pruebas", "Pruebas"], ["historial", "Historial"]];
 
   function panelDatos(d, miembro) {
     const campos = celdas(d, miembro).map((c) => [c[0], c[1], c[3]]);
@@ -261,12 +286,12 @@
     if (d.categoria) campos.splice(2, 0, ["Categoría", esc(d.categoria), "perfil-info-categoria"]);
     return h2(miembro ? "Datos del deportista" : d.esEquipo ? "Datos del deporte" : "Datos del deportista") + gap("m") +
       '<div class="pfw-grid" data-testid="perfil-info">' + campos.map((c) => '<div class="pfw-campo"><span class="pfw-label">' + esc(c[0]) + '</span><div class="pfw-valor" data-testid="' + c[2] + '">' + c[1] + "</div></div>").join("") + "</div>" +
-      (miembro ? gap("l") + miembroAviso() : "");
+      "";
   }
 
   function panelWeb(d, miembro, key, evId) {
-    if (key === "pruebas") return d.esEquipo ? equipo(d) : panelCalificar(d, evId);
-    if (key === "historial") return miembro ? historialMiembro(d) : panelHistorial(d);
+    if (key === "pruebas") return panelCalificarSujeto(d, miembro, evId);
+    if (key === "historial") return panelHistorialSujeto(d, miembro);
     return panelDatos(d, miembro);
   }
 
@@ -278,7 +303,7 @@
         (esDeporte ? '<div class="pf-avatar pfw-av-deporte" data-testid="perfil-avatar" aria-hidden="true">' + ico(Data.deporteIcono(d.deporte), 44, "var(--orange-700)") + "</div>"
           : '<div class="pf-avatar" data-testid="perfil-avatar" aria-hidden="true"><span>' + esc((titulo || "").charAt(0).toUpperCase()) + "</span></div>") +
         '<div class="pfw-id"><p class="pfw-eyebrow" data-testid="perfil-tipo">' + (miembro ? "Perfil del deportista" : esDeporte ? "Perfil del deporte" : "Perfil del deportista") + "</p>" +
-        '<div class="pfw-name"><h1 class="t-h2" data-testid="perfil-nombre">' + esc(titulo) + "</h1>" + (miembro ? "" : Ui.chip(estadoEfectivo(d))) +
+        '<div class="pfw-name"><h1 class="t-h2" data-testid="perfil-nombre">' + esc(titulo) + "</h1>" + Ui.chip(estadoEfectivo(d)) +
         (esDeporte ? '<span class="pfw-meta">' + d.miembros.length + (d.miembros.length === 1 ? " integrante" : " integrantes") + "</span>" : miembro ? '<span class="pfw-meta">Integrante del equipo</span>' : "") +
         "</div>" +
         (d.colegio ? '<p class="pfw-sub">' + esc(d.colegio) + "</p>" : "") + "</div></section>" +
@@ -298,7 +323,7 @@
       if (esWeb()) return Ui.page({ nav: "eventos", testid: "pantalla-deportista", scroll: true, body: '<div class="pf" data-testid="perfil-contenido" data-es-equipo="' + (d.esEquipo && !miembro) + '">' + perfilWeb(d, miembro, eventoActual(d, ctx)) + "</div>" });
       const cuerpo = '<div class="pf-titlerow fija a-sangre" data-testid="perfil-barra"><a class="backlink" href="#/eventos" data-act="volver" data-testid="perfil-volver" aria-label="Volver">' + ico("m-chevron_left", 32, "var(--orange-700)") + "</a>" +
         '<h1 class="t-h1" style="color:var(--negro)" data-testid="perfil-titulo">' + titulo + "</h1></div>" + gap("m") + header(d) + gap("m") + infoDeportiva(d, miembro) + gap("l") +
-        (miembro ? miembroAviso() + historialMiembro(d) : d.esEquipo ? equipo(d) : individual(d, eventoActual(d, ctx)));
+        conTabs(d, miembro, eventoActual(d, ctx));
       return Ui.page({ nav: "eventos", testid: "pantalla-deportista", scroll: true, body: '<div class="pf" data-testid="perfil-contenido" data-es-equipo="' + (d.esEquipo && !miembro) + '">' + cuerpo + "</div>" });
     },
     mount(root, params, ctx) {
@@ -331,11 +356,11 @@
         if (t.classList.contains("on")) return;
         root.querySelectorAll(".tab").forEach((x) => { const on = x === t; x.classList.toggle("on", on); x.setAttribute("aria-selected", String(on)); });
         moverInd(t, true);
-        panel.innerHTML = root.querySelector(".pfw") ? panelWeb(d, esMiembro(d), t.dataset.key, eventoActual(d, ctx)) : i ? panelHistorial(d) : panelCalificar(d, eventoActual(d, ctx));
+        panel.innerHTML = root.querySelector(".pfw") ? panelWeb(d, esMiembro(d), t.dataset.key, eventoActual(d, ctx)) : i ? panelHistorialSujeto(d, esMiembro(d)) : panelCalificarSujeto(d, esMiembro(d), eventoActual(d, ctx));
         /* Entrada suave del contenido nuevo */
         if (!sinMovimiento && panel.animate) panel.animate([{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "none" }], { duration: 220, easing: "ease-out" });
       });
-      Ui.on(root, "click", "[data-act=descargar-historial]", () => { if (!d) return; const eq = esMiembro(d) ? Data.equipoDeMiembro(d.id) : null; descargarHistorial(d, eq); });
+      Ui.on(root, "click", "[data-act=descargar-historial]", () => { if (!d) return; descargarHistorial(d); });
       Ui.on(root, "click", "[data-act=volver]", (e) => { e.preventDefault(); const eq = esMiembro(d) ? Data.equipoDeMiembro(d.id) : null; Router.back(eq ? "/deportista/" + encodeURIComponent(eq.id) + (ev ? "?evento=" + encodeURIComponent(ev.id) : "") : ev ? "/evento/" + ev.id : "/eventos"); });
     },
   });

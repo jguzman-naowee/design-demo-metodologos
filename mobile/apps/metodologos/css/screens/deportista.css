@@ -118,3 +118,12 @@
 
 .pf-block-ico{display:none}
 .pf-prog{display:none}
+
+/* Calificación individual en conjunto: fila de integrante y subtítulos del historial */
+.pf-fila-int{align-items:center;gap:var(--sp-s-XL);margin-bottom:var(--sp-s-XL)}
+.pf-fila-nombre{min-width:0;color:var(--negro)}
+.pf-fila-nombre b{font-size:var(--fs-label);font-weight:var(--fw-regular)}
+.pf-fila-acc{display:flex;align-items:center;flex-wrap:wrap;justify-content:flex-end;gap:var(--sp-s-XL);flex:none}
+.pf-sub{margin:0 0 var(--sp-s-XL);color:var(--negro)}
+.pf-int-hist{margin-bottom:var(--sp-m-L)}
+.pf-int-nm{margin:0 0 var(--sp-s-XL);color:var(--gray-800);font-weight:var(--fw-bold)}
