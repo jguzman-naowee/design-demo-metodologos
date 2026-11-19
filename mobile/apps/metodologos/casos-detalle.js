@@ -373,24 +373,24 @@ window.CASOS_DETALLE = {
   },
 
   "3.2": {
-    resumen: "En la pestaña de conjunto se abre la Selección de Baloncesto: «Perfil del deporte», con una sola calificación para todo el equipo e integrantes informativos. Al abrir una integrante, un aviso aclara que se califica con el equipo.",
+    resumen: "En la pestaña de conjunto se abre la Selección de Baloncesto: «Perfil del deporte», con la «Evaluación del equipo» y, aparte, las «Evaluaciones individuales» de cada integrante. Al abrir una integrante, un aviso aclara que tiene dos evaluaciones independientes: la suya y la del equipo.",
     secciones: [
       { titulo: "Qué cambió", items: [
         "Las filas de integrantes quedan más livianas: nombre a 15 px regular (antes 16/600) y divisor `gray-200` (antes `gray-300`).",
-        "Debajo del título «Integrantes del equipo» aparece la nota «Informativos: la calificación es del equipo, no por integrante.» (13 px `gray-700`).",
+        "Los integrantes dejan de ser informativos: bajo «Evaluaciones individuales» cada uno es una fila con su estado y su acción («Iniciar calificación», lápiz o el ojo), y la nota explica que se califica de a uno y en cualquier orden.",
         "La barra fija dice «Perfil del deporte» y, con scroll, «Perfil de Baloncesto». En una integrante dice «Perfil del deportista» y luego «Perfil de» + el nombre.",
         "El aviso de la integrante es ahora una tarjeta `gray-100` sin borde, con el icono de información en `orange-700`."
       ] },
       { titulo: "Qué se agregó", items: [
-        "Debajo del aviso, el perfil de la integrante muestra el historial de evaluaciones del equipo (ver 3.4)."
+        "El perfil de la integrante gana las pestañas Calificar e Historial (en web, Datos, Pruebas e Historial): sus pruebas para calificar y su historial (ver 3.4 y 4.4)."
       ] },
       { titulo: "Cómo se hace", items: [
         "Un equipo es un deportista con `targetType == TEAM` o con integrantes. Su perfil se titula «Perfil del deporte» y la cabecera muestra el deporte (avatar con la «B» de Baloncesto) y el colegio.",
         "«Info. Deportiva» del equipo: Deporte, Tipo de deporte («Conjunto»), Género y Estado.",
-        "Sección «Calificar equipo», con la intro «Diligencia la evaluación técnico-metodológica del equipo. Es una sola calificación para todo el equipo.». Debajo puede venir una de tres cosas: el botón «Calificar en conjunto» (pendiente y evaluable, ver 4.2), la tarjeta de calificado con fecha, evaluador y ver/editar, o la tarjeta de bloqueo (ver 2.5).",
-        "«Integrantes del equipo»: una lista de enlaces a `#/deportista/:equipoId-m:n`. Sin integrantes: «El equipo se encuentra sin integrantes» (icono `group_off_outlined`).",
+        "Sección «Evaluación del equipo», con la intro «Una sola calificación para todo el equipo. Es independiente de la de cada integrante.». Debajo puede venir una de tres cosas: el botón «Calificar en conjunto» (pendiente y evaluable, ver 4.2), la tarjeta de calificado con fecha, evaluador y ver/editar, o la tarjeta de bloqueo (ver 2.5).",
+        "«Evaluaciones individuales»: una fila por integrante con el nombre (enlace a `#/deportista/:equipoId-m:n`), su chip de estado y su acción. Sin integrantes: «El equipo se encuentra sin integrantes» (icono `group_off_outlined`).",
         "En la app, que alguien es integrante lo marca el backend (`esMiembroEquipo`). La muestra no lo trae, así que la demo lo deduce de la lista de miembros de cada equipo.",
-        "Perfil de una integrante: no muestra pestañas ni la sección de calificar. «Info. Deportiva» va sin Clasificación ni Estado, y luego viene el aviso «Este deportista se califica como parte del equipo («Calificar en conjunto»); no se califica individualmente.»"
+        "Perfil de una integrante: pestañas Calificar e Historial. «Info. Deportiva» va sin Clasificación, con su Estado, y el aviso «Este deportista tiene dos evaluaciones en la prueba: la suya y la del equipo…» encabeza Calificar. *Propuesta nueva: la app real aún no lo trae; el back todavía no lo soporta.*"
       ] },
       { titulo: "Spec Flutter", items: [
         "Origen en la app: `deportista_perfil_page.dart` (la misma página con la rama de equipo y la de integrante).",
@@ -454,15 +454,15 @@ window.CASOS_DETALLE = {
   },
 
   "3.4": {
-    resumen: "Historia PROD-59: en un deporte de conjunto, el perfil de una integrante de la Selección de Voleibol muestra el historial de evaluaciones del equipo. Desde ahí solo se puede ver y descargar; la edición se hace desde el perfil del deporte.",
+    resumen: "Historia PROD-59: en un deporte de conjunto, el historial de una integrante de la Selección de Voleibol tiene dos secciones: sus evaluaciones individuales (editables dentro del plazo) y la del equipo (solo ver; se edita desde el perfil del deporte). «Descargar historial» baja solo lo suyo.",
     secciones: [
       { titulo: "Qué cambió", items: [
-        "El perfil de una integrante deja de ser solo informativo: debajo del aviso «se califica como parte del equipo» aparece el historial de evaluaciones del equipo.",
-        "Desde una integrante, la acción es siempre el ojo (solo lectura), aunque la evaluación del equipo todavía se pueda editar."
+        "El historial de una integrante separa «Evaluaciones individuales» (lápiz u ojo según el plazo) de «Evaluación del equipo» (siempre el ojo, aunque todavía se pueda editar).",
+        "El historial del equipo, en el perfil del deporte, suma las evaluaciones de sus integrantes en una sección aparte."
       ] },
       { titulo: "Qué se agregó", items: [
         "Si la evaluación todavía se puede editar, la tarjeta lo dice con un `NwtAlert` mute informative: «Editable hasta el 2 de septiembre de 2026. Hazlo desde el perfil del deporte.», con un enlace a `#/deportista/c2`. Si el plazo ya cerró, la tarjeta no dice nada.",
-        "«Descargar historial» desde la integrante baja el Excel del equipo. En la cabecera del archivo van «Equipo» y además «Integrante consultado».",
+        "«Descargar historial» desde la integrante baja el Excel solo con sus evaluaciones individuales; el del equipo se baja desde el perfil del deporte. Los dos archivos no se mezclan.",
         "Datos de muestra: la Selección de Voleibol (c2) tiene «Semifinal» en e1 (editable) y «Cuartos de final» en e3 (plazo vencido)."
       ] },
       { titulo: "Cómo se hace", items: [
@@ -538,7 +538,7 @@ window.CASOS_DETALLE = {
     resumen: "Desde el perfil del deporte (Selección de Baloncesto), «Calificar en conjunto» abre el mismo formulario adaptado al equipo: delegación o institución en lugar del nombre. Vacío, marca los mismos errores.",
     secciones: [
       { titulo: "Qué cambió", items: [
-        "Aplican los mismos cambios visuales del formulario que en 4.1: bandas de sección, campos bloqueados sin borde, errores en `error-700` y barra compacta."
+        "Aplican los mismos cambios visuales del formulario que en 4.1: bandas de sección, campos bloqueados sin borde, errores en `error-700` y barra compacta. La evaluación del equipo es independiente de la de cada integrante (ver 4.4)."
       ] },
       { titulo: "Cómo se hace", items: [
         "El sujeto es el equipo (`esEquipo`). La ruta es la misma, `#/evaluacion/c1/0`; también existe el alias `#/evaluacion-conjunto/:id/:prueba`.",
@@ -555,6 +555,27 @@ window.CASOS_DETALLE = {
       { titulo: "Pendiente", items: [
         "De casos.js: tampoco se puede escribir; quedan sin recorrer el llenado y la confirmación.",
         "Confirmar en el repo Flutter qué campo trae «Delegación / institución» para un equipo (la demo usa el colegio) y si el número de atletas sigue siendo obligatorio en conjunto."
+      ] }
+    ]
+  },
+
+  "4.4": {
+    resumen: "Desde «Evaluaciones individuales» del perfil del deporte se elige a un integrante y se abre el mismo formulario de evaluación, con el equipo en la identificación. Vacío, marca los mismos errores. Es una propuesta: el back aún no soporta la evaluación por integrante.",
+    secciones: [
+      { titulo: "Qué se agregó", items: [
+        "Una evaluación por integrante y prueba, independiente de la del equipo: se puede hacer antes, después o sin ella, y de a una.",
+        "En el perfil del deporte, cada fila de «Evaluaciones individuales» trae su chip de estado y su acción: «Iniciar calificación», lápiz (dentro del plazo), ojo (fuera de él) o «No se puede calificar» si el evento aún no inicia.",
+        "El formulario es el mismo que en 4.1; la identificación suma la fila «Equipo». Países, no. de atletas, pasos y validaciones no cambian."
+      ] },
+      { titulo: "Cómo se hace", items: [
+        "Cada integrante hereda las pruebas de su equipo (mismo nombre y evento) con estado propio. La ruta es la misma, `#/evaluacion/c1-m1/0`.",
+        "El estado del equipo se calcula solo con sus pruebas; calificar a un integrante no lo cambia, y al revés.",
+        "El resumen «N deportes por calificar» del evento sigue contando solo la evaluación del equipo (pendiente de confirmar).",
+        "Los datos guardados viven en memoria y se pierden al recargar."
+      ] },
+      { titulo: "Pendiente", items: [
+        "Contrato real con el back (campos y endpoints): ver `docs/web-spec-tecnica-calificacion-individual-conjunto.md`.",
+        "Cómo se ve la lista con muchos integrantes (paginación o búsqueda)."
       ] }
     ]
   },

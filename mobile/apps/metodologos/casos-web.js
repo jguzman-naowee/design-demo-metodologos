@@ -10,7 +10,7 @@
   const id = (s) => (/data-testid="([^"]+)"/.exec(s || "") || [])[1] || "";
   const NECESITA = (tid, tab) => {
     if (/^perfil-(historial-lista|ver-|editar-|plazo-|descargar-historial)/.test(tid)) return "historial";
-    if (/^perfil-(iniciar-|bloqueado|calificar-conjunto|equipo|integrantes-nota|integrante-)/.test(tid)) return "pruebas";
+    if (/^perfil-(iniciar-|bloqueado|calificar-conjunto|equipo|integrantes-nota|integrante-|fila-|aviso-miembro)/.test(tid)) return "pruebas";
     if (/^perfil-prueba-/.test(tid)) return tab === "historial" ? "historial" : "pruebas";
     return null;
   };

@@ -100,9 +100,10 @@ window.CASOS = [
       { t: "click", sel: "[data-testid=\"evento-tab-conjunto\"]", body: "Vamos a los deportes de conjunto." },
       { t: "click", sel: "[data-testid=\"deportista-tile-c1\"]", body: "Abrimos la selección de Baloncesto." },
       { t: "note", sel: "[data-testid=\"perfil-titulo\"]", body: "«Perfil del deporte»: la calificación es del equipo." },
-      { t: "note", sel: "[data-testid=\"perfil-integrantes-nota\"]", body: "Los integrantes son solo informativos." },
+      { t: "note", sel: "[data-testid=\"perfil-calificar-conjunto\"]", body: "Primero, la «Evaluación del equipo»: una sola para todo el equipo." },
+      { t: "note", sel: "[data-testid=\"perfil-integrantes-nota\"]", body: "Debajo, las «Evaluaciones individuales»: se elige a quién calificar, de a uno y en cualquier orden." },
       { t: "click", sel: "[data-testid=\"perfil-integrante-c1-m1\"]", body: "Abrimos a una integrante." },
-      { t: "note", sel: "[data-testid=\"perfil-aviso-miembro\"]", body: "No se califica por separado: se califica con el equipo." }
+      { t: "note", sel: "[data-testid=\"perfil-aviso-miembro\"]", body: "Tiene dos evaluaciones en la prueba, la suya y la del equipo, y son independientes." }
     ] },
   { id: "3.3", titulo: "Descarga de historial del atleta", falta: "El Excel se arma en el navegador con datos de muestra; en la app real lo pediría al servicio. La muestra tiene un solo deportista con evaluaciones en varios eventos (Javier Manríquez).",
     steps: [
@@ -118,20 +119,21 @@ window.CASOS = [
       { t: "click", sel: "[data-testid=\"perfil-ver-4\"]", body: "Abrimos una evaluación de un evento finalizado, cuyo plazo de edición ya terminó." },
       { t: "note", sel: "[data-testid=\"evaluacion-aviso-plazo\"]", body: "El formulario queda en solo lectura y lo explica: el plazo de edición terminó." }
     ] },
-  { id: "3.4", titulo: "Descarga de historial del atleta: deporte de conjunto", falta: "La evaluación es del equipo: desde el perfil del integrante solo se ve y se descarga, no se edita. La edición se hace en el perfil del deporte y solo mientras el plazo siga abierto.",
+  { id: "3.4", titulo: "Descarga de historial del atleta: deporte de conjunto", falta: "La evaluación del equipo se ve desde el integrante pero se edita en el perfil del deporte, mientras el plazo siga abierto. Las individuales sí se editan desde el integrante.",
     steps: [
       { t: "goto", url: "index.html?sesion=1#/eventos", body: "Mismo historial, ahora en un deporte de conjunto. Empezamos en el inicio, con la sesión iniciada." },
       { t: "click", sel: "[data-testid=\"evento-card-e1\"]", body: "Abrimos el evento en curso." },
       { t: "click", sel: "[data-testid=\"evento-tab-conjunto\"]", body: "Vamos a los deportes de conjunto." },
       { t: "click", sel: "[data-testid=\"deportista-tile-c2\"]", body: "Abrimos la selección de Voleibol." },
       { t: "click", sel: "[data-testid=\"perfil-integrante-c2-m1\"]", body: "Abrimos a una integrante." },
-      { t: "note", sel: "[data-testid=\"perfil-aviso-miembro\"]", body: "Sigue el aviso: se califica con el equipo, no por separado." },
-      { t: "note", sel: "[data-testid=\"perfil-historial-lista\"]", body: "Debajo está el historial de evaluaciones del equipo, de todos los eventos." },
+      { t: "note", sel: "[data-testid=\"perfil-aviso-miembro\"]", body: "Tiene su propia evaluación y la del equipo, independientes." },
+      { t: "click", sel: "[data-testid=\"perfil-tab-historial\"]", body: "Abrimos el «Historial»." },
+      { t: "note", sel: "[data-testid=\"perfil-historial-lista\"]", body: "Dos secciones: sus evaluaciones individuales y, aparte, la del equipo, de todos los eventos." },
       { t: "note", sel: "[data-testid=\"perfil-plazo-0\"]", body: "Si la evaluación aún se puede editar, la card lo dice y manda a hacerlo desde el perfil del deporte. Si el plazo cerró, no dice nada." },
       { t: "click", sel: "[data-testid=\"perfil-ver-0\"]", body: "Desde aquí solo se puede ver la evaluación." },
       { t: "note", sel: "[data-testid=\"evaluacion-banner-solo-lectura\"]", body: "El formulario queda en solo lectura." },
       { t: "click", sel: "[data-testid=\"evaluacion-volver-perfil\"]", body: "Volvemos al perfil del integrante." },
-      { t: "click", sel: "[data-testid=\"perfil-descargar-historial\"]", body: "«Descargar historial» baja el Excel con las evaluaciones del equipo." }
+      { t: "click", sel: "[data-testid=\"perfil-descargar-historial\"]", body: "«Descargar historial» baja el Excel de la integrante, solo con sus evaluaciones individuales. El del equipo se baja desde el perfil del deporte." }
     ] },
   { id: "4.1", titulo: "Calificar una prueba individual: errores de validación", falta: "El marco solo pulsa: no se puede escribir en los campos, así que no se llega a «Confirmar envío» ni a que la prueba quede «Calificado». En la app se escribe y se confirma.",
     steps: [
@@ -153,6 +155,18 @@ window.CASOS = [
       { t: "click", sel: "[data-testid=\"deportista-tile-c1\"]", body: "Abrimos la selección de Baloncesto." },
       { t: "click", sel: "[data-testid=\"perfil-calificar-conjunto\"]", body: "Pulsamos «Calificar en conjunto»." },
       { t: "note", sel: "[data-testid=\"evaluacion-campo-delegacion\"]", body: "El formulario del equipo muestra la delegación o institución." },
+      { t: "click", sel: "[data-testid=\"evaluacion-guardar\"]", body: "Probamos «Guardar evaluación» vacío." },
+      { t: "note", sel: "[data-testid=\"evaluacion-campo-technicalAspect\"]", body: "Los mismos campos obligatorios marcan error." }
+    ] },
+  { id: "4.4", titulo: "Calificar a un integrante del equipo", falta: "Tampoco se puede escribir: queda sin recorrer el llenado y la confirmación. El back aún no soporta la evaluación por integrante; la demo la simula en memoria.",
+    steps: [
+      { t: "goto", url: "index.html?sesion=1#/eventos", body: "Empezamos en el inicio, con la sesión ya iniciada." },
+      { t: "click", sel: "[data-testid=\"evento-card-e1\"]", body: "Abrimos el evento en curso." },
+      { t: "click", sel: "[data-testid=\"evento-tab-conjunto\"]", body: "Vamos a los deportes de conjunto." },
+      { t: "click", sel: "[data-testid=\"deportista-tile-c1\"]", body: "Abrimos la selección de Baloncesto." },
+      { t: "note", sel: "[data-testid=\"perfil-fila-c1-m1\"]", body: "En «Evaluaciones individuales» cada integrante tiene su estado y su acción, sin depender de la evaluación del equipo." },
+      { t: "click", sel: "[data-testid=\"perfil-integrante-calificar-c1-m1\"]", body: "Pulsamos «Iniciar calificación» en Sofía Vargas." },
+      { t: "note", sel: "[data-testid=\"evaluacion-campo-equipo\"]", body: "Es el mismo formulario; en la identificación aparece además el equipo." },
       { t: "click", sel: "[data-testid=\"evaluacion-guardar\"]", body: "Probamos «Guardar evaluación» vacío." },
       { t: "note", sel: "[data-testid=\"evaluacion-campo-technicalAspect\"]", body: "Los mismos campos obligatorios marcan error." }
     ] },
