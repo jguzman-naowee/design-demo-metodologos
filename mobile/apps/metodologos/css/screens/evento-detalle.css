@@ -75,7 +75,12 @@
 .tab-txt{display:block;padding-bottom:var(--sp-s-L);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:var(--fs-label);font-weight:var(--fw-regular);color:var(--gray-700)}
 .tab-bar{display:block;height:2px;background:transparent}
 .tab.on .tab-txt{font-weight:var(--fw-bold);color:var(--orange-700)}
+/* DC-080/081: en móvil las pestañas (evento y perfil) van más grandes y pueden partirse en dos líneas */
+html:not(.web) .tab-txt{white-space:normal;overflow:visible;text-overflow:clip;font-size:var(--fs-subtitle);line-height:1.2}
 .tab.on .tab-bar{background:var(--orange-700)}
+
+/* DC-082: la tabla de la web no se carga en móvil (web.css no está), así que sin esto se veía duplicada bajo la lista */
+.evd-web{display:none}
 
 /* Lista */
 .evd-listhead{flex:none;display:flex;align-items:center;gap:var(--sp-s-XL);padding-bottom:10px} /* DC-009/011: 10px de aire bajo el título de la lista (no hay token de 10px) */
