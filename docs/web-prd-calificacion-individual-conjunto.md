@@ -30,7 +30,7 @@ Dos tipos de evaluación sobre la misma prueba de conjunto:
 | Cuántas por prueba | Una | Una por integrante |
 | Sujeto | El equipo (deporte, delegación o institución) | El deportista, dentro del equipo y la prueba |
 | Formulario | 3 pasos (existente) | El mismo 3 pasos |
-| Países y no. de atletas | Sí | No aplican (son del equipo) |
+| Países y no. de atletas | Sí | Sí: es el mismo formulario |
 | Plazo de edición | 10 días tras terminar el evento | El mismo, heredado |
 | Estado | Sin calificar / Calificado | Sin calificar / Calificado, propio de cada integrante |
 
@@ -64,8 +64,7 @@ Al guardar, la persona vuelve al lugar desde donde entró y ve «Quedó guardada
 
 ### 7.3 Formulario
 - [ ] Mismo asistente de 3 pasos y mismas reglas de campos, validación, confirmación y guardado que en PROD-65 §7.
-- [ ] En el paso 1, la identificación precargada de la evaluación individual muestra deportista, equipo, deporte y prueba, sin poder editarse.
-- [ ] «Países en la prueba» y «No. de atletas» no aparecen en la evaluación individual; sí en la del equipo.
+- [ ] En el paso 1, la identificación precargada de la evaluación individual muestra deportista, deporte, **equipo** y prueba, sin poder editarse. El resto del formulario (países, no. de atletas, pasos 2 y 3) es idéntico al de cualquier evaluación individual.
 - [ ] Al guardar o cancelar, vuelve a la pantalla de origen (perfil del deporte o del integrante).
 
 ### 7.4 Estados y conteos

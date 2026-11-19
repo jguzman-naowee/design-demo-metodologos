@@ -214,7 +214,7 @@ td:first-child{font-weight:600;white-space:nowrap}
 <div class="flow" style="margin-top:12px">
   <div class="step"><svg class="ico"><use href="#i-user"/></svg><b>Perfil del integrante</b><span>Pruebas → «Iniciar calificación»</span></div>
   <div class="arrow">→</div>
-  <div class="step"><svg class="ico"><use href="#i-form"/></svg><b>Formulario de 3 pasos</b><span>Sin países ni no. de atletas</span></div>
+  <div class="step"><svg class="ico"><use href="#i-form"/></svg><b>Formulario de 3 pasos</b><span>Mismo formulario, con el equipo</span></div>
   <div class="arrow">→</div>
   <div class="step"><svg class="ico"><use href="#i-check"/></svg><b>Confirmar y guardar</b><span>Misma confirmación</span></div>
   <div class="arrow">→</div>
@@ -223,7 +223,7 @@ td:first-child{font-weight:600;white-space:nowrap}
 
 <!-- 5 -->
 <h2><span class="n">5</span>Formulario · paso 1, equipo frente a individual</h2>
-<p class="sec">El asistente es el mismo. Solo cambia la identificación y el contexto de la prueba.</p>
+<p class="sec">Es el mismo formulario. La evaluación individual solo suma la fila «Equipo» en la identificación.</p>
 <div class="vs">
   <div>
     <p class="cap"><span class="tag eq">Equipo</span>Paso 1 · Datos generales</p>
@@ -246,10 +246,12 @@ td:first-child{font-weight:600;white-space:nowrap}
         <div class="stepper"><span class="d on"><i>1</i>Datos generales</span><span class="ln"></span><span class="d"><i>2</i>Evaluación</span><span class="ln"></span><span class="d"><i>3</i>Cierre</span></div>
         <div class="fcard"><h4>Identificación del deportista</h4>
           <div class="fld"><label>Deportista</label><div class="box">Laura Pardo</div></div>
-          <div class="fld"><label>Equipo</label><div class="box">Selección de Voleibol · Colegio Nacional</div></div>
+          <div class="fld"><label>Deporte</label><div class="box">Voleibol</div></div>
+          <div class="fld"><label>Equipo</label><div class="box">Selección de Voleibol</div></div>
           <div class="fld"><label>Prueba</label><div class="box">Prueba 1 · Voleibol de sala</div></div></div>
         <div class="fcard"><h4>Contexto de la prueba</h4>
-          <div class="fld"><div class="box gone">No aplica: países y no. de atletas son del equipo</div></div></div>
+          <div class="fld"><label>Países en la prueba (opcional)</label><div class="box edit">Colombia, Brasil, México</div></div>
+          <div class="fld"><label>No. de atletas en la prueba *</label><div class="box edit">12</div></div></div>
         <div class="fbar"><button class="btn o s" type="button">Cancelar</button><button class="btn s" type="button">Continuar</button></div>
       </div></div>
   </div>
@@ -317,7 +319,7 @@ td:first-child{font-weight:600;white-space:nowrap}
   <tr><th></th><th>Evaluación del equipo</th><th>Evaluación individual</th></tr>
   <tr><td>Cuántas por prueba</td><td>Una</td><td>Una por integrante</td></tr>
   <tr><td>Sujeto</td><td>Equipo (deporte, delegación o institución)</td><td>Deportista dentro del equipo</td></tr>
-  <tr><td>Países y no. de atletas</td><td>Sí</td><td>No aplican</td></tr>
+  <tr><td>Países y no. de atletas</td><td colspan="2">Sí, en ambas: es el mismo formulario</td></tr>
   <tr><td>Plazo de edición</td><td colspan="2">Heredado del evento: 10 días tras terminar</td></tr>
   <tr><td>Estado</td><td colspan="2">Sin calificar / Calificado, propio de cada una</td></tr>
   <tr><td>Orden</td><td colspan="2">Cualquiera. Calificar a todos no es obligatorio.</td></tr>

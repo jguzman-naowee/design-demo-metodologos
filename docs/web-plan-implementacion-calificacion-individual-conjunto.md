@@ -11,7 +11,7 @@ Un commit por capa revisable. Cada paso se verifica en **web y móvil** antes de
 |---|---|---|---|---|
 | 1 | Datos | Cada integrante hereda las pruebas de su equipo (nombre y evento), con estado propio *(hecho)* | `data.js`, `data-deportistas.js` | El integrante tiene pruebas; el estado del equipo no cambia |
 | 2 | Evaluaciones | Confirmar que `Evaluaciones.save/get` funciona con el id del integrante; sin cambio de firma | `data-evaluacion.js` | Guardar para `c2-m1` no altera al equipo `c2` |
-| 3 | Formulario | Paso 1 individual de conjunto: sin países ni atletas, con equipo precargado; validación solo para equipo | `screens/evaluacion.js` | Individual de conjunto avanza sin campos; equipo sigue exigiendo atletas |
+| 3 | Formulario | Mismo formulario individual con la fila «Equipo» en la identificación del integrante | `screens/evaluacion.js` | El integrante muestra su equipo; el resto del formulario no cambia |
 | 4 | Perfil del deporte | Dos secciones: equipo e individuales con acción por fila | `screens/deportista.js` | Se califica un integrante sin tocar al equipo, y al revés |
 | 5 | Perfil del integrante | Pestaña Pruebas, aviso nuevo, historial con la del equipo en solo ver | `screens/deportista.js` | Retorno al perfil de origen |
 | 6 | Historial | Pestaña Historial del equipo (web), pestañas Calificar/Historial (móvil); dos secciones | `screens/deportista.js` | Aparece lo guardado, separado |

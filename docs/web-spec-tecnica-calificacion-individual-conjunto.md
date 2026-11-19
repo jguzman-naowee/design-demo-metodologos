@@ -33,7 +33,7 @@ Ambas llevan `targetType` (el campo ya existe: hoy `"ATHLETE"`): `"TEAM"` o `"AT
 ### 2.3 Contrato del back (a validar con quien lo construya)
 - Crear y leer evaluación con `targetType: "TEAM" | "ATHLETE"`, y para conjunto: `teamId`, `participantId`, `testId`.
 - Unicidad: una evaluación por (`targetType`, sujeto, prueba). Un integrante puede tener la suya y el equipo la suya sin conflicto.
-- Los campos `countries` y `athletesCount` solo se exigen cuando `targetType = "TEAM"`.
+- Los campos `countries` y `athletesCount` se mantienen en ambos tipos: es el mismo formulario.
 - Listar el historial: por equipo (solo `TEAM`) y por deportista (sus `ATHLETE`, de equipo o individuales, más la del equipo como solo lectura).
 - Plazo de edición: el mismo cálculo del evento para ambas.
 - **Pendiente:** confirmar nombres reales de campos y endpoints; los de arriba son propuesta.
@@ -62,9 +62,7 @@ El **retorno** al guardar o cancelar usa `Router.back` con ruta de respaldo: per
 
 ### 4.3 Formulario (`evaluacion.js`)
 - Sujeto equipo: igual que hoy (`esEquipo`).
-- Sujeto integrante de conjunto (`esMiembroEquipo`): paso 1 con deportista, equipo, deporte y prueba precargados; **sin** `countries` ni `athletesCount`.
-- Validación del paso 1: `errAtletas()` solo aplica cuando `esEquipo`. Hoy `PASOS[0].campos = ["athletesCount"]`; en el individual el paso 1 no tiene campos obligatorios y «Continuar» avanza.
-- Pasos 2 y 3 sin cambios.
+- Sujeto integrante de conjunto: **el mismo formulario individual**, con una fila más en la identificación («Equipo», precargada desde `Data.equipoDeMiembro`). Validación y pasos 2 y 3 sin cambios.
 
 ### 4.4 Historial y Excel
 - Equipo → Historial: sección «Evaluación del equipo» y sección «Evaluaciones individuales» (por integrante).

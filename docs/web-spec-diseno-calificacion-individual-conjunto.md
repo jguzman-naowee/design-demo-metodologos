@@ -30,7 +30,7 @@
 
 ### 2.4 Formulario
 - Mismo asistente de 3 pasos.
-- Paso 1 individual: Deportista, Equipo, Deporte y Prueba precargados y de solo lectura. Sin países ni número de atletas.
+- Paso 1 individual: Deportista, Deporte, **Equipo** y Prueba precargados y de solo lectura. Países y número de atletas se mantienen: es el mismo formulario.
 - Al guardar o cancelar, vuelve a la pantalla de origen.
 
 ## 3. Estados de una fila
