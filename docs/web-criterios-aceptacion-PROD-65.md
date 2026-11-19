@@ -35,6 +35,7 @@ Origen: solicitud del COC en PROD-57.
 - [ ] Debajo, el título «Perfil» y una tarjeta a todo el ancho con las pestañas Datos, Pruebas e Historial.
 - [ ] Datos: deporte, colegio, categoría, tipo de deporte, sexo y estado.
 - [ ] Pruebas e Historial en tablas con filas alternadas, con la acción de calificar o editar según el plazo.
+- [ ] El perfil de un deporte de conjunto también tiene pestañas Datos, Pruebas e Historial: Pruebas separa «Evaluación del equipo» de «Evaluaciones individuales»; Historial muestra la del equipo y las de sus integrantes por separado.
 
 ## 6. Perfil del metodólogo
 - [ ] Se abre desde el menú lateral y desde el menú del usuario.
@@ -44,7 +45,7 @@ Origen: solicitud del COC en PROD-57.
 
 ### 7.1 Entrada
 - [ ] Desde el perfil del deportista, pestaña Pruebas, cada prueba sin calificar tiene «Iniciar calificación»; una ya calificada tiene «Editar evaluación» dentro del plazo y «Ver evaluación» fuera de él.
-- [ ] En deportes de conjunto la evaluación es del equipo: se entra con «Calificar en conjunto» desde el perfil del deporte.
+- [ ] En deportes de conjunto hay dos evaluaciones independientes por prueba: la del equipo («Calificar en conjunto», desde el perfil del deporte) y la de cada integrante (desde la lista «Evaluaciones individuales» o desde su perfil). Ver `web-prd-calificacion-individual-conjunto.md`.
 
 ### 7.2 Asistente de 3 pasos
 - [ ] Barra de pasos arriba (Paso 1 Datos generales, Paso 2 Evaluación, Paso 3 Cierre) que marca el paso actual y los completados, y permite volver a un paso desde ella.
