@@ -76,6 +76,7 @@
 .tab-bar{display:block;height:2px;background:transparent}
 .tab.on .tab-txt{font-weight:var(--fw-bold);color:var(--orange-700)}
 /* DC-080/081: en móvil las pestañas (evento y perfil) van más grandes y pueden partirse en dos líneas */
+html.web .tab-br{display:none} /* el salto de línea forzado es solo de móvil */
 html:not(.web) .tab-txt{white-space:normal;overflow:visible;text-overflow:clip;font-size:18px;line-height:1.2}
 .tab.on .tab-bar{background:var(--orange-700)}
 
