@@ -14,7 +14,7 @@
 .evd-hero-veil{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,255,255,0) 0%,rgba(255,255,255,0) 45%,rgba(255,255,255,.9) 72%,var(--white-alpha-100) 82%)}
 .backlink.evd-hero-back{position:absolute;top:var(--sp-s-XL);left:var(--sp-s-XL);z-index:1;margin:0;background:rgba(24,30,71,.45)}
 .evd-hero-in{position:relative;display:flex;flex-direction:column;align-items:flex-start;padding:var(--sp-l-L) var(--sp-m-M) var(--sp-m-L)}
-.evd-chip{display:block;max-width:100%}
+.evd-chip{display:flex;align-items:center;flex-wrap:wrap;gap:var(--sp-s-XL);max-width:100%}
 /* DC-029: chip del hero más grande, con borde blanco al 8% */
 .evd-chip .chip{padding:var(--sp-s-L) var(--sp-m-S);font-size:var(--fs-tag);border:1px solid rgba(255,255,255,.08)}
 .evd-title{margin:var(--sp-s-XL) 0 0;font-size:var(--fs-sujeto);font-weight:var(--fw-bold);color:var(--navy);line-height:1.2;

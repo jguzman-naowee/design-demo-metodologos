@@ -159,7 +159,7 @@
           (imagen ? '<img class="evd-hero-img" src="' + esc(imagen) + '" alt="" decoding="async" onload="this.classList.add(\'ld\')" onerror="this.remove()">' : "") +
           '<span class="evd-hero-veil" aria-hidden="true"></span>' +
           '<button type="button" class="backlink evd-hero-back" data-act="volver" data-testid="evento-volver" aria-label="Volver">' + (document.documentElement.classList.contains("web") && matchMedia("(min-width:900px)").matches ? Ui.icon("m-arrow_back", { size: 24, color: "currentColor" }) + "<span>Volver a eventos</span>" : Ui.icon("m-chevron_left", { size: 32, color: "var(--white-alpha-100)" })) + "</button>" +
-          '<div class="evd-hero-in"><span class="evd-chip" data-testid="evento-estado">' + Ui.chip(ev.estado, ev.estadoLabel) + "</span>" +
+          '<div class="evd-hero-in"><span class="evd-chip" data-testid="evento-estado">' + Ui.tagInternacional(ev) + Ui.chip(ev.estado, ev.estadoLabel) + "</span>" +
             '<h1 class="evd-title" data-testid="evento-nombre">' + esc(titular(ev.nombre)) + "</h1>" +
             '<p class="evd-sub" data-testid="evento-fecha-lugar">' + esc(ev.lugar ? ev.fecha + " · " + ev.lugar : ev.fecha) + "</p></div></header>" +
         (deportes.length ? seccionDeportes(deportes) : "") +

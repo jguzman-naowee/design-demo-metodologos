@@ -106,6 +106,9 @@
   html.web .evwc-datos{display:flex;flex-direction:column;gap:6px;margin:auto 0 0;padding:var(--naotech-sizing-12) 48px 0 0;border-top:1px solid var(--gray-200);list-style:none;font-size:14px;color:var(--gray-700)}
   html.web .evwc-datos li{display:flex;align-items:center;gap:var(--naotech-sizing-8)}
   html.web .evwc-datos li:first-child{font-weight:var(--fw-bold);color:var(--negro)}
+  /* Con la etiqueta «Internacional» el título pierde ancho: las etiquetas pasan arriba, en su propia fila. */
+  html.web .evwc-head.con-tag{flex-wrap:wrap;row-gap:var(--naotech-sizing-8)}
+  html.web .evwc-head.con-tag .evwc-tags{order:-1;flex-basis:100%}
   html.web .evwc-ir{position:absolute;right:var(--naotech-sizing-20);bottom:var(--naotech-sizing-20);display:grid;place-items:center;width:32px;height:32px;border:1.5px solid var(--orange-700);border-radius:50%;color:var(--orange-700);transition:transform var(--wm-base) var(--wm-out)}
   html.web .evwc:hover .evwc-ir{transform:translateX(3px)}
   html.web .evs .list .nwt-alert[data-act=aviso]{position:relative;cursor:help;box-shadow:0 2px 8px rgba(0,0,0,.25)}

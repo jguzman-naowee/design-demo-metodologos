@@ -70,6 +70,9 @@
   };
   const rawIcon = (nombre, o) => { const size = (o && o.size) || 24; return '<span class="icbox" style="display:flex;align-items:center;justify-content:center;flex:none;width:' + size + "px;height:" + size + 'px" aria-hidden="true">' + svgOf(nombre, size, false) + "</span>"; };
   const registerIcon = (nombre, svg) => { ICONS[nombre] = svg; };
+  registerIcon("m-public", '<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" fill="currentColor"/></svg>');
+  /* Etiqueta «Internacional» de los eventos que aplican; va a la izquierda del estado. */
+  const tagInternacional = (ev) => ev && ev.internacional ? '<span class="chip internacional" data-testid="evento-internacional">' + icon("m-public", { size: 12, color: "currentColor" }) + "Internacional</span>" : "";
   /* Glifos de las alertas del SDK (NwtAlert / NwtToast): van dentro de un círculo relleno (i, !) o sueltos en las alertas mute (circulo + i / !) */
   registerIcon("nwt-i", '<svg viewBox="0 0 24 24"><circle cx="12" cy="6.8" r="1.7" fill="currentColor"/><rect x="10.6" y="10.3" width="2.8" height="8.4" rx="1.2" fill="currentColor"/></svg>');
   registerIcon("nwt-exclamacion", '<svg viewBox="0 0 24 24"><rect x="10.6" y="4.8" width="2.8" height="9" rx="1.2" fill="currentColor"/><circle cx="12" cy="18.3" r="1.7" fill="currentColor"/></svg>');
@@ -284,5 +287,5 @@
   document.addEventListener("click", (e) => { const m = e.target.closest("[data-act=conoce-mas]"); if (m) conoceMas(); });
   document.addEventListener("click", (e) => { if (e.target.closest("[data-act=notificaciones]") && location.hash.split("?")[0] !== "#/notificaciones") location.hash = "#/notificaciones"; });
 
-  window.Ui = { fijar, topbar, seguirTitulo, logoAnimado, actualizarCampana, tabIndicator, alertaMute, esc, html, icon, rawIcon, registerIcon, chip, button, appBar, bottomNav, page, empty, search, checkRow, openSheet, openSidePanel, toast, on, closeLayer, conoceMas, offAll };
+  window.Ui = { tagInternacional, fijar, topbar, seguirTitulo, logoAnimado, actualizarCampana, tabIndicator, alertaMute, esc, html, icon, rawIcon, registerIcon, chip, button, appBar, bottomNav, page, empty, search, checkRow, openSheet, openSidePanel, toast, on, closeLayer, conoceMas, offAll };
 })();

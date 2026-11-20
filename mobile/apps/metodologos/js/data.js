@@ -140,11 +140,11 @@
   /* EventoVm. e1 y e2 son de coc_sample.dart. e3 es un EXTRA de la demo (no existe en la muestra de la app):
      da un evento "Finalizado" para que el filtro «Estado» y el aviso de plazo de edición tengan caso. editableUntil es fija (AAAA-MM-DD). */
   const eventos = [
-    { id: "e1", nombre: "Juegos panamericanos de la juventud 2026", fecha: "9-23 Ago.", lugar: "Ciudad de Panamá", estado: "enCurso", estadoLabel: "En curso", imagen: IMG + "evento1.jpg", deportistas, sportCodes: [], editableUntil: null },
+    { id: "e1", internacional: true, nombre: "Juegos panamericanos de la juventud 2026", fecha: "9-23 Ago.", lugar: "Ciudad de Panamá", estado: "enCurso", estadoLabel: "En curso", imagen: IMG + "evento1.jpg", deportistas, sportCodes: [], editableUntil: null },
     { id: "e2", nombre: "Festival deportivo escolar 2026", fecha: "12-25 Abr.", lugar: "Bogotá", estado: "programado", estadoLabel: "Programado", imagen: IMG + "evento2.jpg", deportistas: festival, sportCodes: [], editableUntil: null },
     { id: "e3", extra: true, nombre: "XXIII Juegos Deportivos Nacionales", fecha: "3-8 Mar.", lugar: "Córdoba y Sucre", estado: "finalizado", estadoLabel: "Finalizado", imagen: IMG + "evento3.jpg", deportistas, sportCodes: [], editableUntil: "2026-03-18" },
-    { id: "e4", extra: true, nombre: "Campeonato Suramericano Juvenil 2026", fecha: "1-9 Ago.", lugar: "Lima", estado: "enCurso", estadoLabel: "En curso", imagen: IMG + "evento2.jpg", deportistas, sportCodes: [], editableUntil: null },
-    { id: "e5", extra: true, nombre: "Juegos Olímpicos de la Juventud Dakar 2026", fecha: "31 Oct.-13 Nov.", lugar: "Dakar, Senegal", estado: "programado", estadoLabel: "Programado", imagen: IMG + "evento5.jpg", deportistas: dakar, sportCodes: [], editableUntil: null },
+    { id: "e4", internacional: true, extra: true, nombre: "Campeonato Suramericano Juvenil 2026", fecha: "1-9 Ago.", lugar: "Lima", estado: "enCurso", estadoLabel: "En curso", imagen: IMG + "evento2.jpg", deportistas, sportCodes: [], editableUntil: null },
+    { id: "e5", internacional: true, extra: true, nombre: "Juegos Olímpicos de la Juventud Dakar 2026", fecha: "31 Oct.-13 Nov.", lugar: "Dakar, Senegal", estado: "programado", estadoLabel: "Programado", imagen: IMG + "evento5.jpg", deportistas: dakar, sportCodes: [], editableUntil: null },
   ];
 
   /* Evento programado: aún no se puede calificar. La prueba queda bloqueada con motivo («No se puede calificar»), como la app cuando el backend la marca no evaluable. */

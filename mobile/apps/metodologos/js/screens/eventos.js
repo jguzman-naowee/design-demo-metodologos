@@ -21,7 +21,7 @@
       '<a class="evcard-link" href="#/evento/' + Ui.esc(e.id) + '" data-testid="evento-card-' + Ui.esc(e.id) + '" aria-label="' + Ui.esc(e.nombre + ", " + e.estadoLabel + ", " + sub) + '">' +
         '<div class="evwc-media">' + '<img class="evcard-img evwc-img" src="' + Ui.esc(Data.heroWeb[e.id] || e.imagen || Data.eventoGenerico) + '" alt="" loading="lazy" onload="this.classList.add(\'ld\')" onerror="this.onerror=null;this.src=\'' + Data.eventoGenerico + '\'">' +
           (aviso ? '<span class="evwc-edit" data-testid="evento-aviso-' + Ui.esc(e.id) + '" title="Puedes editar las evaluaciones que registraste hasta 10 días después de que termine el evento.">' + Ui.icon("nwt-exclamacion", { size: 14, color: "currentColor" }) + "<span>Editable hasta el " + Ui.esc(fechaC) + "</span></span>" : "") + "</div>" +
-        '<div class="evwc-head"><h2 class="evcard-title">' + Ui.esc(e.nombre) + "</h2>" + Ui.chip(e.estado, e.estadoLabel) + "</div>" +
+        '<div class="evwc-head' + (e.internacional ? " con-tag" : "") + '"><h2 class="evcard-title">' + Ui.esc(e.nombre) + "</h2><span class=\"evwc-tags\">" + Ui.tagInternacional(e) + Ui.chip(e.estado, e.estadoLabel) + "</span></div>" +
         '<ul class="evwc-datos"><li>' + Ui.icon("calendario", { size: 18, color: "var(--gray-500)" }) + "<span>" + Ui.esc(e.fecha) + "</span></li>" +
           (e.lugar ? "<li>" + Ui.icon("ubicacion", { size: 18, color: "var(--gray-500)" }) + "<span>" + Ui.esc(e.lugar) + "</span></li>" : "") +
           "</ul>" +
@@ -31,7 +31,7 @@
       '<a class="evcard-link" href="#/evento/' + Ui.esc(e.id) + '" data-testid="evento-card-' + Ui.esc(e.id) + '" aria-label="' + Ui.esc(e.nombre + ", " + e.estadoLabel + ", " + sub) + '">' +
         '<img class="evcard-img" src="' + Ui.esc((document.documentElement.classList.contains("web") && matchMedia("(min-width:900px)").matches && Data.heroWeb[e.id]) || e.imagen || Data.eventoGenerico) + '" alt="" loading="lazy" onload="this.classList.add(\'ld\')" onerror="this.onerror=null;this.src=\'' + Data.eventoGenerico + '\'">' +
         '<div class="evcard-body' + (aviso ? " has-aviso" : "") + '">' +
-          '<div class="evcard-meta">' + Ui.chip(e.estado, e.estadoLabel) + "</div>" +
+          '<div class="evcard-meta">' + Ui.tagInternacional(e) + Ui.chip(e.estado, e.estadoLabel) + "</div>" +
           '<h2 class="evcard-title">' + Ui.esc(e.nombre) + "</h2>" +
           '<p class="evcard-sub">' + Ui.esc(sub) + "</p>" +
           '<span class="evcard-go" aria-hidden="true">' + Ui.icon("m-chevron_right", { size: 20, color: "currentColor" }) + "</span>" +
