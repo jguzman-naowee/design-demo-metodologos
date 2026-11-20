@@ -128,12 +128,12 @@ window.CASOS = [
       { t: "click", sel: "[data-testid=\"perfil-integrante-c2-m1\"]", body: "Abrimos a una integrante." },
       { t: "note", sel: "[data-testid=\"perfil-aviso-miembro\"]", body: "Tiene su propia evaluación y la del equipo, independientes." },
       { t: "click", sel: "[data-testid=\"perfil-tab-historial\"]", body: "Abrimos el «Historial»." },
-      { t: "note", sel: "[data-testid=\"perfil-historial-lista\"]", body: "Dos secciones: sus evaluaciones individuales y, aparte, la del equipo, de todos los eventos." },
+      { t: "note", sel: "[data-testid=\"perfil-historial-lista\"]", body: "Dos secciones: sus evaluaciones individuales y, aparte, la del equipo en su evento." },
       { t: "note", sel: "[data-testid=\"perfil-plazo-0\"]", body: "Si la evaluación aún se puede editar, la card lo dice y manda a hacerlo desde el perfil del deporte. Si el plazo cerró, no dice nada." },
       { t: "click", sel: "[data-testid=\"perfil-ver-0\"]", body: "Desde aquí solo se puede ver la evaluación." },
       { t: "note", sel: "[data-testid=\"evaluacion-banner-solo-lectura\"]", body: "El formulario queda en solo lectura." },
       { t: "click", sel: "[data-testid=\"evaluacion-volver-perfil\"]", body: "Volvemos al perfil del integrante." },
-      { t: "click", sel: "[data-testid=\"perfil-descargar-historial\"]", body: "«Descargar historial» baja el Excel de la integrante, solo con sus evaluaciones individuales. El del equipo se baja desde el perfil del deporte." }
+      { t: "click", sel: "[data-testid=\"perfil-descargar-historial\"]", body: "«Descargar historial» baja el Excel de la integrante, con sus evaluaciones y la del equipo como fila aparte. El equipo no tiene descarga propia." }
     ] },
   { id: "4.1", titulo: "Calificar una prueba individual: errores de validación", falta: "El marco solo pulsa: no se puede escribir en los campos, así que no se llega a «Confirmar envío» ni a que la prueba quede «Calificado». En la app se escribe y se confirma.",
     steps: [

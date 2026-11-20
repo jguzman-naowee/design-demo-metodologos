@@ -56,6 +56,11 @@
     miembro("c2-m2", "Laura Peña", "Voleibol", "Mujer", "Colegio La Enseñanza", "calificado"),
     miembro("c2-m3", "Camila Torres", "Voleibol", "Mujer", "Colegio La Enseñanza", "calificado"),
   ];
+  const miembrosBalonmano = [
+    miembro("c6-m1", "Esteban Ruiz", "Balonmano", "Hombre", "Colegio San Carlos", "calificado"),
+    miembro("c6-m2", "Tomás Herrera", "Balonmano", "Hombre", "Colegio San Carlos", "calificado"),
+    miembro("c6-m3", "Nicolás Duarte", "Balonmano", "Hombre", "Colegio San Carlos", "calificado"),
+  ];
   const miembrosFutbolSala = [
     miembro("c3-m1", "Andrés Gómez", "Fútbol sala", "Hombre", "Colegio Nacional", "sinCalificacion"),
     miembro("c3-m2", "Julián Mesa", "Fútbol sala", "Hombre", "Colegio Nacional", "sinCalificacion"),
@@ -69,9 +74,12 @@
     deportista({ id: "c2", nombre: "Selección de Voleibol", deporte: "Voleibol", categoria: "Juvenil", estado: "calificado", tipo: "Conjunto", colegio: "Colegio La Enseñanza", modalidad: "Sala", sexo: "Mujer",
       pruebas: [
         prueba("Semifinal", "calificado", { fecha: "Mié, 03 2026 · 2:00 PM", evaluador: EVALUADOR, editable: true, editableUntil: "2026-09-02" }),
-        /* EXTRA de la demo: evaluación de un evento anterior, con el plazo de edición terminado */
-        prueba("Cuartos de final", "calificado", { eventoId: "e3", fecha: "Vie, 06 2026 · 5:10 PM", evaluador: EVALUADOR, alreadyEvaluated: true, editableUntil: "2026-03-18" }),
       ], miembros: miembrosVoleibol }),
+    /* Un equipo vive en un solo evento (en eventsLite el «equipo» es la competencia y la fase). Este es el de e3, con plazo vencido. */
+    deportista({ id: "c6", nombre: "Selección de Balonmano", deporte: "Balonmano", categoria: "Juvenil", estado: "calificado", tipo: "Conjunto", colegio: "Colegio San Carlos", modalidad: "Sala", sexo: "Hombre",
+      pruebas: [
+        prueba("Cuartos de final", "calificado", { eventoId: "e3", fecha: "Vie, 06 2026 · 5:10 PM", evaluador: EVALUADOR, alreadyEvaluated: true, editableUntil: "2026-03-18" }),
+      ], miembros: miembrosBalonmano }),
     deportista({ id: "c3", nombre: "Selección de Fútbol sala", deporte: "Fútbol sala", categoria: "Prejuvenil", estado: "sinCalificacion", tipo: "Conjunto", colegio: "Colegio Nacional", modalidad: "Microfútbol", sexo: "Hombre",
       pruebas: [prueba("Cuartos de final", "sinCalificacion")], miembros: miembrosFutbolSala }),
   ];

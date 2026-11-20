@@ -141,26 +141,26 @@
 
   /* Descarga del historial: un .xlsx con una fila por evaluación completada, de todos los eventos del ciclo. */
   const completadas = (d) => d.pruebas.map((_, i) => i).filter((i) => calificada(d, i));
-  /* d: quien se consulta. equipo (opcional): si d es integrante, el historial es el del equipo y d solo se anota como quien consulta. */
-  function descargarHistorial(d, equipo) {
-    const T = (v) => ({ v, s: "texto" }), src = equipo || d;
+  /* El Excel es del deportista: sus evaluaciones individuales y, si es integrante, la del equipo (es el mismo registro del equipo, no una copia). */
+  function descargarHistorial(d) {
+    const T = (v) => ({ v, s: "texto" }), t = esMiembro(d) ? Data.equipoDeMiembro(d.id) : null;
     const filas = [
       [{ v: "Historial de evaluaciones", s: "titulo" }],
-      equipo ? [{ v: "Equipo", s: "negrita" }, src.nombre] : [{ v: "Deportista", s: "negrita" }, src.nombre],
-      equipo ? [{ v: "Integrante consultado", s: "negrita" }, d.nombre] : [],
-      [{ v: "Deporte", s: "negrita" }, src.deporte],
-      [{ v: "Categoría", s: "negrita" }, src.categoria],
-      [{ v: "Colegio o institución", s: "negrita" }, src.colegio],
+      [{ v: "Deportista", s: "negrita" }, d.nombre],
+      t ? [{ v: "Equipo", s: "negrita" }, t.nombre] : [],
+      [{ v: "Deporte", s: "negrita" }, d.deporte],
+      [{ v: "Categoría", s: "negrita" }, d.categoria],
+      [{ v: "Colegio o institución", s: "negrita" }, d.colegio],
       [{ v: "Generado", s: "negrita" }, Evaluaciones.formatFechaHora(new Date()) + " · " + (Data.metodologo ? Data.metodologo.nombre : "")],
       [],
-      ["Evento", "Estado del evento", "Prueba", "Fecha de evaluación", "Evaluador", "Plazo de edición", "Países en la prueba", "N.º de atletas", "Aspecto técnico", "Aspecto táctico", "Preparación física", "Conclusiones", "Recomendaciones"].map((v) => ({ v, s: "encabezado" })),
+      ["Evento", "Estado del evento", "Evaluación", "Prueba", "Fecha de evaluación", "Evaluador", "Plazo de edición", "Países en la prueba", "N.º de atletas", "Aspecto técnico", "Aspecto táctico", "Preparación física", "Conclusiones", "Recomendaciones"].map((v) => ({ v, s: "encabezado" })),
     ];
-    agruparPorEvento(src, completadas(src)).forEach(({ ev, idx }) => idx.forEach((i) => {
+    [[d, "Individual"], [t, "Equipo"]].filter((x) => x[0]).forEach(([src, tipo]) => agruparPorEvento(src, completadas(src)).forEach(({ ev, idx }) => idx.forEach((i) => {
       const p = conMeta(src, i), op = Evaluaciones.get(src.id, i) || {};
-      filas.push([T(ev.nombre), ev.estadoLabel, T(p.nombre), p.fecha || "", T(p.evaluador || ""), T(plazoTexto(src, i)), T(op.countries || ""), typeof op.athletesCount === "number" ? op.athletesCount : (op.athletesCount || ""), T(op.technicalAspect || ""), T(op.tacticalAspect || ""), T(op.physicalPreparation || ""), T(op.conclusions || ""), T(op.recommendations || "")]);
-    }));
-    const slug = Data.norm(src.nombre).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-    Xlsx.descargar("historial-evaluaciones-" + slug + ".xlsx", { hoja: "Historial", columnas: [34, 16, 22, 24, 26, 36, 24, 12, 48, 48, 48, 48, 48], filas });
+      filas.push([T(ev.nombre), ev.estadoLabel, tipo, T(p.nombre), p.fecha || "", T(p.evaluador || ""), T(plazoTexto(src, i)), T(op.countries || ""), typeof op.athletesCount === "number" ? op.athletesCount : (op.athletesCount || ""), T(op.technicalAspect || ""), T(op.tacticalAspect || ""), T(op.physicalPreparation || ""), T(op.conclusions || ""), T(op.recommendations || "")]);
+    })));
+    const slug = Data.norm(d.nombre).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    Xlsx.descargar("historial-evaluaciones-" + slug + ".xlsx", { hoja: "Historial", columnas: [34, 16, 14, 22, 24, 26, 36, 24, 12, 48, 48, 48, 48, 48], filas });
     Ui.toast("El archivo quedó en tu dispositivo.", "success", 3500, "Historial descargado");
   }
 
@@ -255,8 +255,8 @@
     const cuerpo = (!idx.length && !conInd.length) ? vacio("Aún no hay evaluaciones completadas.")
       : sub("Evaluación del equipo") + (idx.length ? listaHist(t, idx, false) : '<p class="t-body pf-intro">El equipo aún no tiene evaluación completada.</p>') + gap("l") +
         sub("Evaluaciones individuales") + (conInd.length ? conInd.map(([m, ix]) => '<div class="pf-int-hist" data-testid="perfil-hist-' + esc(m.id) + '"><div class="t-caption pf-int-nm">' + esc(m.nombre) + "</div>" + listaHist(m, ix, false) + "</div>").join("") : '<p class="t-body pf-intro">Ningún integrante tiene evaluación completada.</p>');
-    if (esWeb()) return histCabeceraWeb(h2("Historial de evaluaciones") + gap("s") + intro, idx.length) + gap("m") + cuerpo;
-    return h2("Historial de evaluaciones") + gap("s") + intro + gap("m") + (idx.length ? Ui.button({ title: "Descargar historial", variant: "cream-outlined", leftIcon: "m-download", act: "descargar-historial", testid: "perfil-descargar-historial" }) + gap("m") : "") + cuerpo;
+    if (esWeb()) return histCabeceraWeb(h2("Historial de evaluaciones") + gap("s") + intro, false) + gap("m") + cuerpo;
+    return h2("Historial de evaluaciones") + gap("s") + intro + gap("m") + cuerpo; /* el equipo no tiene descarga: va en el historial de cada deportista */
   }
 
   /* Integrante: sus evaluaciones individuales (editables) y, aparte, la del equipo (solo lectura: se edita desde el perfil del deporte) */

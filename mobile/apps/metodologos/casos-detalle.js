@@ -418,7 +418,7 @@ window.CASOS_DETALLE = {
       ] },
       { titulo: "Qué se agregó", items: [
         "Extra de la demo: «Descargar historial» genera en el navegador un `.xlsx` real (`js/xlsx.js`, un ZIP sin comprimir con XML de hoja de cálculo) llamado `historial-evaluaciones-:nombre.xlsx`.",
-        "El Excel tiene una cabecera (título, deportista, deporte, categoría, colegio o institución, y fecha de generación · metodólogo) y una tabla con las columnas Evento, Estado del evento, Prueba, Fecha de evaluación, Evaluador, Plazo de edición, Países en la prueba, N.º de atletas, Aspecto técnico, Aspecto táctico, Preparación física, Conclusiones y Recomendaciones.",
+        "El Excel tiene una cabecera (título, deportista, deporte, categoría, colegio o institución, y fecha de generación · metodólogo) y una tabla con las columnas Evento, Estado del evento, Evaluación (Individual o Equipo), Prueba, Fecha de evaluación, Evaluador, Plazo de edición, Países en la prueba, N.º de atletas, Aspecto técnico, Aspecto táctico, Preparación física, Conclusiones y Recomendaciones.",
         "Toast de éxito al descargar: «Historial descargado» / «El archivo quedó en tu dispositivo.» (3500 ms).",
         "El plazo en cada tarjeta es un `NwtAlert` mute del SDK: informative con «Editable hasta el 2 de septiembre de 2026», o negative con «El plazo de edición terminó el 18 de marzo de 2026».",
         "Datos de muestra en varios eventos: d1 tiene evaluaciones en e1 (100m planos), e4 (Relevo 4x100, editable) y e3 (100m planos, plazo vencido). e4 es un segundo evento en curso al mismo tiempo."
@@ -442,7 +442,7 @@ window.CASOS_DETALLE = {
         "Botón de acción: 36×36 (`--touch-target`, área táctil de 44), fondo `orange-100`, radio 8, icono de 20 en `orange-700` (`lapiz` u `ojo-abierto`).",
         "`NwtAlert` mute: icono de 16 sin fondo, texto con el tono 700 del tema (`--naotech-theme-color-700`) para llegar a AA sobre blanco. Informative usa un círculo con «i»; negative, un círculo con «!».",
         "«Descargar historial»: `OcButton` cream, a todo el ancho, 52 de alto, fondo `orange-100` `#FFEDC7`, texto `orange-800` `#B83100`, icono `download` de 20 a la izquierda.",
-        "Columnas del Excel (anchos de la demo, en caracteres): 34, 16, 22, 24, 26, 36, 24, 12, 48, 48, 48, 48, 48. Hoja «Historial». Los textos largos van con ajuste de línea y alineados arriba.",
+        "Columnas del Excel (anchos de la demo, en caracteres): 34, 16, 14, 22, 24, 26, 36, 24, 12, 48, 48, 48, 48, 48. Hoja «Historial». Los textos largos van con ajuste de línea y alineados arriba.",
         "Sugerencia para Flutter: paquete `excel` + `path_provider` + `share_plus`, o descargar un archivo generado por el servicio. Es una sugerencia, no una decisión."
       ] },
       { titulo: "Pendiente", items: [
@@ -454,7 +454,7 @@ window.CASOS_DETALLE = {
   },
 
   "3.4": {
-    resumen: "Historia PROD-59: en un deporte de conjunto, el historial de una integrante de la Selección de Voleibol tiene dos secciones: sus evaluaciones individuales (editables dentro del plazo) y la del equipo (solo ver; se edita desde el perfil del deporte). «Descargar historial» baja solo lo suyo.",
+    resumen: "Historia PROD-59: en un deporte de conjunto, el historial de una integrante de la Selección de Voleibol tiene dos secciones: sus evaluaciones individuales (editables dentro del plazo) y la del equipo (solo ver; se edita desde el perfil del deporte). El equipo no tiene «Descargar historial»: la descarga es del deportista.",
     secciones: [
       { titulo: "Qué cambió", items: [
         "El historial de una integrante separa «Evaluaciones individuales» (lápiz u ojo según el plazo) de «Evaluación del equipo» (siempre el ojo, aunque todavía se pueda editar).",
@@ -462,14 +462,14 @@ window.CASOS_DETALLE = {
       ] },
       { titulo: "Qué se agregó", items: [
         "Si la evaluación todavía se puede editar, la tarjeta lo dice con un `NwtAlert` mute informative: «Editable hasta el 2 de septiembre de 2026. Hazlo desde el perfil del deporte.», con un enlace a `#/deportista/c2`. Si el plazo ya cerró, la tarjeta no dice nada.",
-        "«Descargar historial» desde la integrante baja el Excel solo con sus evaluaciones individuales; el del equipo se baja desde el perfil del deporte. Los dos archivos no se mezclan.",
-        "Datos de muestra: la Selección de Voleibol (c2) tiene «Semifinal» en e1 (editable) y «Cuartos de final» en e3 (plazo vencido)."
+        "«Descargar historial» desde la integrante baja su Excel, con sus evaluaciones y la del equipo como fila aparte. El perfil del deporte (equipo) ya no tiene descarga: en eventsLite el formulario se asigna a cada deportista y la calificación en conjunto aparece en su historial.",
+        "Datos de muestra: cada equipo vive en un solo evento. La Selección de Voleibol (c2) tiene «Semifinal» en e1 (editable) y la de Balonmano (c6), «Cuartos de final» en e3 (plazo vencido)."
       ] },
       { titulo: "Cómo se hace", items: [
         "Para una integrante, se busca su equipo (`equipoDeMiembro`) y se listan las pruebas calificadas del equipo agrupadas por evento, como en 3.3 pero en modo solo lectura.",
         "Cada tarjeta lleva fecha, evaluador, la acción ojo (`#/evaluacion/c2/:indice?modo=ver`) y, solo si la evaluación es editable, el aviso con el enlace al perfil del deporte.",
         "El formulario se abre en solo lectura con el banner «Evaluación registrada · solo lectura» y el botón «Volver al perfil», que regresa al perfil de la integrante.",
-        "Excel: las mismas columnas que en 3.3, con los datos del equipo. «Integrante consultado» registra quién hizo la descarga.",
+        "Excel de la integrante: las mismas columnas que en 3.3. Trae sus evaluaciones individuales y, como filas aparte, la del equipo (el mismo registro del equipo, no una copia; confirmado con desarrollo, falta que el back lo incluya).",
         "Datos reales: las opiniones del equipo (`opinions` con el sujeto equipo) y la pertenencia del integrante al equipo (`teams`)."
       ] },
       { titulo: "Spec Flutter", items: [
@@ -480,7 +480,7 @@ window.CASOS_DETALLE = {
       ] },
       { titulo: "Pendiente", items: [
         "De casos.js: la evaluación es del equipo; desde el perfil del integrante solo se ve y se descarga, no se edita. La edición se hace en el perfil del deporte y solo mientras el plazo siga abierto.",
-        "Decisión de producto: ¿el integrante (o su entrenador) debe poder descargar el historial del equipo, o la descarga es solo del metodólogo?"
+        "Por confirmar: que el back ya incluya la evaluación del equipo en el Excel del deportista (en curso con desarrollo)."
       ] }
     ]
   },
