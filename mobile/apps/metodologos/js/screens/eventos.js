@@ -31,9 +31,10 @@
       '<a class="evcard-link" href="#/evento/' + Ui.esc(e.id) + '" data-testid="evento-card-' + Ui.esc(e.id) + '" aria-label="' + Ui.esc(e.nombre + ", " + e.estadoLabel + ", " + sub) + '">' +
         '<img class="evcard-img" src="' + Ui.esc((document.documentElement.classList.contains("web") && matchMedia("(min-width:900px)").matches && Data.heroWeb[e.id]) || e.imagen || Data.eventoGenerico) + '" alt="" loading="lazy" onload="this.classList.add(\'ld\')" onerror="this.onerror=null;this.src=\'' + Data.eventoGenerico + '\'">' +
         '<div class="evcard-body' + (aviso ? " has-aviso" : "") + '">' +
-          '<div class="evcard-meta">' + Ui.chip(e.estado, e.estadoLabel) + Ui.icon("arrow-right-select", { size: 20, color: "var(--orange-700)" }) + "</div>" +
+          '<div class="evcard-meta">' + Ui.chip(e.estado, e.estadoLabel) + "</div>" +
           '<h2 class="evcard-title">' + Ui.esc(e.nombre) + "</h2>" +
           '<p class="evcard-sub">' + Ui.esc(sub) + "</p>" +
+          '<span class="evcard-go" aria-hidden="true">' + Ui.icon("m-chevron_right", { size: 20, color: "currentColor" }) + "</span>" +
         "</div>" +
       "</a>" +
       avisoHtml +

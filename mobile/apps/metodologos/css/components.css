@@ -63,7 +63,7 @@ svg.ic{display:block;flex:none}
 .fija.a-sangre::after{left:calc(-1 * var(--sp-m-M));right:calc(-1 * var(--sp-m-M))}
 
 /* ── OcAppBar (shared/widgets/oc_app_bar.dart): padding 16/8, borde inferior 1px gray300, logo 40, menú 24 ── */
-.appbar{flex:none;display:flex;align-items:center;justify-content:space-between;padding:6px var(--sp-m-M);
+.appbar{position:relative;z-index:6;flex:none;display:flex;align-items:center;justify-content:space-between;padding:6px var(--sp-m-M);
   background:var(--white-alpha-100);border-bottom:1px solid var(--gray-200)}
 .appbar-btn{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%}
 .appbar-btn.logo{margin-left:-2px}.appbar-btn.menu{margin-right:-10px;color:var(--blue-jic-900)}
@@ -143,7 +143,10 @@ svg.ic{display:block;flex:none}
 .evcard-aviso{padding:var(--sp-s-XL) var(--sp-m-M) var(--sp-m-M)}
 .evcard-body.has-aviso{padding-bottom:0}
 .evcard-img{display:block;width:100%;height:150px;object-fit:cover;background:var(--gray-200)}
-.evcard-body{padding:var(--sp-m-M)}
+.evcard-body{position:relative;padding:var(--sp-m-M)}
+/* Botón-icono circular con borde, abajo a la derecha (igual que en web); la tarjeta entera sigue siendo el enlace. */
+.evcard-go{position:absolute;right:var(--sp-m-M);bottom:var(--sp-m-M);display:grid;place-items:center;width:32px;height:32px;border:1.5px solid var(--orange-700);border-radius:50%;color:var(--orange-700)}
+.evcard-body:not(.evwc-body) .evcard-title,.evcard-body .evcard-sub{padding-right:calc(32px + var(--sp-s-XL))}
 .evcard-meta{display:flex;align-items:center;justify-content:space-between;min-height:20px}
 .evcard-title{margin:var(--sp-s-XL) 0 var(--sp-s-M);font-size:var(--fs-subtitle);font-weight:var(--fw-bold);color:var(--navy);line-height:1.2;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -240,7 +243,8 @@ svg.ic{display:block;flex:none}
 /* Eventos (DC-015): un solo scroll; solo la fila del buscador queda fija, sobre el lienzo tonal.
    Relleno 8 con margen −8: mismo layout, y aire bajo la barra cuando las cards pasan por detrás. top −16: el sticky respeta el padding. */
 .content.evs{display:block;padding-bottom:var(--sp-m-XL)}
-.evs > .searchrow{position:sticky;top:calc(-1 * var(--sp-m-M));z-index:5;margin:calc(-1 * var(--sp-s-XL)) 0 var(--sp-s-XL);padding:var(--sp-s-XL) 0;background:var(--gray-100);
+/* +1 px hacia arriba: con escala fraccionaria quedaba una rendija bajo la barra donde se veía el contenido. */
+.evs > .searchrow{position:sticky;top:calc(-1 * var(--sp-m-M) - 1px);z-index:5;margin:calc(-1 * var(--sp-s-XL) - 1px) 0 var(--sp-s-XL);padding:calc(var(--sp-s-XL) + 1px) 0 var(--sp-s-XL);background:var(--gray-100);
   box-shadow:calc(-1 * var(--sp-m-M)) 0 0 var(--gray-100),var(--sp-m-M) 0 0 var(--gray-100)}
 /* DC-024: pegada, el filtro «Estado» se oculta y el buscador ocupa todo el ancho (la barra conserva su alto) */
 .evs > .searchrow .trigger{transition:width 200ms ease,margin 200ms ease,opacity 150ms ease,visibility 0s}
