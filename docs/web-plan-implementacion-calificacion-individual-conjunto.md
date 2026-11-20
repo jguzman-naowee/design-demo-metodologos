@@ -15,7 +15,7 @@ Un commit por capa revisable. Cada paso se verifica en **web y móvil** antes de
 | 4 | Perfil del deporte | Dos secciones: equipo e individuales con acción por fila | `screens/deportista.js` | Se califica un integrante sin tocar al equipo, y al revés |
 | 5 | Perfil del integrante | Pestaña Pruebas, aviso nuevo, historial con la del equipo en solo ver | `screens/deportista.js` | Retorno al perfil de origen |
 | 6 | Historial | Pestaña Historial del equipo (web), pestañas Calificar/Historial (móvil); dos secciones | `screens/deportista.js` | Aparece lo guardado, separado |
-| 7 | Excel | Dos descargas separadas: equipo y deportista | `xlsx.js` | Cada archivo solo trae lo suyo |
+| 7 | Excel | Solo descarga del deportista (con la fila del equipo); el equipo no tiene | `xlsx.js` | El equipo no muestra el botón; el integrante sí |
 | 8 | Casos de la demo | Reescribir 3.2, 3.4 y 4.2; añadir el caso de integrante | `casos.js`, `casos-detalle.js`, `casos-web.js`, `web-casos.js` | El recorrido guiado completo corre |
 | 9 | Docs | Actualizar PROD-65 §5 y §7.1 y el inventario de pantallas; CHANGELOG | `docs/*` | Sin referencias a «integrante informativo» |
 

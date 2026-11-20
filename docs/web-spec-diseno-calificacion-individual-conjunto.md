@@ -26,7 +26,7 @@
 ### 2.3 Historial del deporte
 - Pestaña nueva en web (y pestaña Historial en móvil).
 - Dos secciones separadas: «Evaluación del equipo» y «Evaluaciones individuales», agrupada por integrante.
-- «Descargar historial» una sola vez, arriba, para el historial del equipo.
+- Sin «Descargar historial»: el equipo no tiene descarga; la del deportista, con la evaluación del equipo como fila aparte, está en su propio historial.
 
 ### 2.4 Formulario
 - Mismo asistente de 3 pasos.

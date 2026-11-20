@@ -73,8 +73,8 @@ Al guardar, la persona vuelve al lugar desde donde entró y ve «Quedó guardada
 - [ ] Antes de que inicie el evento, las acciones de calificación individual muestran «No se puede calificar», igual que las del equipo.
 
 ### 7.5 Descargas
-- [ ] «Descargar historial» del equipo entrega un Excel con la evaluación del equipo.
-- [ ] «Descargar historial» del deportista entrega un Excel con sus evaluaciones individuales.
+- [ ] El equipo no tiene «Descargar historial»: la calificación en conjunto aparece en el historial de cada integrante.
+- [ ] «Descargar historial» del deportista entrega su Excel con sus evaluaciones individuales y, como fila aparte, la del equipo al que pertenece (es el mismo registro del equipo, no una copia). Confirmado con desarrollo; falta que el back lo incluya.
 - [ ] Los dos archivos son separados y no se mezclan.
 
 ## 8. Decisiones tomadas
@@ -85,7 +85,7 @@ Al guardar, la persona vuelve al lugar desde donde entró y ve «Quedó guardada
 | ¿Plazo de edición? | El del evento, heredado. |
 | ¿Formulario? | El mismo. |
 | ¿Quién califica? | El mismo metodólogo asignado. |
-| ¿Excel? | Dos separados: equipo y deportista. |
+| ¿Excel? | Solo el del deportista, con la evaluación del equipo como fila aparte. El equipo no tiene descarga (ajuste por comentario de desarrollo, 20-nov-2026). |
 | ¿Conteo del evento? | Solo la evaluación del equipo. *Propuesta pendiente de confirmar.* |
 | ¿Cómo se elige a quién calificar? | Lista de integrantes del conjunto con acción en la fila; una calificación a la vez, sin flujo continuo. |
 | ¿Equipo frente a individual en pantalla? | Dos secciones separadas. |

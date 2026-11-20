@@ -277,7 +277,6 @@ td:first-child{font-weight:600;white-space:nowrap}
     <div class="win"><div class="bar"><i></i><i></i><i></i><span>…/selección-de-voleibol</span></div>
       <div class="cont">
         <div class="tabs"><span>Datos</span><span>Pruebas</span><span class="on new">Historial</span></div>
-        <div style="text-align:right;margin-bottom:8px"><button class="btn o s" type="button"><svg class="ico"><use href="#i-down"/></svg>Descargar historial</button></div>
         <p class="cap" style="margin:0 0 6px">Evaluación del equipo</p>
         <div class="tbl" style="margin-bottom:12px"><div class="row"><span>Prueba 1</span><span class="acts"><svg class="ico"><use href="#i-edit"/></svg></span></div></div>
         <p class="cap" style="margin:0 0 6px">Evaluaciones individuales</p>
@@ -303,14 +302,13 @@ td:first-child{font-weight:600;white-space:nowrap}
 </div>
 
 <!-- 8 -->
-<h2><span class="n">8</span>Descargas en Excel</h2>
-<p class="sec">Dos archivos separados que no se mezclan.</p>
+<h2><span class="n">8</span>Descarga en Excel</h2>
+<p class="sec">Solo el deportista tiene descarga. Trae sus evaluaciones y, como fila aparte, la del equipo al que pertenece (el mismo registro del equipo, no una copia). El equipo no tiene descarga.</p>
 <div class="xls">
-  <div class="sheet"><div class="t"><svg class="ico"><use href="#i-file"/></svg>historial-equipo.xlsx</div>
-    <table><tr><th>Equipo</th><th>Prueba</th><th>Evaluación</th><th>Fecha</th></tr><tr><td>Selección de Voleibol</td><td>Prueba 1</td><td>Equipo</td><td>01 Sep 2026</td></tr></table></div>
   <div class="sheet"><div class="t"><svg class="ico"><use href="#i-file"/></svg>historial-deportista.xlsx</div>
-    <table><tr><th>Deportista</th><th>Prueba</th><th>Evaluación</th><th>Fecha</th></tr><tr><td>Javier Manríquez</td><td>Prueba 1</td><td>Individual</td><td>01 Sep 2026</td></tr><tr><td>Javier Manríquez</td><td>Prueba 2</td><td>Individual</td><td>02 Sep 2026</td></tr></table></div>
+    <table><tr><th>Deportista</th><th>Evaluación</th><th>Prueba</th><th>Fecha</th></tr><tr><td>Javier Manríquez</td><td>Individual</td><td>Prueba 1</td><td>01 Sep 2026</td></tr><tr><td>Javier Manríquez</td><td>Equipo</td><td>Prueba 1</td><td>01 Sep 2026</td></tr></table></div>
 </div>
+<div class="callout">Confirmado con desarrollo; falta que el back ya lo incluya en el Excel.</div>
 
 <!-- 9 -->
 <h2><span class="n">9</span>Equipo frente a individual</h2>
@@ -334,6 +332,7 @@ td:first-child{font-weight:600;white-space:nowrap}
     <li>Si un integrante sale o entra después de calificar, su evaluación queda ligada al deportista.</li>
     <li>Sin indicador «3 de 8»: solo la etiqueta de estado. La app móvil sigue el mismo cambio, con pestañas Calificar e Historial.</li>
     <li>Cómo se ve la lista con muchos integrantes (paginación o búsqueda).</li>
+    <li>Un equipo vive en un solo evento: en eventsLite el «equipo» es la competencia y la fase. En el formulario se muestra el nombre del equipo y la prueba.</li>
     <li>El back aún no soporta evaluaciones por integrante; el plan está aprobado y se construirá.</li>
   </ul>
 </div>

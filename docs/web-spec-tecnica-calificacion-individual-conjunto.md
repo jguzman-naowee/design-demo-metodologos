@@ -66,7 +66,8 @@ El **retorno** al guardar o cancelar usa `Router.back` con ruta de respaldo: per
 
 ### 4.4 Historial y Excel
 - Equipo → Historial: sección «Evaluación del equipo» y sección «Evaluaciones individuales» (por integrante).
-- «Descargar historial» del equipo: solo `TEAM`. «Descargar historial» del deportista: solo sus `ATHLETE`. Dos archivos, sin mezclar (`xlsx.js`).
+- El equipo no tiene «Descargar historial». «Descargar historial» del deportista baja su Excel (`xlsx.js`) con una columna «Evaluación» (Individual o Equipo): sus evaluaciones y la del equipo como fila aparte. El equipo tiene un solo registro por prueba; el del integrante es otro, opcional e independiente (confirmado con desarrollo).
+- Un equipo vive en un solo evento: en eventsLite el «equipo» es la competencia y la fase, y no existen equipos que se repitan entre eventos.
 
 ### 4.5 Conteos
 - «N deportes por calificar» del evento sigue contando solo la evaluación del equipo.
