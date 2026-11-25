@@ -283,37 +283,33 @@
   Ui.registerIcon("m-arrow_back", '<svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="currentColor"/></svg>');
   Ui.registerIcon("m-person_outline", '<svg viewBox="0 0 24 24"><path d="M12 6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 9c2.7 0 5.8 1.29 6 2v1H6v-.99c.2-.72 3.3-2.01 6-2.01m0-11C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 9c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z" fill="currentColor"/></svg>');
   const esWeb = () => document.documentElement.classList.contains("web") && window.matchMedia("(min-width:900px)").matches;
-  const tabsWeb = () => [["datos", "Datos"], ["pruebas", "Pruebas"], ["historial", "Historial"]];
+  const tabsWeb = () => TABS;
 
-  function panelDatos(d, miembro) {
+  /* Card de datos a la derecha de la card del deportista (antes era la pestaña «Datos») */
+  function cardDatos(d, miembro) {
     const campos = celdas(d, miembro).map((c) => [c[0], c[1], c[3]]);
+    campos[0][1] = '<span class="pfw-dep">' + Ui.icon(Data.deporteIcono(d.deporte), { size: 20, color: "var(--orange-600)" }) + "<span>" + esc(d.deporte) + "</span></span>";
     if (d.colegio) campos.splice(1, 0, ["Colegio o institución", esc(d.colegio), "perfil-info-colegio"]);
     if (d.categoria) campos.splice(2, 0, ["Categoría", esc(d.categoria), "perfil-info-categoria"]);
-    return h2(miembro ? "Datos del deportista" : d.esEquipo ? "Datos del deporte" : "Datos del deportista") + gap("m") +
-      '<div class="pfw-grid" data-testid="perfil-info">' + campos.map((c) => '<div class="pfw-campo"><span class="pfw-label">' + esc(c[0]) + '</span><div class="pfw-valor" data-testid="' + c[2] + '">' + c[1] + "</div></div>").join("") + "</div>" +
-      "";
+    return '<section class="pfw-datos" data-testid="perfil-info"><h2 class="t-subtitle pfw-datos-tit">' + (!miembro && d.esEquipo ? "Datos del deporte" : "Datos del deportista") + "</h2>" +
+      '<div class="pfw-grid">' + campos.map((c) => '<div class="pfw-campo"><span class="pfw-label">' + esc(c[0]) + '</span><div class="pfw-valor" data-testid="' + c[2] + '">' + c[1] + "</div></div>").join("") + "</div></section>";
   }
 
-  function panelWeb(d, miembro, key, evId) {
-    if (key === "pruebas") return panelCalificarSujeto(d, miembro, evId);
-    if (key === "historial") return panelHistorialSujeto(d, miembro);
-    return panelDatos(d, miembro);
-  }
+  const panelWeb = (d, miembro, key, evId) => key === "historial" ? panelHistorialSujeto(d, miembro) : panelCalificarSujeto(d, miembro, evId);
 
   function perfilWeb(d, miembro, evId) {
-    const ev = Data.evento(evId), esDeporte = !miembro && d.esEquipo, titulo = esDeporte ? d.deporte : d.nombre, tab = ultimaTab[d.id] || "datos";
+    const ev = Data.evento(evId), esDeporte = !miembro && d.esEquipo, titulo = esDeporte ? d.deporte : d.nombre, tab = ultimaTab[d.id] === "historial" ? "historial" : "calificar";
     return '<div class="pfw" data-testid="perfil-web">' +
       '<a class="web-volver" href="#/eventos" data-act="volver" data-testid="perfil-volver">' + ico("m-arrow_back", 24, "currentColor") + "<span>" + (miembro ? "Volver al deporte" : ev ? "Volver al evento" : "Volver a eventos") + "</span></a>" +
-      '<section class="pfw-head' + (esDeporte ? " deporte" : "") + '" data-testid="perfil-header">' +
+      '<div class="pfw-top"><section class="pfw-head' + (esDeporte ? " deporte" : "") + '" data-testid="perfil-header">' +
         (esDeporte ? '<div class="pf-avatar pfw-av-deporte" data-testid="perfil-avatar" aria-hidden="true">' + ico(Data.deporteIcono(d.deporte), 44, "var(--orange-700)") + "</div>"
           : '<div class="pf-avatar" data-testid="perfil-avatar" aria-hidden="true"><span>' + esc((titulo || "").charAt(0).toUpperCase()) + "</span></div>") +
         '<div class="pfw-id"><p class="pfw-eyebrow" data-testid="perfil-tipo">' + (miembro ? "Perfil del deportista" : esDeporte ? "Perfil del deporte" : "Perfil del deportista") + "</p>" +
         '<div class="pfw-name"><h1 class="t-h2" data-testid="perfil-nombre">' + esc(titulo) + "</h1>" + Ui.chip(estadoEfectivo(d)) +
         (esDeporte ? '<span class="pfw-meta">' + d.miembros.length + (d.miembros.length === 1 ? " integrante" : " integrantes") + "</span>" : miembro ? '<span class="pfw-meta">Integrante del equipo</span>' : "") +
         "</div>" +
-        (d.colegio ? '<p class="pfw-sub">' + esc(d.colegio) + "</p>" : "") + "</div></section>" +
-      '<h2 class="t-h2 pfw-seccion" data-testid="perfil-seccion">Perfil</h2>' +
-        '<section class="pfw-main">' + tabsHtml(tabsWeb(d, miembro), tab) + gap("m") + '<div data-panel>' + panelWeb(d, miembro, tab, evId) + "</div></section></div>";
+        (d.colegio ? '<p class="pfw-sub">' + esc(d.colegio) + "</p>" : "") + "</div></section>" + cardDatos(d, miembro) + "</div>" +
+        '<section class="pfw-main' + (tab === "historial" ? " sin-card" : "") + '">' + tabsHtml(tabsWeb(d, miembro), tab) + gap("m") + '<div data-panel>' + panelWeb(d, miembro, tab, evId) + "</div></section></div>";
   }
 
   /* Evento por el que se llegó (?evento=); sin él, el primero que contiene al deportista. */
@@ -362,6 +358,7 @@
         ultimaTab[d.id] = t.dataset.key;
         root.querySelectorAll(".tab").forEach((x) => { const on = x === t; x.classList.toggle("on", on); x.setAttribute("aria-selected", String(on)); });
         moverInd(t, true);
+        const main = root.querySelector(".pfw-main"); if (main) main.classList.toggle("sin-card", t.dataset.key === "historial");
         panel.innerHTML = root.querySelector(".pfw") ? panelWeb(d, esMiembro(d), t.dataset.key, eventoActual(d, ctx)) : i ? panelHistorialSujeto(d, esMiembro(d)) : panelCalificarSujeto(d, esMiembro(d), eventoActual(d, ctx));
         /* Entrada suave del contenido nuevo */
         if (!sinMovimiento && panel.animate) panel.animate([{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "none" }], { duration: 220, easing: "ease-out" });

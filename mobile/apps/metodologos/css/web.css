@@ -166,7 +166,7 @@
   html.web .evd-card > .evd-gap16:first-child{display:none}
   html.web .tabs.evd-tabs{position:relative;top:auto;padding-top:var(--naotech-sizing-8);box-shadow:none;background:transparent;justify-content:flex-start}
   html.web .evd-tabs .tab{flex:0 0 auto;padding:0 var(--naotech-sizing-24) 0 0}
-  html.web .evd-tabs .tab-txt{font-size:var(--naotech-heading6-font-size)} /* mismo tamaño que «Deportistas inscritos» (DC-076) */
+  html.web .evd-tabs .tab-txt{font-size:18px} /* pestañas por encima del título de la lista (DC-076) */
   html.web .evd-tabs .tab+.tab{padding-left:var(--naotech-sizing-24)}
   html.web .evd-tabs.fija::after{display:none}
   html.web .evd-listhead{padding:var(--naotech-sizing-24) 0 var(--naotech-sizing-16)}
@@ -240,7 +240,7 @@
   html.web .wside .nwt-sidebar__menu__item--active .nwt-sidebar__menu__icon .icbox{color:var(--naotech-color-orange-700)!important}
   /* DC-024: «Volver a eventos» en naranja */
   /* DC-025 y DC-026: título de la lista a 20 px y el contador pegado al nombre */
-  html.web .evd-h2{flex:0 1 auto;font-size:var(--naotech-heading6-font-size)}
+  html.web .evd-h2{flex:0 1 auto;font-size:var(--fs-body)}
   html.web .evd-listhead{gap:var(--naotech-sizing-12);justify-content:flex-start}
 }
 
@@ -309,7 +309,13 @@
   html.web .pfw-nav{position:relative;display:flex;align-items:center;gap:12px;padding:16px 20px;border:1px solid var(--gray-200);border-radius:var(--r-xlarge);color:var(--negro);font-weight:var(--fw-bold)}
   html.web .pfw-nav::before{content:"";position:absolute;left:-1px;top:50%;width:4px;height:32px;transform:translateY(-50%);border-radius:0 4px 4px 0;background:var(--orange-700)}
   html.web .pfw-main{min-width:0;padding:24px 32px 32px;background:var(--white-alpha-100);border:1px solid var(--gray-200);border-radius:var(--r-xlarge)}
+  /* Historial: pestañas, título y texto quedan sobre el fondo; la card es solo la tabla */
+  html.web .pfw-main{padding:0;background:none;border:0;border-radius:0}
+  html.web .pfw-main .pfw-tabla{padding:8px 24px 16px;background:var(--white-alpha-100);border:1px solid var(--gray-200);border-radius:var(--r-xlarge)}
   html.web .pfw-main .tab{flex:0 0 auto;padding:0 var(--naotech-sizing-24) 0 0}
+  html.web .pfw-main .tab-txt{font-size:18px}
+  html.web .pfw-main .t-subtitle{font-size:var(--fs-body)} /* título de la sección: más chico que las pestañas */
+  html.web .pfw-main .pf-intro{font-size:var(--fs-body-small)}
   html.web .pfw-main .tab+.tab{padding-left:var(--naotech-sizing-24)}
   /* Las filas de pruebas van planas dentro de la card principal: sin segundo borde ni fondo */
   html.web .pfw-main .pf-prueba,html.web .pfw-main .pf-ccard{background:none;border:0;border-top:1px solid var(--gray-200);border-radius:0;padding-left:0;padding-right:0;box-shadow:none}
@@ -345,6 +351,18 @@
 }
 @media (min-width:900px) and (max-width:1100px){
   html.web .pfw-cols{grid-template-columns:1fr}
+}
+@media (min-width:900px){
+  html.web .pfw-top{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:24px;align-items:stretch;margin-bottom:24px}
+  html.web .pfw-top .pfw-head{flex-direction:column;align-items:flex-start;justify-content:center}
+  html.web .pfw-dep{display:inline-flex;align-items:center;gap:8px}
+  html.web .pfw-dep .icbox{position:relative;top:-1px}
+  html.web .pfw-datos .chip{position:relative;top:-2px}
+  html.web .pfw-datos{padding:24px 32px;background:var(--gray-100);border:0;border-radius:var(--r-xlarge)}
+  html.web .pfw-datos-tit{margin:0 0 20px;color:var(--negro)}
+}
+@media (min-width:900px) and (max-width:1100px){
+  html.web .pfw-top{grid-template-columns:1fr}
 }
 
 /* Formulario de evaluación por pasos (web): stepper arriba, tarjetas numeradas por sección y pie fijo con Continuar.
